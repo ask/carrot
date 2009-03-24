@@ -6,7 +6,7 @@ carrot
     Ask Solem (askh@opera.com)
 :Version: 0.1.0
 
-`RabbitMQ`_/`ZeroMQ`_ (`AMQP`_) messaging queue support for `Django`_.
+Simple `RabbitMQ`_/`ZeroMQ`_ (`AMQP`_) messaging queue support for `Django`_.
 
 .. _`RabbitMQ`: http://www.rabbitmq.com/
 .. _`ZeroMQ`: http://www.zeromq.org/
