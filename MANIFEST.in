@@ -1,0 +1,7 @@
+include AUTHORS
+include README
+include TODO
+include MANIFEST.in
+include LICENSE
+include Changelog
+recursive-include carrot *
