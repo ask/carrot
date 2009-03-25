@@ -87,11 +87,19 @@ Example
         AMQP_PASSWORD = "my_rabbitmq_user_password"
         AMQP_VHOST = "virtual_host_to_use"
 
+    First we have to set up the connection instance, and map it to the
+    publishers and consumers:
+
+        >>> from carrot.connection import DjangoAMQPConnection
+        >>> connection = DjangoAMQPConnection()
+        >>> po_publisher = PostOfficePublisher(connection=connection)
+        >>> po_consumer = PostOfficeConsumer(connection=connection)
+
 
     Then, finally, we can send and receive some messages:
 
-        >>> PostOfficePublisher().send({"My message": ["foo", "bar", "baz"]})
-        >>> PostOfficeConsumer().next()
+        >>> po_publisher.send({"My message": ["foo", "bar", "baz"]})
+        >>> po_consumer().next()
         Receieved: {"My message": ["foo", "bar", "baz"]}
         
 

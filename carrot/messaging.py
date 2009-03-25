@@ -1,6 +1,4 @@
 from amqplib import client_0_8 as amqp
-from django.conf import settings
-import sys
 
 try:
     # cjson is the fastest
@@ -22,77 +20,42 @@ except ImportError:
         deserailize = simplejson.loads
 
 
-class DjangoAMQPConnection(object):
-    hostname = getattr(settings, "AMQP_SERVER", None)
-    port = getattr(settings, "AMQP_PORT", 5672)
-    userid = getattr(settings, "AMQP_USER", None)
-    password = getattr(settings, "AMQP_PASSWORD", None)
-    virtual_host = getattr(settings, "AMQP_VHOST", "/")
-    insist = False
-
-    @property
-    def host(self):
-        return ":".join([self.hostname, str(self.port)])
-
-    def __init__(self, hostname=None, port=None, userid=None, password=None,
-            virtual_host=None, **kwargs):
-        self.hostname = hostname or self.hostname
-        self.port = port or self.port
-        self.userid = userid or self.userid
-        self.password = password or self.password
-        self.virtual_host = virtual_host or self.virtual_host
-        self.insist = kwargs.get("insist", self.insist)
-
-        self.connect()
-
-    def connect(self):
-        self.connection = amqp.Connection(host=self.host,
-                                          userid=self.userid,
-                                          password=self.password,
-                                          virtual_host=self.virtual_host,
-                                          insist=self.insist)
-        self.channel = self.connection.channel()
-
-    def close(self):
-        self.channel.close()
-        self.connection.close()
-
-    def __del__(self):
-        self.close()
-
-
 class Consumer(object):
-    connection_cls = DjangoAMQPConnection
+    queue = ""
+    exchange = ""
+    routing_key = ""
     decoder = deserialize
     durable = True
     exclusive = False
     auto_delete = False
     exchange_type = "direct"
+    channel_open = False
 
-    def __init__(self, queue=None, exchange=None, routing_key=None, connection=None,
+    def __init__(self, connection, queue=None, exchange=None, routing_key=None,
             **kwargs):
+        self.connection = connection 
         self.queue = queue or self.queue
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
-        self.connection_cls = kwargs.get("connection_cls",
-                self.connection_cls)
         self.decoder = kwargs.get("decoder", self.decoder)
         self.durable = kwargs.get("durable", self.durable)
         self.exclusive = kwargs.get("exclusive", self.exclusive)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
-        self.connection = connection or self.connection_cls()
-        channel = self.connection.channel
+        channel = self.connection.connection.channel()
 
-        channel.queue_declare(queue=self.queue, durable=self.durable,
-                              exclusive=self.exclusive,
-                              auto_delete=self.auto_delete)
-        channel.exchange_declare(exchange=self.exchange,
-                                 type=self.exchange_type,
-                                 durable=self.durable,
-                                 auto_delete=self.auto_delete)
-        channel.queue_bind(queue=self.queue, exchange=self.exchange,
-                           routing_key=self.routing_key)
+        if queue:
+            channel.queue_declare(queue=self.queue, durable=self.durable,
+                                  exclusive=self.exclusive,
+                                  auto_delete=self.auto_delete)
+        if exchange:
+            channel.exchange_declare(exchange=self.exchange,
+                                     type=self.exchange_type,
+                                     durable=self.durable,
+                                     auto_delete=self.auto_delete)
+        if queue:
+            channel.queue_bind(queue=self.queue, exchange=self.exchange,
+                               routing_key=self.routing_key)
 
 
     def receive_callback(self, message):
@@ -104,38 +67,38 @@ class Consumer(object):
                 "Consumers must implement the receive method")
 
     def next(self):
-        message = self.connection.channel.basic_get(self.queue)
+        message = self.channel.basic_get(self.queue)
         if message:
             self.receive_callback(message)
-            self.connection.channel.basic_ack(message.delivery_tag)
+            self.channel.basic_ack(message.delivery_tag)
    
     def wait(self):
+        self.channel_open = True
         channel.basic_consume(queue=self.queue, no_ack=True,
                 callback=self.receive_callback,
                 consumer_tag=self.__class__.__name__)
-        while True:
-            self.connection.channel.wait()
+        yield self.channel.wait()
        
     def __del__(self):
-        self.connection.channel.basic_cancel(self.__class__.__name__)
+        if self.channel_open:
+            self.channel.basic_cancel(self.__class__.__name__)
+        if getattr(self, "channel") and self.channel.is_open:
+            self.channel.close()
     
 
 class Publisher(object):
-    exchange = None
-    routing_key = None
-    connection_cls = DjangoAMQPConnection
+    exchange = ""
+    routing_key = ""
     delivery_mode = 2 # Persistent
     encoder = serialize
 
-    def __init__(self, exchange=None, routing_key=None, connection=None,
-            **kwargs):
+    def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
+        self.connection = connection 
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
-        self.connection_cls = kwargs.get("connection_cls",
-                self.connection_cls)
         self.encoder = kwargs.get("encoder", self.encoder)
         self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
-        self.connection = connection or self.connection_cls()
+        self.channel = self.connection.connection.channel()
 
     def create_message(self, message_data):
         message_data = self.encoder(message_data)
@@ -145,5 +108,9 @@ class Publisher(object):
 
     def send(self, message_data, delivery_mode=None):
         message = self.create_message(message_data)
-        self.connection.channel.basic_publish(message, exchange=self.exchange,
+        self.channel.basic_publish(message, exchange=self.exchange,
                                               routing_key=self.routing_key)
+
+    def __del__(self):
+        if getattr(self, "channel") and self.channel.is_open:
+            self.channel.close()
