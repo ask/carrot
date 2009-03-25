@@ -52,4 +52,3 @@ class DjangoAMQPConnection(AMQPConnection):
                 getattr(settings, "AMQP_PORT", self.port))
 
         super(DjangoAMQPConnection, self).__init__(*args, **kwargs)
-

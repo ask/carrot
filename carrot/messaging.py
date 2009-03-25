@@ -20,6 +20,7 @@ except ImportError:
         deserailize = simplejson.loads
 
 
+
 class Consumer(object):
     queue = ""
     exchange = ""
@@ -33,7 +34,7 @@ class Consumer(object):
 
     def __init__(self, connection, queue=None, exchange=None, routing_key=None,
             **kwargs):
-        self.connection = connection 
+        self.connection = connection()
         self.queue = queue or self.queue
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
@@ -42,21 +43,24 @@ class Consumer(object):
         self.exclusive = kwargs.get("exclusive", self.exclusive)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
-        channel = self.connection.connection.channel()
+        self.channel = self.build_channel()
 
-        if queue:
+
+    def build_channel(self):
+        channel = self.connection.connection.channel()
+        if self.queue:
             channel.queue_declare(queue=self.queue, durable=self.durable,
                                   exclusive=self.exclusive,
                                   auto_delete=self.auto_delete)
-        if exchange:
+        if self.exchange:
             channel.exchange_declare(exchange=self.exchange,
                                      type=self.exchange_type,
                                      durable=self.durable,
                                      auto_delete=self.auto_delete)
-        if queue:
+        if self.queue:
             channel.queue_bind(queue=self.queue, exchange=self.exchange,
                                routing_key=self.routing_key)
-
+        return channel
 
     def receive_callback(self, message):
         message_data = self.decoder(message.body)
@@ -67,12 +71,16 @@ class Consumer(object):
                 "Consumers must implement the receive method")
 
     def next(self):
+        if not self.channel.connection:
+            self.channel = self.build_channel()
         message = self.channel.basic_get(self.queue)
         if message:
             self.receive_callback(message)
             self.channel.basic_ack(message.delivery_tag)
    
     def wait(self):
+        if not self.channel.connection:
+            self.channel = self.build_channel()
         self.channel_open = True
         channel.basic_consume(queue=self.queue, no_ack=True,
                 callback=self.receive_callback,
@@ -93,14 +101,21 @@ class Publisher(object):
     encoder = serialize
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
-        self.connection = connection 
+        self.connection = connection()
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
         self.encoder = kwargs.get("encoder", self.encoder)
         self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
-        self.channel = self.connection.connection.channel()
+        self.channel = self.build_channel()
+
+    def build_channel(self):
+        return self.connection.connection.channel()
 
     def create_message(self, message_data):
+        # Recreate channel if connection lost.
+        if not self.channel.connection:
+            self.channel = self.build_channel()
+
         message_data = self.encoder(message_data)
         message = amqp.Message(message_data)
         message.properties["delivery_mode"] = self.delivery_mode
