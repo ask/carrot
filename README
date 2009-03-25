@@ -8,6 +8,9 @@ carrot
 
 Simple `RabbitMQ`_/`ZeroMQ`_ (`AMQP`_) messaging queue support for `Django`_.
 
+*Note* This software is not finished. And is likely to change drastically
+in the near future.
+
 .. _`RabbitMQ`: http://www.rabbitmq.com/
 .. _`ZeroMQ`: http://www.zeromq.org/
 .. _`AMQP`: http://amqp.org
