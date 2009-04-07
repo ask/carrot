@@ -87,7 +87,7 @@ class Consumer(object):
                 consumer_tag=self.__class__.__name__)
         yield self.channel.wait()
        
-    def __del__(self):
+    def close(self):
         if self.channel_open:
             self.channel.basic_cancel(self.__class__.__name__)
         if getattr(self, "channel") and self.channel.is_open:
@@ -126,6 +126,6 @@ class Publisher(object):
         self.channel.basic_publish(message, exchange=self.exchange,
                                               routing_key=self.routing_key)
 
-    def __del__(self):
+    def close(self):
         if getattr(self, "channel") and self.channel.is_open:
             self.channel.close()

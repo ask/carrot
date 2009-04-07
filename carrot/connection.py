@@ -32,9 +32,6 @@ class AMQPConnection(object):
         if getattr(self, "connection"):
             self.connection.close()
 
-    def __del__(self):
-        self.close()
-
 
 class DjangoAMQPConnection(AMQPConnection):
     
