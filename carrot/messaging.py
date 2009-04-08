@@ -17,7 +17,7 @@ except ImportError:
         # embedded in Django.
         from django.utils import simplejson
         serialize = simplejson.dumps
-        deserailize = simplejson.loads
+        deserialize = simplejson.loads
 
 
 
