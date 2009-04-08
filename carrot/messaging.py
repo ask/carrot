@@ -20,7 +20,6 @@ except ImportError:
         deserialize = simplejson.loads
 
 
-
 class Consumer(object):
     queue = ""
     exchange = ""
@@ -36,6 +35,7 @@ class Consumer(object):
             **kwargs):
         self.connection = connection()
         self.queue = queue or self.queue
+
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
         self.decoder = kwargs.get("decoder", self.decoder)
@@ -44,7 +44,6 @@ class Consumer(object):
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
         self.channel = self.build_channel()
-
 
     def build_channel(self):
         channel = self.connection.connection.channel()
@@ -129,3 +128,39 @@ class Publisher(object):
     def close(self):
         if getattr(self, "channel") and self.channel.is_open:
             self.channel.close()
+
+
+class Messaging(object):
+    queue = ""
+    exchange = ""
+    routing_key = ""
+    publisher_cls = Publisher
+    consumer_cls = Consumer
+
+    def __init__(self, connection_cls, **kwargs):
+        self.connection_cls = connection_cls
+        self.exchange = kwargs.get("exchange", self.exchange)
+        self.queue = kwargs.get("queue", self.queue)
+        self.routing_key = kwargs.get("routing_key", self.routing_key)
+        self.publisher = self.publisher_cls(connection_cls,
+                exchange=self.exchange, routing_key=self.routing_key)
+        self.consumer = self.consumer_cls(connection_cls, queue=self.queue,
+                exchange=self.exchange, routing_key=self.routing_key)
+        self.consumer.receive = self.receive_callback
+
+    def send(self, message_data, delivery_mode=None):
+        self.publisher.send(message_data, delivery_mode=delivery_mode)
+
+    def receive_callback(self, message_data, message):
+        self.receive(message_data, message)
+
+    def receive(self, message_data, message):
+        raise NotImplementedError(
+                "Messaging classes must implement the receive method")
+
+    def next(self):
+        return self.consumer.next()
+
+    def close(self):
+        self.consumer.close()
+        self.publisher.close()
