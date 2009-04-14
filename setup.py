@@ -17,6 +17,7 @@ setup(
     description=carrot.__doc__,
     author=carrot.__author__,
     author_email=carrot.__contact__,
+    url=carrot.__homepage__,
     packages=find_packages(exclude=['ez_setup']),
     install_requires=[
         'django>=1.0',
