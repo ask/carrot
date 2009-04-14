@@ -1,10 +1,10 @@
-==========
-carrot
-==========
+==================================================================================
+carrot - Simple RabbitMQ/ZeroMQ (AMQP) messaging queue support for Python/Django.
+==================================================================================
 
 :Authors:
     Ask Solem (askh@opera.com)
-:Version: 0.1.0
+:Version: 0.1.1
 
 Simple `RabbitMQ`_/`ZeroMQ`_ (`AMQP`_) messaging queue support for `Django`_.
 
@@ -28,29 +28,28 @@ warrens`_.
 .. _`py-amqplib`: http://barryp.org/software/py-amqplib/
 
 Installation
--------------
+=============
 
     You can install ``carrot`` either via the Python Package Index (PyPI)
     or from source.
 
-    To install using ``pip``:
-
+    To install using ``pip``,
 ::
         $ pip install carrot
 
-    To install using ``easy_install``
-
+    To install using ``easy_install``,
+::
         $ easy_install carrot
 
     If you have downloaded a source tarball you can install it
-    in the following way:
+    by doing the following,
 ::
         $ python setup.py build
         # python setup.py install # as root
 
 
 Example
--------
+=======
 
     This is a `carrot` implementation of the example publisher and
     consumer described in the article `Rabbits and warrens`_
@@ -106,5 +105,11 @@ Example
         
 
 .. _`JSON`: http://www.json.org/
+
+License
+=======
+
+This software is licensed under the ``New BSD License``. See the ``LICENSE``
+file in the top distribution directory for the full license text.
 
 .. # vim: syntax=rst expandtab tabstop=4 shiftwidth=4 shiftround
