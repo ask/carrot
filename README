@@ -4,7 +4,7 @@ carrot - Simple RabbitMQ/ZeroMQ (AMQP) messaging queue support for Python/Django
 
 :Authors:
     Ask Solem (askh@opera.com)
-:Version: 0.1.1
+:Version: 0.3.0
 
 Simple `RabbitMQ`_/`ZeroMQ`_ (`AMQP`_) messaging queue support for `Django`_.
 
