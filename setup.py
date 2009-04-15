@@ -9,7 +9,7 @@ except ImportError:
     use_setuptools()
     from setuptools import setup, find_packages
 
-carrot = __import__("carrot", {}, {}, [""])
+import carrot
 
 setup(
     name='carrot',
@@ -18,9 +18,9 @@ setup(
     author=carrot.__author__,
     author_email=carrot.__contact__,
     url=carrot.__homepage__,
+    platforms=["any"],
     packages=find_packages(exclude=['ez_setup']),
     install_requires=[
-        'django>=1.0',
         'amqplib',
     ],
     classifiers=[
