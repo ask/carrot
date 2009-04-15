@@ -4,7 +4,7 @@ carrot - Simple RabbitMQ/ZeroMQ (AMQP) messaging queue support for Python/Django
 
 :Authors:
     Ask Solem (askh@opera.com)
-:Version: 0.3.0
+:Version: 0.3.1
 
 Simple `RabbitMQ`_/`ZeroMQ`_ (`AMQP`_) messaging queue support for `Django`_.
 
@@ -30,23 +30,22 @@ warrens`_.
 Installation
 =============
 
-    You can install ``carrot`` either via the Python Package Index (PyPI)
-    or from source.
+You can install ``carrot`` either via the Python Package Index (PyPI)
+or from source.
 
-    To install using ``pip``,
-::
-        $ pip install carrot
+To install using ``pip``,::
 
-    To install using ``easy_install``,
-::
-        $ easy_install carrot
+    $ pip install carrot
 
-    If you have downloaded a source tarball you can install it
-    by doing the following,
-::
-        $ python setup.py build
-        # python setup.py install # as root
+To install using ``easy_install``,::
 
+    $ easy_install carrot
+
+If you have downloaded a source tarball you can install it
+by doing the following,::
+
+    $ python setup.py build
+    # python setup.py install # as root
 
 Example
 =======
