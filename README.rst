@@ -99,7 +99,8 @@ Example
     Then, finally, we can send and receive some messages:
 
         >>> po_publisher.send({"My message": ["foo", "bar", "baz"]})
-        >>> po_consumer().next()
+        >>> po_publisher.close()
+        >>> po_consumer.next()
         Receieved: {"My message": ["foo", "bar", "baz"]}
         
 
