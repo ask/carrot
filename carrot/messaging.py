@@ -76,22 +76,33 @@ class Consumer(object):
         if message:
             self.receive_callback(message)
             self.channel.basic_ack(message.delivery_tag)
-   
+        return message
+
     def wait(self):
         if not self.channel.connection:
             self.channel = self.build_channel()
         self.channel_open = True
-        channel.basic_consume(queue=self.queue, no_ack=True,
+        self.channel.basic_consume(queue=self.queue, no_ack=True,
                 callback=self.receive_callback,
                 consumer_tag=self.__class__.__name__)
         yield self.channel.wait()
-       
+
+    def iterqueue(self, limit=None):
+        for items_since_start in itertools.count():
+            item = self.next()
+            if item is None or limit and items_since_start > limit:
+                raise StopIteration
+            yield item
+
+    def __iter__(self):
+        return self.iterqueue()
+
     def close(self):
         if self.channel_open:
             self.channel.basic_cancel(self.__class__.__name__)
         if getattr(self, "channel") and self.channel.is_open:
             self.channel.close()
-    
+
 
 class Publisher(object):
     exchange = ""
