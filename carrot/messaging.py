@@ -24,7 +24,6 @@ class Consumer(object):
     queue = ""
     exchange = ""
     routing_key = ""
-    decoder = deserialize
     durable = True
     exclusive = False
     auto_delete = False
@@ -38,7 +37,7 @@ class Consumer(object):
 
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
-        self.decoder = kwargs.get("decoder", self.decoder)
+        self.decoder = kwargs.get("decoder", deserialize)
         self.durable = kwargs.get("durable", self.durable)
         self.exclusive = kwargs.get("exclusive", self.exclusive)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
@@ -108,13 +107,12 @@ class Publisher(object):
     exchange = ""
     routing_key = ""
     delivery_mode = 2 # Persistent
-    encoder = serialize
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
         self.connection = connection()
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
-        self.encoder = kwargs.get("encoder", self.encoder)
+        self.encoder = kwargs.get("encoder", serialize)
         self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
         self.channel = self.build_channel()
 
