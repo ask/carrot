@@ -12,9 +12,9 @@ class AMQPConnection(object):
 
     def __init__(self, hostname, userid, password,
             virtual_host=None, port=None, **kwargs):
-        self.hostname = hostname 
-        self.userid = userid 
-        self.password = password 
+        self.hostname = hostname
+        self.userid = userid
+        self.password = password
         self.virtual_host = virtual_host or self.virtual_host
         self.port = port or self.port
         self.insist = kwargs.get("insist", self.insist)
@@ -34,7 +34,7 @@ class AMQPConnection(object):
 
 
 class DjangoAMQPConnection(AMQPConnection):
-    
+
     def __init__(self, *args, **kwargs):
         from django.conf import settings
         kwargs["hostname"] = kwargs.get("hostname",
