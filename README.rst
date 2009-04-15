@@ -79,9 +79,8 @@ Example
     To start sending and receveing messages with these classes, you first
     have to configure the AMQP server for your django app. If you have a
     `RabbitMQ`_ server running on localhost you can add these settings 
-    to your ``settings.py``:
+    to your ``settings.py``,::
 
-::
         AMQP_SERVER = "localhost"
         AMQP_PORT = 5678
         AMQP_USER = "my_rabbitmq_user"
