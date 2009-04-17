@@ -94,12 +94,9 @@ class Consumer(object):
     def iterqueue(self, limit=None):
         for items_since_start in itertools.count():
             item = self.next()
-            if item is None or limit and items_since_start > limit:
+            if item is None or (limit and items_since_start > limit):
                 raise StopIteration
             yield item
-
-    def __iter__(self):
-        return self.iterqueue()
 
     def close(self):
         if self.channel_open:
