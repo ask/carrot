@@ -7,8 +7,8 @@ try:
     deserialize = cjson.decode
 except ImportError:
     try:
-        # Then try to find the lastest version of simplejson.
-        # Later versions has C speedups which is pretty fast.
+        # Then try to find the latest version of simplejson.
+        # Later versions has C speedups which makes it pretty fast.
         import simplejson
         serialize = simplejson.dumps
         deserialize = simplejson.loads
@@ -68,7 +68,7 @@ class Consumer(object):
         raise NotImplementedError(
                 "Consumers must implement the receive method")
 
-    def next(self):
+    def process_next(self):
         if not self.channel.connection:
             self.channel = self.build_channel()
         message = self.channel.basic_get(self.queue)
@@ -76,6 +76,11 @@ class Consumer(object):
             self.receive_callback(message)
             self.channel.basic_ack(message.delivery_tag)
         return message
+
+    def next(self):
+        raise DeprecationWarning(
+                "next() is deprecated, use process_next() instead.")
+        return self.process_next()
 
     def wait(self):
         if not self.channel.connection:
