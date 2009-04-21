@@ -20,6 +20,24 @@ except ImportError:
         deserialize = simplejson.loads
 
 
+class Message(object):
+    """Wrapper around amqplib.client_0_8.Message."""
+    def __init__(self, amqp_message, channel):
+        self.amqp_message = amqp_message
+        self.channel = channel
+
+    def ack(self):
+        return self.channel.basic_ack(self.delivery_tag)
+
+    @property
+    def body(self):
+        return self.amqp_message.body
+
+    @property
+    def delivery_tag(self):
+        return self.amqp_message.delivery_tag
+
+
 class Consumer(object):
     queue = ""
     exchange = ""
@@ -68,14 +86,27 @@ class Consumer(object):
         raise NotImplementedError(
                 "Consumers must implement the receive method")
 
-    def process_next(self):
+    def fetch(self):
         if not self.channel.connection:
             self.channel = self.build_channel()
-        message = self.channel.basic_get(self.queue)
+        raw_message = self.channel.basic_get(self.queue)
+        return Message(raw_message, channel=self.channel)
+
+    def process_next(self):
+        message = self.fetch()
         if message:
             self.receive_callback(message)
-            self.channel.basic_ack(message.delivery_tag)
+            message.ack()
         return message
+
+    def discard_all(self):
+        """Discard all waiting messages.
+        
+        *WARNING*: All messages will be ignored and not processed.
+        """
+        while True:
+            if self.fetch() is None:
+                return
 
     def next(self):
         raise DeprecationWarning(
