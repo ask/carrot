@@ -118,11 +118,13 @@ class Consumer(object):
     def discard_all(self):
         """Discard all waiting messages.
         
-        *WARNING*: All messages will be ignored and not processed.
+        *WARNING*: All incoming messages will be ignored and not processed.
         """
         while True:
-            if self.fetch() is None:
+            message = self.fetch()
+            if message is None:
                 return
+            message.ack()
 
     def next(self):
         raise DeprecationWarning(
