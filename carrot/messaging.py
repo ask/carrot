@@ -29,6 +29,9 @@ class Message(object):
     def ack(self):
         return self.channel.basic_ack(self.delivery_tag)
 
+    def reject(self):
+        return self.channel.basic_reject(self.delivery_tag)
+
     @property
     def body(self):
         return self.amqp_message.body
