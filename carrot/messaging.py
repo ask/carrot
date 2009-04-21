@@ -119,14 +119,17 @@ class Consumer(object):
 
     def discard_all(self):
         """Discard all waiting messages.
-        
+       
+        Returns the number of messages discarded.
         *WARNING*: All incoming messages will be ignored and not processed.
         """
+        discarded_count = 0
         while True:
             message = self.fetch()
             if message is None:
-                return
+                return discarded_count
             message.ack()
+            discarded_count = discarded_count + 1
 
     def next(self):
         raise DeprecationWarning(
