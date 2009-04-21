@@ -106,6 +106,8 @@ class Consumer(object):
         if not self.channel.connection:
             self.channel = self.build_channel()
         raw_message = self.channel.basic_get(self.queue)
+        if not raw_message:
+            return None
         return Message(raw_message, channel=self.channel)
 
     def process_next(self):
