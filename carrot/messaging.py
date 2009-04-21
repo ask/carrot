@@ -27,10 +27,23 @@ class Message(object):
         self.channel = channel
 
     def ack(self):
+        """Acknowledge this message as being processed.,
+        
+        This will remove the message from the queue."""
         return self.channel.basic_ack(self.delivery_tag)
 
     def reject(self):
+        """Reject this message.
+        The message will then be discarded by the server.
+        """
         return self.channel.basic_reject(self.delivery_tag)
+
+    def requeue(self):
+        """Reject this message and put it back on the queue.
+
+        You must not use this method as a means of selecting messages
+        to process."""
+        return self.channel.basic_reject(self.delivery_tag, requeue=True)
 
     @property
     def body(self):
