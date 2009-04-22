@@ -36,7 +36,7 @@ class Message(object):
         """Reject this message.
         The message will then be discarded by the server.
         """
-        return self.channel.basic_reject(self.delivery_tag)
+        return self.channel.basic_reject(self.delivery_tag, requeue=False)
 
     def requeue(self):
         """Reject this message and put it back on the queue.
