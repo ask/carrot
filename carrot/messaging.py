@@ -1,4 +1,5 @@
 from amqplib import client_0_8 as amqp
+import warnings
 
 try:
     # cjson is the fastest
@@ -132,8 +133,8 @@ class Consumer(object):
             discarded_count = discarded_count + 1
 
     def next(self):
-        raise DeprecationWarning(
-                "next() is deprecated, use process_next() instead.")
+        warnings.warn("next() is deprecated, use process_next() instead.",
+                DeprecationWarning)
         return self.process_next()
 
     def wait(self):
