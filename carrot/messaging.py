@@ -1,4 +1,4 @@
-from amqplib import client_0_8 as amqp
+from carrot.backend.amqplib import Backend
 import warnings
 
 try:
@@ -21,40 +21,6 @@ except ImportError:
         deserialize = simplejson.loads
 
 
-class Message(object):
-    """Wrapper around amqplib.client_0_8.Message."""
-    def __init__(self, amqp_message, channel):
-        self.amqp_message = amqp_message
-        self.channel = channel
-
-    def ack(self):
-        """Acknowledge this message as being processed.,
-        
-        This will remove the message from the queue."""
-        return self.channel.basic_ack(self.delivery_tag)
-
-    def reject(self):
-        """Reject this message.
-        The message will then be discarded by the server.
-        """
-        return self.channel.basic_reject(self.delivery_tag, requeue=False)
-
-    def requeue(self):
-        """Reject this message and put it back on the queue.
-
-        You must not use this method as a means of selecting messages
-        to process."""
-        return self.channel.basic_reject(self.delivery_tag, requeue=True)
-
-    @property
-    def body(self):
-        return self.amqp_message.body
-
-    @property
-    def delivery_tag(self):
-        return self.amqp_message.delivery_tag
-
-
 class Consumer(object):
     queue = ""
     exchange = ""
@@ -68,6 +34,7 @@ class Consumer(object):
     def __init__(self, connection, queue=None, exchange=None, routing_key=None,
             **kwargs):
         self.connection = connection()
+        self.backend = Backend(connection=connection)
         self.queue = queue or self.queue
 
         self.exchange = exchange or self.exchange
@@ -77,23 +44,21 @@ class Consumer(object):
         self.exclusive = kwargs.get("exclusive", self.exclusive)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
-        self.channel = self.build_channel()
+        self.build_channel()
 
     def build_channel(self):
-        channel = self.connection.connection.channel()
         if self.queue:
-            channel.queue_declare(queue=self.queue, durable=self.durable,
-                                  exclusive=self.exclusive,
-                                  auto_delete=self.auto_delete)
+            self.backend.queue_declare(queue=self.queue, durable=self.durable,
+                                       exclusive=self.exclusive,
+                                       auto_delete=self.auto_delete)
         if self.exchange:
-            channel.exchange_declare(exchange=self.exchange,
-                                     type=self.exchange_type,
-                                     durable=self.durable,
-                                     auto_delete=self.auto_delete)
+            self.backend.exchange_declare(exchange=self.exchange,
+                                          type=self.exchange_type,
+                                          durable=self.durable,
+                                          auto_delete=self.auto_delete)
         if self.queue:
-            channel.queue_bind(queue=self.queue, exchange=self.exchange,
-                               routing_key=self.routing_key)
-        return channel
+            self.backend.queue_bind(queue=self.queue, exchange=self.exchange,
+                                    routing_key=self.routing_key)
 
     def receive_callback(self, message):
         message_data = self.decoder(message.body)
@@ -104,12 +69,7 @@ class Consumer(object):
                 "Consumers must implement the receive method")
 
     def fetch(self):
-        if not self.channel.connection:
-            self.channel = self.build_channel()
-        raw_message = self.channel.basic_get(self.queue)
-        if not raw_message:
-            return None
-        return Message(raw_message, channel=self.channel)
+        message = self.backend.get(self.queue)
 
     def process_next(self):
         message = self.fetch()
@@ -138,13 +98,10 @@ class Consumer(object):
         return self.process_next()
 
     def wait(self):
-        if not self.channel.connection:
-            self.channel = self.build_channel()
         self.channel_open = True
-        self.channel.basic_consume(queue=self.queue, no_ack=True,
+        return self.backend.consume(queue=self.queue, no_ack=True,
                 callback=self.receive_callback,
                 consumer_tag=self.__class__.__name__)
-        yield self.channel.wait()
 
     def iterqueue(self, limit=None):
         for items_since_start in itertools.count():
@@ -155,9 +112,8 @@ class Consumer(object):
 
     def close(self):
         if self.channel_open:
-            self.channel.basic_cancel(self.__class__.__name__)
-        if getattr(self, "channel") and self.channel.is_open:
-            self.channel.close()
+            self.backend.cancel(self.__class__.__name__)
+        self.backend.close()
 
 
 class Publisher(object):
@@ -167,33 +123,23 @@ class Publisher(object):
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
         self.connection = connection()
+        self.backend = Backend(connection=connection)
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
         self.encoder = kwargs.get("encoder", serialize)
         self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
-        self.channel = self.build_channel()
 
-    def build_channel(self):
-        return self.connection.connection.channel()
-
-    def create_message(self, message_data):
-        # Recreate channel if connection lost.
-        if not self.channel.connection:
-            self.channel = self.build_channel()
-
+    def prepare_message(self, message_data):
         message_data = self.encoder(message_data)
-        message = amqp.Message(message_data)
-        message.properties["delivery_mode"] = self.delivery_mode
-        return message
+        return self.backend.prepare_message(message_data, self.delivery_mode)
 
     def send(self, message_data, delivery_mode=None):
-        message = self.create_message(message_data)
-        self.channel.basic_publish(message, exchange=self.exchange,
-                                              routing_key=self.routing_key)
+        message = self.prepare_message(message_data)
+        self.backend.publish(message, exchange=self.exchange,
+                                      routing_key=self.routing_key)
 
     def close(self):
-        if getattr(self, "channel") and self.channel.is_open:
-            self.channel.close()
+        self.backend.close()
 
 
 class Messaging(object):
