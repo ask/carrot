@@ -51,7 +51,7 @@ class BaseBackend(object):
     def ack(self, delivery_tag):
         pass
 
-    def reject(self, delivery_tag):
+    def reject(self, delivery_tag, requeue):
         pass
 
     def requeue(self, delivery_tag):
