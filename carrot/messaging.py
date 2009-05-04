@@ -72,6 +72,7 @@ class Consumer(object):
 
     def fetch(self):
         message = self.backend.get(self.queue)
+        return message
 
     def process_next(self):
         message = self.fetch()
@@ -161,10 +162,10 @@ class Messaging(object):
         self.routing_key = kwargs.get("routing_key", self.routing_key)
         self.publisher = self.publisher_cls(connection_cls,
                 exchange=self.exchange, routing_key=self.routing_key,
-                backend=backend)
+                backend=self.backend)
         self.consumer = self.consumer_cls(connection_cls, queue=self.queue,
                 exchange=self.exchange, routing_key=self.routing_key,
-                backend=backend)
+                backend=self.backend)
         self.consumer.receive = self.receive_callback
 
     def send(self, message_data, delivery_mode=None):
@@ -180,6 +181,17 @@ class Messaging(object):
     def next(self):
         return self.consumer.next()
 
+    def fetch(self):
+        return self.consumer.fetch()
+
     def close(self):
         self.consumer.close()
         self.publisher.close()
+
+    @property
+    def encoder(self):
+        return self.publisher.encoder
+
+    @property
+    def decoder(self):
+        return self.consumer.decoder
