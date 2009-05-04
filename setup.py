@@ -20,6 +20,7 @@ setup(
     url=carrot.__homepage__,
     platforms=["any"],
     packages=find_packages(exclude=['ez_setup']),
+    test_suite="nose.collector",
     install_requires=[
         'amqplib',
     ],
