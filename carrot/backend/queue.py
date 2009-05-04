@@ -12,7 +12,7 @@ class Backend(BaseBackend):
     def get(self, *args, **kwargs):
         if not mqueue.qsize():
             return None
-        return mqueue.get()
+        return Message(backend=self, body=mqueue.get())
 
     def consume(self, queue, no_ack, callback, consumer_tag):
         yield callback(mqueue.get())
