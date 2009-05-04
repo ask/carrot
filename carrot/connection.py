@@ -33,6 +33,21 @@ class AMQPConnection(object):
             self.connection.close()
 
 
+class DummyConnection(object):
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def connect(self):
+        pass
+
+    def close(self):
+        pass
+
+    @property
+    def host(self):
+        pass
+
+
 class DjangoAMQPConnection(AMQPConnection):
 
     def __init__(self, *args, **kwargs):
