@@ -1,4 +1,4 @@
-from carrot.backend.amqplib import Backend
+from carrot.backend.pyamqplib import Backend
 import warnings
 
 try:
@@ -34,7 +34,9 @@ class Consumer(object):
     def __init__(self, connection, queue=None, exchange=None, routing_key=None,
             **kwargs):
         self.connection = connection()
-        self.backend = Backend(connection=connection)
+        self.backend = kwargs.get("backend")
+        if not self.backend:
+            self.backend = Backend(connection=connection)
         self.queue = queue or self.queue
 
         self.exchange = exchange or self.exchange
@@ -123,7 +125,9 @@ class Publisher(object):
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
         self.connection = connection()
-        self.backend = Backend(connection=connection)
+        self.backend = kwargs.get("backend")
+        if not self.backend:
+            self.backend = Backend(connection=connection)
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
         self.encoder = kwargs.get("encoder", serialize)
@@ -151,13 +155,16 @@ class Messaging(object):
 
     def __init__(self, connection_cls, **kwargs):
         self.connection_cls = connection_cls
+        self.backend = kwargs.get("backend")
         self.exchange = kwargs.get("exchange", self.exchange)
         self.queue = kwargs.get("queue", self.queue)
         self.routing_key = kwargs.get("routing_key", self.routing_key)
         self.publisher = self.publisher_cls(connection_cls,
-                exchange=self.exchange, routing_key=self.routing_key)
+                exchange=self.exchange, routing_key=self.routing_key,
+                backend=backend)
         self.consumer = self.consumer_cls(connection_cls, queue=self.queue,
-                exchange=self.exchange, routing_key=self.routing_key)
+                exchange=self.exchange, routing_key=self.routing_key,
+                backend=backend)
         self.consumer.receive = self.receive_callback
 
     def send(self, message_data, delivery_mode=None):
