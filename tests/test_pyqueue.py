@@ -65,9 +65,11 @@ class TestMessaging(unittest.TestCase):
         m = TMessaging(connection_cls=DummyConnection, backend=b)
         self.assertTrue(m)
 
+        self.assertEquals(m.fetch(), None)
         mdata = {"name": "Cosmo Kramer"}
         m.send(mdata)
         next_msg = m.fetch()
         next_msg_data = m.decoder(next_msg.body)
         self.assertEquals(next_msg_data, mdata)
+        self.assertEquals(m.fetch(), None)
 
