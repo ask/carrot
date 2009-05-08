@@ -8,17 +8,23 @@ try:
     deserialize = cjson.decode
 except ImportError:
     try:
-        # Then try to find the latest version of simplejson.
-        # Later versions has C speedups which makes it pretty fast.
-        import simplejson
-        serialize = simplejson.dumps
-        deserialize = simplejson.loads
+        # Then try to find simplejson. If this is 2.6, it's called json
+        import json
+        serialize = json.dumps
+        deserialize = json.loads
     except ImportError:
-        # If all of the above fails, fallback to the simplejson
-        # embedded in Django.
-        from django.utils import simplejson
-        serialize = simplejson.dumps
-        deserialize = simplejson.loads
+        try:
+            # Then try to find the non-2.6 version of simplejson.
+            # Later versions has C speedups which makes it pretty fast.
+            import simplejson
+            serialize = simplejson.dumps
+            deserialize = simplejson.loads
+        except ImportError:
+            # If all of the above fails, fallback to the simplejson
+            # embedded in Django.
+            from django.utils import simplejson
+            serialize = simplejson.dumps
+            deserialize = simplejson.loads
 
 
 class Message(object):
