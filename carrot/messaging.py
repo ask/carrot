@@ -75,7 +75,7 @@ class Consumer(object):
 
     def __init__(self, connection, queue=None, exchange=None, routing_key=None,
             **kwargs):
-        self.connection = connection()
+        self.connection = connection
         self.queue = queue or self.queue
 
         self.exchange = exchange or self.exchange
@@ -192,7 +192,7 @@ class Publisher(object):
     delivery_mode = 2 # Persistent
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
-        self.connection = connection()
+        self.connection = connection
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
         self.encoder = kwargs.get("encoder", serialize)
@@ -233,14 +233,14 @@ class Messaging(object):
     publisher_cls = Publisher
     consumer_cls = Consumer
 
-    def __init__(self, connection_cls, **kwargs):
-        self.connection_cls = connection_cls
+    def __init__(self, connection, **kwargs):
+        self.connection = connection
         self.exchange = kwargs.get("exchange", self.exchange)
         self.queue = kwargs.get("queue", self.queue)
         self.routing_key = kwargs.get("routing_key", self.routing_key)
-        self.publisher = self.publisher_cls(connection_cls,
+        self.publisher = self.publisher_cls(connection,
                 exchange=self.exchange, routing_key=self.routing_key)
-        self.consumer = self.consumer_cls(connection_cls, queue=self.queue,
+        self.consumer = self.consumer_cls(connection, queue=self.queue,
                 exchange=self.exchange, routing_key=self.routing_key)
         self.consumer.receive = self._receive_callback
 

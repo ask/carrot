@@ -92,8 +92,10 @@ Example
     publishers and consumers:
 
         >>> from carrot.connection import DjangoAMQPConnection
-        >>> po_publisher = PostOfficePublisher(connection=DjangoAMQPConnection)
-        >>> po_consumer = PostOfficeConsumer(connection=DjangoAMQPConnection)
+        >>> po_publisher = PostOfficePublisher(
+        ...                             connection=DjangoAMQPConnection())
+        >>> po_consumer = PostOfficeConsumer(
+        ...                             connection=DjangoAMQPConnection())
 
 
     Then, finally, we can send and receive some messages:
