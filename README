@@ -4,7 +4,7 @@ carrot - Simple RabbitMQ/ZeroMQ (AMQP) messaging queue support for Python/Django
 
 :Authors:
     Ask Solem (askh@opera.com)
-:Version: 0.3.6
+:Version: 0.3.7
 
 Simple `RabbitMQ`_/`ZeroMQ`_ (`AMQP`_) messaging queue with optional support
 for `Django`_.
@@ -63,7 +63,7 @@ Example
         >>> class PostOfficeConsumer(Consumer):
         ...     queue = "po_box"
         ...     exchange = "sorting_room"
-        ...     routing_key = "json"
+        ...     routing_key = "jason"
         ...
         ...     def receieve(self, message_data, message):
         ...         """This is the method that is called whenever we
