@@ -1,6 +1,8 @@
 from amqplib import client_0_8 as amqp
 import warnings
 
+# Try to import a module that provides json parsing and emitting, starting
+# with the fastest alternative and falling back to the slower ones.
 try:
     # cjson is the fastest
     import cjson
@@ -8,17 +10,17 @@ try:
     deserialize = cjson.decode
 except ImportError:
     try:
-        # Then try to find simplejson. If this is 2.6, it's called json
-        import json
-        serialize = json.dumps
-        deserialize = json.loads
+        # Then try to find simplejson. Later versions has C speedups which
+        # makes it pretty fast.
+        import simplejson
+        serialize = simplejson.dumps
+        deserialize = simplejson.loads
     except ImportError:
         try:
-            # Then try to find the non-2.6 version of simplejson.
-            # Later versions has C speedups which makes it pretty fast.
-            import simplejson
-            serialize = simplejson.dumps
-            deserialize = simplejson.loads
+            # Then try to find the python 2.6 stdlib json module.
+            import json
+            serialize = json.dumps
+            deserialize = json.loads
         except ImportError:
             # If all of the above fails, fallback to the simplejson
             # embedded in Django.
@@ -35,7 +37,7 @@ class Message(object):
 
     def ack(self):
         """Acknowledge this message as being processed.,
-        
+
         This will remove the message from the queue."""
         return self.channel.basic_ack(self.delivery_tag)
 
@@ -126,7 +128,7 @@ class Consumer(object):
         By default, an ack is sent to the server signifying that the
         message has been accepted. This means that the ack and reject
         methods on the message object are no longer valid. If the ack argument
-        is set to False, this behaviour is disabled and applications are 
+        is set to False, this behaviour is disabled and applications are
         required to handle ack themselves."""
         message = self.fetch()
         if message:
@@ -137,7 +139,7 @@ class Consumer(object):
 
     def discard_all(self):
         """Discard all waiting messages.
-       
+
         Returns the number of messages discarded.
         *WARNING*: All incoming messages will be ignored and not processed.
         """
