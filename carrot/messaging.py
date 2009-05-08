@@ -107,7 +107,7 @@ class Consumer(object):
         message_data = self.decoder(message.body)
         self.receive(message_data, message)
 
-    def _fetch(self):
+    def fetch(self):
         if not self.channel.connection:
             self.channel = self._build_channel()
         raw_message = self.channel.basic_get(self.queue)
@@ -128,7 +128,7 @@ class Consumer(object):
         methods on the message object are no longer valid. If the ack argument
         is set to False, this behaviour is disabled and applications are 
         required to handle ack themselves."""
-        message = self._fetch()
+        message = self.fetch()
         if message:
             self._receive_callback(message)
             if ack:
@@ -143,7 +143,7 @@ class Consumer(object):
         """
         discarded_count = 0
         while True:
-            message = self._fetch()
+            message = self.fetch()
             if message is None:
                 return discarded_count
             message.ack()
