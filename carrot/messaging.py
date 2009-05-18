@@ -165,7 +165,8 @@ class Consumer(object):
         self.channel.basic_consume(queue=self.queue, no_ack=True,
                 callback=self._receive_callback,
                 consumer_tag=self.__class__.__name__)
-        yield self.channel.wait()
+        while True:
+            self.channel.wait()
 
     def iterqueue(self, limit=None):
         """Iterator that yields all pending messages, at most limit
