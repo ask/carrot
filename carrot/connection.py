@@ -18,6 +18,7 @@ class AMQPConnection(object):
         self.virtual_host = virtual_host or self.virtual_host
         self.port = port or self.port
         self.insist = kwargs.get("insist", self.insist)
+        self.connection = None
 
         self.connect()
 
@@ -29,7 +30,7 @@ class AMQPConnection(object):
                                           insist=self.insist)
 
     def close(self):
-        if getattr(self, "connection"):
+        if self.connection:
             self.connection.close()
 
 
