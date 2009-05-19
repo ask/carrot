@@ -253,6 +253,9 @@ class Messaging(object):
     def send(self, message_data, delivery_mode=None):
         self.publisher.send(message_data, delivery_mode=delivery_mode)
 
+    def fetch(self):
+        return self.consumer.fetch()
+
     def receive(self, message_data, message):
         raise NotImplementedError(
                 "Messaging classes must implement the receive method")
