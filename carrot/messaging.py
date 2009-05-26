@@ -1,3 +1,93 @@
+"""
+
+Creating a connection
+---------------------
+
+    If you're using Django you can use the
+    :class:`carrot.connection.DjangoAMQPConnection` class, by setting the
+    following variables in your ``settings.py``::
+
+       AMQP_SERVER = "localhost"
+       AMQP_PORT = 5672
+       AMQP_USER = "test"
+       AMQP_PASSWORD = "secret"
+       AMQP_VHOST = "/test"
+
+    Then create a connection by doing:
+
+        >>> from carrot.connection import DjangoAMQPConnection
+        >>> amqpconn = DjangoAMQPConnection()
+
+    If you're not using Django, you can create a connection manually by using
+    :class:`carrot.messaging.AMQPConnection`.
+
+    >>> from carrot.connection import AMQPConnection
+    >>> amqpconn = AMQPConnection(hostname="localhost", port=5672,
+    ...                           userid="test", password="test",
+    ...                           vhost="test")
+
+
+Sending messages using a Publisher
+----------------------------------
+
+    >>> from carrot.messaging import Publisher
+    >>> publisher = Publisher(connection=amqpconn,
+    ...                       exchange="feed", routing_key="importer")
+    >>> publisher.send({"import_feed": "http://cnn.com/rss/edition.rss"})
+    >>> publisher.close()
+
+Receiving messages using a Consumer
+-----------------------------------
+
+    >>> from carrot.messaging import Consumer
+    >>> consumer = Consumer(connection=amqpconn, queue="feed",
+                            exchange="feed", routing_key="importer")
+    >>> def import_feed_callback(message_data, message)
+    ...     feed_url = message_data.get("import_feed")
+    ...     if not feed_url:
+    ...         message.reject()
+    ...     # something importing this feed url
+    ...     # import_feed(feed_url)
+    ...     message.ack()
+    >>> consumer.register_callback(import_feed_callback)
+    >>> consumer.wait() # Go into the consumer loop.
+
+
+Subclassing the messaging classes
+---------------------------------
+
+The :class:`Consumer`, and :class:`Publisher` classes are also designed
+for subclassing. Another way of defining the publisher and consumer is
+
+    >>> from carrot.messaging import Publisher, Consumer
+    >>> class FeedPublisher(Publisher):
+    ...     exchange = "feed"
+    ...     routing_key = "importer"
+    ... 
+    ...     def feed_import(feed_url):
+    ...         return self.send({"action": "import_feed",
+    ...                           "feed_url": feed_url})
+    >>> class FeedConsumer(Consumer):
+    ...     queue = "feed"
+    ...     exchange = "feed"
+    ...     routing_key = "importer"
+    ...
+    ...     def receive(self, message_data, message):
+    ...         action = message_data.get("action")
+    ...         if not action:
+    ...             message.reject()
+    ...         if action == "import_feed":
+    ...             # something importing this feed
+    ...             # import_feed(message_data["feed_url"])
+    ...         else:
+    ...             raise Exception("Unknown action: %s" % action)
+    >>> publisher = FeedPublisher(connection=amqpconn)
+    >>> publisher.import_feed("http://cnn.com/rss/edition.rss")
+    >>> publisher.close()
+    >>> consumer = FeedConsumer(connection=amqpconn)
+    >>> consumer.wait() # Go into the consumer loop.
+
+"""
 from amqplib import client_0_8 as amqp
 import warnings
 
@@ -30,10 +120,42 @@ except ImportError:
 
 
 class Message(object):
-    """Wrapper around :class:`amqplib.client_0_8.Message`."""
-    def __init__(self, amqp_message, channel):
+    """A message received by the broker.
+
+    Usually you don't insantiate message objects yourself, but receive
+    them using a :class:`Consumer`.
+   
+    :param amqp_message: see :attr:`amqp_message`.
+
+    :param channel: see :attr:`channel`.
+
+    :param decoder: see :attr:`decoder`.
+
+
+    .. attribute:: amqp_message
+
+        A :class:`amqplib.client_0_8.basic_message.Message` instance.
+
+    .. attribute:: channel
+
+        The AMQP channel. A :class:`amqplib.client_0_8.channel.Channel` instance.
+
+    .. attribute:: decoder
+
+        A function able to deserialize the serialized message data.
+    
+    """
+    def __init__(self, amqp_message, channel, decoder=None):
+        if not decoder:
+            decoder = deserialize
         self.amqp_message = amqp_message
         self.channel = channel
+        self.decoder = decoder
+
+    def decode(self):
+        """Deserialize the message body, returning the original
+        python structure sent by the publisher."""
+        return self.decoder(message.body)
 
     def ack(self):
         """Acknowledge this message as being processed.,
@@ -57,19 +179,156 @@ class Message(object):
 
     @property
     def body(self):
+        """The message body."""
         return self.amqp_message.body
 
     @property
     def delivery_tag(self):
+        """The message delivery tag, uniquely identifying this message."""
         return self.amqp_message.delivery_tag
 
 
 class Consumer(object):
-    """Superclass for all consumers. Subclasses need to implement the
-    receive method"""
-    queue = ""
-    exc§hange = ""
-    routing_key = ""
+    """Message consumer.
+
+    :param connection: see :attr:`connection`.
+    :param queue: see :attr:`queue`.
+    :param exchange: see :attr:`exchange`.
+    :param routing_key: see :attr:`routing_key`.
+
+    :keyword durable: see :attr:`durable`.
+    :keyword auto_delete: see :attr:`auto_delete`.
+    :keyword exclusive: see :attr:`exclusive`.
+    :keyword exchange_type: see :attr:`exchange_type`.
+    :keyword decoder: see :attr:`decoder`.
+
+    
+    .. attribute:: connection
+
+        A :class:`carrot.connection.AMQPConnection` instance.
+
+    .. attribute:: queue
+
+       Name of the queue.
+
+    .. attribute:: exchange
+
+        Name of the exchange the queue binds to.
+
+    .. attribute:: routing_key
+
+        The routing key (if any). The interpretation of the routing key
+        depends on the value of the :attr:`exchange_type` attribute:
+
+            * direct exchange
+
+                Matches if the routing key property of the message and
+                the :attr:`routing_key` attribute are identical.
+
+            * fanout exchange
+
+                Always matches, even if the binding does not have a key.
+
+            * topic exchange
+
+                Matches the routing key property of the message by a primitive
+                pattern matching scheme. The message routing key then consists
+                of words separated by dots (``"."``, like domain names), and
+                two special characters are available; star (``"*"``) and hash
+                (``"#"``). The star matches any word, and the hash matches
+                zero or more words. For example ``"*.stock.#" matches the
+                routing keys ``"usd.stock"`` and ``"eur.stock.db"`` but not
+                ``"stock.nasdaq"``.
+                
+
+    .. attribute:: durable
+
+        Durable exchanges remain active when a server restarts. Non-durable
+        exchanges (transient exchanges) are purged when a server restarts.
+        Default is ``True``.
+
+    .. attribute:: auto_delete
+
+        If set, the exchange is deleted when all queues have finished
+        using it. Default is ``False``.
+
+    .. attribute:: exclusive
+
+        Exclusive queues may only be consumer from by the current connection.
+        When :attr:`exclusive` is on, this also implies :attr:`auto_delete`.
+        Default is ``False``.
+
+    .. attribute:: exchange_type
+
+        AMQP defines four default exchange types (routing algorithms) that
+        covers most of the common messaging use cases. An AMQP broker can
+        also define additional exchange types, so see your message brokers
+        manual for more information about available exchange types.
+
+            *direct
+
+                Direct match between the routing key in the message, and the
+                routing criteria used when a queue is bound to this exchange.
+
+            *topic
+
+                Wildcard match between the routing key and the routing pattern
+                specified in the binding. The routing key is treated as zero
+                or more words delimited by ``"."`` and supports special
+                wildcard characters. ``"*"`` matches a single word and ``"#"``
+                matches zero or more words.
+
+            *fanout
+
+                Queues are bound to this exchange with no arguments. Hence any
+                message sent to this exchange will be forwarded to all queues
+                bound to this exchange.
+
+            *headers
+
+                Queues are bound to this exchange with a table of arguments
+                containing headers and values (optional). A special argument
+                named "x-match" determines the matching algorithm, where
+                ``"all"`` implies an ``AND`` (all pairs must match) and
+                ``"any"`` implies ``OR`` (at least one pair must match).
+
+                *NOTE*: carrot has poor support for header exchanges at
+                    this point.
+
+            This description of AMQP exchange types was shamelessly stolen
+            from the blog post `AMQP in 10 minutes: Part 4`_ by
+            Rajith Attapattu. Recommended reading.
+
+            .. _`AMQP in 10 minutes: Part 4`: http://bit.ly/amqp-exchange-types
+
+    .. attribute:: decoder
+
+        A function able to deserialize the message body.
+
+    .. attribute:: callbacks
+
+        List of registered callbacks to trigger when a message is received
+        by :meth:`wait`, :meth:`process_next` or :meth:`iterqueue`.
+
+    :raises `amqplib.client_0_8.channel.AMQPChannelException`: if the queue is
+        exclusive and the queue already exists and is owned by another
+        connection.
+
+    
+    Example Usage
+
+        >>> consumer = Consumer(connection=DjangoAMQPConnection(),
+        ...                     queue="foo", exchange="foo", routing_key="foo") 
+        >>> def process_message(message_data, message):
+        ...     print("Got message %s: %s" % (
+        ...             message.delivery_tag, message_data))
+        >>> consumer.register_callback(process_message)
+        >>> consumer.wait() # Go into receive loop
+    
+    """
+    queue = None
+    exchange = None
+    routing_key = None
     durable = True
     exclusive = False
     auto_delete = False
@@ -79,16 +338,23 @@ class Consumer(object):
     def __init__(self, connection, queue=None, exchange=None, routing_key=None,
             **kwargs):
         self.connection = connection
-        self.queue = queue or self.queue
 
+        # Binding.
+        self.queue = queue or self.queue
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
+
         self.decoder = kwargs.get("decoder", deserialize)
         self.durable = kwargs.get("durable", self.durable)
         self.exclusive = kwargs.get("exclusive", self.exclusive)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
         self.channel = self._build_channel()
+        self.callbacks = []
+
+        # durable implies auto-delete.
+        if self.durable:
+            sel.auto_delete = True
 
     def _build_channel(self):
         channel = self.connection.connection.channel()
@@ -107,30 +373,84 @@ class Consumer(object):
         return channel
 
     def _receive_callback(self, message):
-        message_data = self.decoder(message.body)
+        message_data = self.message_to_python(message)
         self.receive(message_data, message)
 
+    def message_to_python(self, message):
+        """Decode encoded message back to python.
+       
+        :param message: A :class:`Message` instance.
+
+        """
+        return self.decoder(message.body)
+
     def fetch(self):
+        """Receive the next message waiting on the queue.
+
+        :returns: A :class:`Message` instance,
+            or ``None`` if there's no messages to be received.
+
+        """
         if not self.channel.connection:
             self.channel = self._build_channel()
         raw_message = self.channel.basic_get(self.queue)
         if not raw_message:
             return None
-        return Message(raw_message, channel=self.channel)
+        return Message(raw_message, channel=self.channel,
+                       decoder=self.decoder)
 
     def receive(self, message_data, message):
-        """Called when a new message is received. Must be implemented in
-        subclasses"""
-        raise NotImplementedError(
-                "Consumers must implement the receive method")
+        """This method is called when a new message is received by 
+        running :meth:`wait`, :meth:`process_next` or :meth:`iterqueue`.
+
+        When a message is received, it passes the message on to the
+        callbacks listed in the :attr:`callbacks` attribute.
+        You can register callbacks using :meth:`register_callback`.
+
+        :param message_data: The deserialized message data.
+
+        :param message: The :class:`Message` instance.
+        
+        :raises NotImplementedError: If no callbacks has been registered.
+
+        """
+        if not self.callbacks:
+            raise NotImplementError("No consumer callbacks registered")
+        for callback in self.callbacks:
+            callback(message_data, message)
+
+    def register_callback(self, callback):
+        """Register a callback function to be triggered by :meth:`receive`.
+
+        The ``callback`` function must take two arguments:
+
+            * message_data
+
+                The deserialized message data
+
+            * message
+
+                The :class:`Message` instance.
+        """
+        self.callbacks.append(callback)
 
     def process_next(self, ack=True):
-        """Returns a pending message from the queue.
-        By default, an ack is sent to the server signifying that the
-        message has been accepted. This means that the ack and reject
-        methods on the message object are no longer valid. If the ack argument
-        is set to False, this behaviour is disabled and applications are
-        required to handle ack themselves."""
+        """Processes the next pending message on the queue.
+
+        This function tries to fetch a message from the queue, and
+        if successful passes the message on to :meth:`receive`.
+
+        :keyword ack: By default, an ack is sent to the server
+            signifying that the message has been accepted. This means
+            that the :meth:`Message.ack` and :meth:`Message.reject` methods
+            on the message object are no longer valid.
+            If the ack argument is set to ``False``, this behaviour is
+            disabled and the receiver is required to manually handle
+            acknowledgment.
+
+        :returns: The resulting :class:`Message` object.
+
+        """
         message = self.fetch()
         if message:
             self._receive_callback(message)
@@ -176,13 +496,20 @@ class Consumer(object):
                 discarded_count = discarded_count + 1
 
     def next(self):
-        """*DEPRECATED*: Return the next pending message. Deprecated in favour
-        of :meth:`process_next`"""
+        """*DEPRECATED*: Process the next pending message.
+        Deprecated in favour of :meth:`process_next`"""
         warnings.warn("next() is deprecated, use process_next() instead.",
                 DeprecationWarning)
         return self.process_next()
 
     def wait(self):
+        """Go into consume mode.
+
+        This runs an infinite loop, processing all incoming messages
+        using :meth:`receive` to apply the message to all registered
+        callbacks.
+
+        """
         if not self.channel.connection:
             self.channel = self._build_channel()
         self.channel_open = True
@@ -193,8 +520,14 @@ class Consumer(object):
             self.channel.wait()
 
     def iterqueue(self, limit=None):
-        """Iterator that yields all pending messages, at most limit
-        messages. If limit is not set, return all messages"""
+        """Infinite iterator yielding pending messages.
+
+        Obviously you shouldn't consume the whole iterator at
+        once, without using a ``limit``.
+
+        :keyword limit: If set, the iterator stops when it has processed
+            this number of messages in total.
+        """
         for items_since_start in itertools.count():
             item = self.next()
             if item is None or (limit and items_since_start > limit):
@@ -202,9 +535,10 @@ class Consumer(object):
             yield item
 
     def close(self):
-        """Close the connection to the queue. Any operation that requires
-        a connection will re-establish the connection even if close was
-        called explicitly."""
+        """Close the channel to the queue.
+        
+        Any operation that requires a connection will re-establish the
+        connection even if close was called explicitly.  """
         if self.channel_open:
             self.channel.basic_cancel(self.__class__.__name__)
         if getattr(self, "channel") and self.channel.is_open:
@@ -212,8 +546,56 @@ class Consumer(object):
 
 
 class Publisher(object):
-    """Superclass for Publishers. Subclasses are not required to implement
-    any methods"""
+    """Message publisher.
+
+    :param connection: see :attr:`connection`.
+
+    :param exchange: see :attr:`exchange`.
+
+    :param routing_key: see :attr:`routing_key`.
+
+    :param encoder: see :attr:`encoder`.
+
+
+    .. attribute:: connection
+
+        The AMQP connection. A :class:`carrot.connection.AMQPConnection`
+        instance.
+
+    .. attribute:: exchange
+
+        Name of the exchange we send messages to.
+
+    .. attribute:: routing_key
+
+        The routing key added to all messages sent using this publisher.
+        See :attr:`Consumer.routing_key` for more information.
+
+    .. attribute:: delivery_mode
+
+        The default delivery mode used for messages. The value is an integer.
+        The following delivery modes are supported by (at least) RabbitMQ:
+
+            * 1
+
+                The message is non-persistent. Which means it is stored in
+                memory only, and is lost if the server dies or restarts.
+
+            * 2
+                The message is persistent. Which means the message is
+                stored both in-memory, and on disk, and therefore
+                preserved if the server dies or restarts.
+
+        The default value is ``2`` (persistent).
+
+    .. attribute:: encoder
+
+        The function responsible for encoding the message data passed
+        to :meth:`send`. Note that any consumer of the messages sent
+        must have a decoder supporting the serialization scheme.
+
+    """
+
     exchange = ""
     routing_key = ""
     delivery_mode = 2 # Persistent
@@ -230,13 +612,22 @@ class Publisher(object):
         return self.connection.connection.channel()
 
     def create_message(self, message_data):
+        """With any data, serialize it and encapsulate it in a AMQP
+        message with the proper headers set."""
         message_data = self.encoder(message_data)
         message = amqp.Message(message_data)
         message.properties["delivery_mode"] = self.delivery_mode
         return message
 
     def send(self, message_data, delivery_mode=None):
-        """Send message data to queue"""
+        """Send a message.
+       
+        :param message_data: The message data to send. Can be a list,
+            dictionary or a string.
+
+        :keyword delivery_mode: Override the default :attr:`delivery_mode`.
+
+        """
         message = self.create_message(message_data)
 
         # Recreate channel if connection lost.
@@ -244,16 +635,21 @@ class Publisher(object):
             self.channel = self._build_channel()
 
         self.channel.basic_publish(message, exchange=self.exchange,
-                                              routing_key=self.routing_key)
+                                   routing_key=self.routing_key)
+
     def close(self):
-        """Close connection to queue. Note, whenever send() is called, the
-        connection is re-established, even if close() was called explicitly."""
+        """Close connection to queue.
+        
+        *Note* Whenever :meth:`send` is called, the connection is
+        re-established, even if :meth:`close` was called explicitly.
+        
+        """
         if getattr(self, "channel") and self.channel.is_open:
             self.channel.close()
 
 
 class Messaging(object):
-    """Superclass for clases that are able to both receive and send messages"""
+    """A message publisher and consumer."""
     queue = ""
     exchange = ""
     routing_key = ""
