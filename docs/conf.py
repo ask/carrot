@@ -17,7 +17,7 @@ import os
 # If your extensions are in another directory, add it here. If the directory
 # is relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
-sys.path.append("../carrot")
+sys.path.insert(0, "../carrot")
 import carrot
 
 # General configuration
