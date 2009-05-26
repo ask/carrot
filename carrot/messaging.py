@@ -30,7 +30,7 @@ except ImportError:
 
 
 class Message(object):
-    """Wrapper around amqplib.client_0_8.Message."""
+    """Wrapper around :class:`amqplib.client_0_8.Message`."""
     def __init__(self, amqp_message, channel):
         self.amqp_message = amqp_message
         self.channel = channel
@@ -43,7 +43,8 @@ class Message(object):
 
     def reject(self):
         """Reject this message.
-        The message will then be discarded by the server.
+
+        The message will be discarded by the server.
         """
         return self.channel.basic_reject(self.delivery_tag, requeue=False)
 
@@ -67,7 +68,7 @@ class Consumer(object):
     """Superclass for all consumers. Subclasses need to implement the
     receive method"""
     queue = ""
-    exchange = ""
+    exc§hange = ""
     routing_key = ""
     durable = True
     exclusive = False
@@ -137,23 +138,46 @@ class Consumer(object):
                 message.ack()
         return message
 
-    def discard_all(self):
+    def discard_all(self, filter=None):
         """Discard all waiting messages.
 
-        Returns the number of messages discarded.
+        :param filter: A filter function to only discard the messages this
+            filter returns.
+
+        :returns: the number of messages discarded.
+
         *WARNING*: All incoming messages will be ignored and not processed.
+
+        Example using filter:
+
+            >>> def waiting_feeds_only(message):
+            ...     try:
+            ...         message_data = simplejson.loads(message.body)
+            ...     except: # Should probably be more specific.
+            ...         pass
+            ...
+            ...     if message_data.get("type") == "feed":
+            ...         return True
+            ...     else:
+            ...         return False
         """
         discarded_count = 0
         while True:
             message = self.fetch()
             if message is None:
                 return discarded_count
-            message.ack()
-            discarded_count = discarded_count + 1
+
+            discard_message = True
+            if filter and not filter(message):
+                discard_message = False
+
+            if discard_message:
+                message.ack()
+                discarded_count = discarded_count + 1
 
     def next(self):
-        """DEPRECATED: Return the next pending message. Deprecated in favour
-        of process_next"""
+        """*DEPRECATED*: Return the next pending message. Deprecated in favour
+        of :meth:`process_next`"""
         warnings.warn("next() is deprecated, use process_next() instead.",
                 DeprecationWarning)
         return self.process_next()
