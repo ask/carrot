@@ -1,5 +1,5 @@
 from Queue import Queue
-from carrot.backend import BaseMessage, BaseBackend
+from carrot.backends import BaseMessage, BaseBackend
 
 mqueue = Queue()
 

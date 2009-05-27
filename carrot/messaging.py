@@ -88,7 +88,7 @@ for subclassing. Another way of defining the publisher and consumer is
     >>> consumer.wait() # Go into the consumer loop.
 
 """
-from carrot.backend.pyamqplib import Backend as AMQPLibBackend
+from carrot.backends.pyamqplib import Backend as AMQPLibBackend
 from carrot.serialize import serialize, deserialize
 import warnings
 

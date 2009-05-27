@@ -5,8 +5,8 @@ import uuid
 sys.path.insert(0, os.pardir)
 sys.path.append(os.getcwd())
 
-from carrot.backend.queue import Message as PyQueueMessage
-from carrot.backend.queue import Backend as PyQueueBackend
+from carrot.backends.queue import Message as PyQueueMessage
+from carrot.backends.queue import Backend as PyQueueBackend
 from carrot.connection import DummyConnection
 from carrot.messaging import Messaging
 
