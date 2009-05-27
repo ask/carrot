@@ -107,6 +107,7 @@ class Consumer(object):
     :keyword exclusive: see :attr:`exclusive`.
     :keyword exchange_type: see :attr:`exchange_type`.
     :keyword decoder: see :attr:`decoder`.
+    :keyword backend: see :attr:`backend`.
 
     
     .. attribute:: connection
@@ -210,6 +211,10 @@ class Consumer(object):
     .. attribute:: decoder
 
         A function able to deserialize the message body.
+
+    .. attribute:: backend
+
+        The messaging backend used. Defaults to the ``pyamqplib`` backend.
 
     .. attribute:: callbacks
 
@@ -431,10 +436,7 @@ class Consumer(object):
             yield item
 
     def close(self):
-        """Close the channel to the queue.
-        
-        Any operation that requires a connection will re-establish the
-        connection even if close was called explicitly.  """
+        """Close the channel to the queue."""
         if self.channel_open:
             self.backend.cancel(self.__class__.__name__)
         self.backend.close()
@@ -444,12 +446,11 @@ class Publisher(object):
     """Message publisher.
 
     :param connection: see :attr:`connection`.
-
     :param exchange: see :attr:`exchange`.
-
     :param routing_key: see :attr:`routing_key`.
 
-    :param encoder: see :attr:`encoder`.
+    :keyword encoder: see :attr:`encoder`.
+    :keyword backend: see :attr:`backend`.
 
 
     .. attribute:: connection
@@ -489,6 +490,10 @@ class Publisher(object):
         to :meth:`send`. Note that any consumer of the messages sent
         must have a decoder supporting the serialization scheme.
 
+    .. attribute:: backend
+
+        The backend used. Defaults to the ``pyamqplib`` backend.
+
     """
 
     exchange = ""
@@ -526,12 +531,7 @@ class Publisher(object):
                                       routing_key=self.routing_key)
 
     def close(self):
-        """Close connection to queue.
-        
-        *Note* Whenever :meth:`send` is called, the connection is
-        re-established, even if :meth:`close` was called explicitly.
-        
-        """
+        """Close connection to queue."""
         self.backend.close()
 
 
