@@ -1,6 +1,6 @@
 """carrot.messaging"""
 from carrot.backends import DefaultBackend
-from carrot.serialize import serialize, deserialize
+from carrot.serialization import serialize, deserialize
 import warnings
 
 

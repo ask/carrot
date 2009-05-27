@@ -1,6 +1,6 @@
 from amqplib import client_0_8 as amqp
 from carrot.backends.base import BaseMessage, BaseBackend
-from carrot.serialize import serialize, deserialize
+from carrot.serialization import serialize, deserialize
 
 class Message(BaseMessage):
     """A message received by the broker.

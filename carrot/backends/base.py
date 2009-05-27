@@ -1,4 +1,4 @@
-from carrot.serialize import deserialize
+from carrot.serialization import deserialize
 
 class BaseMessage(object):
     """Base class for received messages."""
