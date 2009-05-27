@@ -25,10 +25,15 @@ setup(
         'amqplib',
     ],
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Framework :: Django",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
+        "License :: OSI Approved :: BSD License",
+        "Intended Audience :: Developers",
+        "Topic :: Communications",
+        "Topic :: System :: Distributed Computing",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     long_description=codecs.open('README.rst', "r", "utf-8").read(),
 )
