@@ -41,7 +41,7 @@ Receiving messages using a Consumer
 
     >>> from carrot.messaging import Consumer
     >>> consumer = Consumer(connection=amqpconn, queue="feed",
-                            exchange="feed", routing_key="importer")
+    ...                     exchange="feed", routing_key="importer")
     >>> def import_feed_callback(message_data, message)
     ...     feed_url = message_data.get("import_feed")
     ...     if not feed_url:
@@ -472,7 +472,7 @@ class Consumer(object):
 
             >>> def waiting_feeds_only(message):
             ...     try:
-            ...         message_data = simplejson.loads(message.body)
+            ...         message_data = message.decode()
             ...     except: # Should probably be more specific.
             ...         pass
             ...
