@@ -4,6 +4,8 @@
 *.sqlite
 *.sqlite-journal
 settings_local.py
+.build
+build
 .*.sw[po]
 dist/
 *.egg-info

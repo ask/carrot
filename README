@@ -4,7 +4,7 @@ carrot - Simple RabbitMQ/ZeroMQ (AMQP) messaging queue support for Python/Django
 
 :Authors:
     Ask Solem (askh@opera.com)
-:Version: 0.3.6
+:Version: 0.3.9
 
 Simple `RabbitMQ`_/`ZeroMQ`_ (`AMQP`_) messaging queue with optional support
 for `Django`_.
@@ -59,13 +59,13 @@ Example
         >>> class PostOfficePublisher(Publisher):
         ...     exchange = "sorting_room"
         ...     routing_key = "jason"
-        
+
         >>> class PostOfficeConsumer(Consumer):
         ...     queue = "po_box"
         ...     exchange = "sorting_room"
-        ...     routing_key = "json"
+        ...     routing_key = "jason"
         ...
-        ...     def receieve(self, message_data, message):
+        ...     def receive(self, message_data, message):
         ...         """This is the method that is called whenever we
         ...         receieve a message in this queue."""
         ...         print("Received: %s" % message_data)
@@ -77,7 +77,7 @@ Example
     There are lots of other options for producers and consumers for which
     the only documentation right now is the source code (sorry!)
 
-    To start sending and receveing messages with these classes, you first
+    To start sending and receiving messages with these classes, you first
     have to configure the AMQP server for your django app. If you have a
     `RabbitMQ`_ server running on localhost you can add these settings 
     to your ``settings.py``,::
@@ -92,16 +92,18 @@ Example
     publishers and consumers:
 
         >>> from carrot.connection import DjangoAMQPConnection
-        >>> po_publisher = PostOfficePublisher(connection=DjangoAMQPConnection)
-        >>> po_consumer = PostOfficeConsumer(connection=DjangoAMQPConnection)
+        >>> po_publisher = PostOfficePublisher(
+        ...                             connection=DjangoAMQPConnection())
+        >>> po_consumer = PostOfficeConsumer(
+        ...                             connection=DjangoAMQPConnection())
 
 
     Then, finally, we can send and receive some messages:
 
         >>> po_publisher.send({"My message": ["foo", "bar", "baz"]})
         >>> po_publisher.close()
-        >>> po_consumer.next()
-        Receieved: {"My message": ["foo", "bar", "baz"]}
+        >>> po_consumer.process_next()
+        Received: {"My message": ["foo", "bar", "baz"]}
         
 
 .. _`JSON`: http://www.json.org/
