@@ -1,5 +1,5 @@
 """Easy RabbitMQ/ZeroMQ (AMQP) messaging queue."""
-VERSION = (0, 3, 9)
+VERSION = (0, 4, "0-pre1")
 __version__ = ".".join(map(str, VERSION))
 __author__ = "Ask Solem"
 __contact__ = "askh@opera.com"
