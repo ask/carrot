@@ -49,7 +49,7 @@ class Message(BaseMessage):
             "body": amqp_message.body,
             "delivery_tag": amqp_message.delivery_tag})
 
-        super(BaseMessage, self).__init__(backend, **kwargs)
+        super(Message, self).__init__(backend, **kwargs)
 
 
 class Backend(BaseBackend):

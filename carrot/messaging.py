@@ -232,9 +232,9 @@ class Consumer(object):
         >>> consumer.wait() # Go into receive loop
     
     """
-    queue = None
-    exchange = None
-    routing_key = None
+    queue = ""
+    exchange = ""
+    routing_key = ""
     durable = True
     exclusive = False
     auto_delete = False
@@ -247,7 +247,7 @@ class Consumer(object):
         self.backend = kwargs.get("backend")
         self.decoder = kwargs.get("decoder", deserialize)
         if not self.backend:
-            self.backend = DefaeultBackend(connection=connection,
+            self.backend = DefaultBackend(connection=connection,
                                            decoder=self.decoder)
         self.queue = queue or self.queue
 
@@ -256,6 +256,7 @@ class Consumer(object):
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
 
+        # Options
         self.durable = kwargs.get("durable", self.durable)
         self.exclusive = kwargs.get("exclusive", self.exclusive)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
