@@ -248,7 +248,7 @@ class Consumer(object):
         self.decoder = kwargs.get("decoder", deserialize)
         if not self.backend:
             self.backend = DefaultBackend(connection=connection,
-                                           decoder=self.decoder)
+                                          decoder=self.decoder)
         self.queue = queue or self.queue
 
         # Binding.
@@ -354,7 +354,8 @@ class Consumer(object):
             disabled and the receiver is required to manually handle
             acknowledgment.
 
-        :returns: The resulting :class:`carrot.backends.base.BaseMessage` object.
+        :returns: The resulting :class:`carrot.backends.base.BaseMessage`
+            object.
 
         """
         message = self.fetch()
@@ -400,13 +401,6 @@ class Consumer(object):
             if discard_message:
                 message.ack()
                 discarded_count = discarded_count + 1
-
-    def next(self):
-        """*DEPRECATED*: Process the next pending message.
-        Deprecated in favour of :meth:`process_next`"""
-        warnings.warn("next() is deprecated, use process_next() instead.",
-                DeprecationWarning)
-        return self.process_next()
 
     def wait(self):
         """Go into consume mode.
