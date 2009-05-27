@@ -41,7 +41,8 @@ class Backend(BaseBackend):
         self.channel.basic_consume(queue=queue, no_ack=no_ack,
                                    callback=callback,
                                    consumer_tag=consumer_tag)
-        yield self.channel.wait()
+        while True:
+            self.channel.wait()
 
     def cancel(self, consumer_tag):
         self.channel.basic_cancel(consumer_tag)
