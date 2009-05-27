@@ -1,3 +1,15 @@
+"""
+
+.. function:: serialize(obj)
+
+    Serialize the object to JSON.
+
+.. function:: deserialize(obj)
+
+    Deserialize JSON-encoded object to a Python object.
+
+"""
+
 # Try to import a module that provides json parsing and emitting, starting
 # with the fastest alternative and falling back to the slower ones.
 try:
