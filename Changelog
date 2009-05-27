@@ -2,12 +2,40 @@
 Change history
 ==============
 
-0.3.9 :date:`2009-05-18 4:49 P.M CET` :author:askh@opera.com
+0.4.0-pre1 :date:`2009-05-27 04:27 P.M CET` :author:askh@opera.com
+------------------------------------------------------------------
+
+	* This version introduces backends. The consumers and publishers
+		all have an associated backend. Currently there are two backends
+		available; ``pyamqlib`` and ``pyqueue``. The ``amqplib`` backend
+		is for production use, while the ``Queue`` backend is for use while
+		unit testing.
+
+	* Consumer/Publisher operations no longer re-establishes the connection
+	  if the connection has been closed.
+
+	* ``Consumer.next`` has been deprecated for a while, and has now been
+	  removed.
+
+	* Message objects now have a ``decode`` method, to deserialize the
+	  message body.
+
+	* You can now use the Consumer class standalone, without subclassing,
+	  by registering callbacks by using ``Consumer.register_callback``.
+
+	* Ability to filter messages in ``Consumer.discard_all``.
+
+	* carrot now includes a basic unit test suite, which hopefully will
+		be more complete in later releases.
+
+	* carrot now uses the Sphinx documentation system.
+
+0.3.9 :date:`2009-05-18 04:49 P.M CET` :author:askh@opera.com
 --------------------------------------------------------------
 
 	* Consumer.wait() now works properly again. Thanks Alexander Solovyov!
 
-0.3.8 :date:`2009-05-11 2:14 P.M CET` :author:askh@opera.com
+0.3.8 :date:`2009-05-11 02:14 P.M CET` :author:askh@opera.com
 --------------------------------------------------------------
 
 	* Rearranged json module import order.
@@ -27,17 +55,17 @@ Change history
 	publisher/consumer.
 
 
-0.2.1 :date:`2009-03-24 5:48 P.M CET` :author:askh@opera.com
+0.2.1 :date:`2009-03-24 05:48 P.M CET` :author:askh@opera.com
 --------------------------------------------------------------
 
 * Fix typo "package" -> "packages" in setup.py
 
-0.2.0 :date:`2009-03-24 5:23 P.M CET` :author:askh@opera.com
+0.2.0 :date:`2009-03-24 05:23 P.M CET` :author:askh@opera.com
 --------------------------------------------------------------
 
 * hasty bugfix release, fixed syntax errors.
 
-0.1.0 :date:`2009-03-24 5:16 P.M CET` :author:askh@opera.com
+0.1.0 :date:`2009-03-24 05:16 P.M CET` :author:askh@opera.com
 --------------------------------------------------------------
 
 * Initial release
