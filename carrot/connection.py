@@ -20,11 +20,11 @@ class AMQPConnection(object):
 
     .. attribute:: userid
 
-        The name of the user we authenticate to the server as.
+        A valid username used to authenticate to the server.
 
     .. attribute:: password
 
-        The password for the :attr:`userid`.
+        The password used to authenticate to the server.
 
     .. attribute:: virtual_host
 
@@ -47,7 +47,7 @@ class AMQPConnection(object):
 
     .. attribute:: connect_timeout
 
-        The timeout in seconds before we give up on connecting to the server.
+        The timeout in seconds before we give up connecting to the server.
         The default is no timeout.
 
     .. attribute:: ssl
@@ -82,6 +82,7 @@ class AMQPConnection(object):
         self.connect()
 
     def connect(self):
+        """Establish a connection to the AMQP server."""
         self.connection = amqp.Connection(host=self.host,
                                         userid=self.userid,
                                         password=self.password,
@@ -89,13 +90,16 @@ class AMQPConnection(object):
                                         insist=self.insist,
                                         ssl=self.ssl,
                                         connect_timeout=self.connect_timeout)
+        return self.connection
 
     def close(self):
+        """Close the currently open connection."""
         if self.connection:
             self.connection.close()
 
 
 class DummyConnection(object):
+    """A connection class that does nothing, for non-networked backends."""
     def __init__(self, *args, **kwargs):
         pass
 
@@ -107,11 +111,33 @@ class DummyConnection(object):
 
     @property
     def host(self):
-        pass
+        return ""
 
 
 class DjangoAMQPConnection(AMQPConnection):
+    """A version of :class:`AMQPConnection` that takes configuration
+    from the Django ``settings.py`` module.
 
+    :keyword hostname: The hostname of the AMQP server to connect to,
+        if not provided this is taken from ``settings.AMQP_SERVER``.
+
+    :keyword userid: The username of the user to authenticate to the server
+        as. If not provided this is taken from ``settings.AMQP_USER``.
+
+    :keyword password: The users password. If not provided this is taken
+        from ``settings.AMQP_PASSWORD``.
+
+    :keyword vhost: The name of the virtual host to work with.
+        This virtual host must exist on the server, and the user must
+        have access to it. Consult your brokers manual for help with
+        creating, and mapping users to virtual hosts. If not provided
+        this is taken from ``settings.AMQP_VHOST``.
+
+    :keyword port: The port the AMQP server is running on. If not provided
+        this is taken from ``settings.AMQP_PORT``, or if that is not set,
+        the default is ``5672`` (amqp).
+
+    """
     def __init__(self, *args, **kwargs):
         from django.conf import settings
         kwargs["hostname"] = kwargs.get("hostname",
