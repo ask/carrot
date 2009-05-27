@@ -1,5 +1,5 @@
 from amqplib import client_0_8 as amqp
-from carrot.backends import BaseMessage, BaseBackend
+from carrot.backends.base import BaseMessage, BaseBackend
 from carrot.serialize import serialize, deserialize
 
 class Message(BaseMessage):

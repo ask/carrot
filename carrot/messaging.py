@@ -88,7 +88,7 @@ for subclassing. Another way of defining the publisher and consumer is
     >>> consumer.wait() # Go into the consumer loop.
 
 """
-from carrot.backends.pyamqplib import Backend as AMQPLibBackend
+from carrot.backends import DefaultBackend
 from carrot.serialize import serialize, deserialize
 import warnings
 
@@ -247,8 +247,8 @@ class Consumer(object):
         self.backend = kwargs.get("backend")
         self.decoder = kwargs.get("decoder", deserialize)
         if not self.backend:
-            self.backend = AMQPLibBackend(connection=connection,
-                                          decoder=self.decoder)
+            self.backend = DefaeultBackend(connection=connection,
+                                           decoder=self.decoder)
         self.queue = queue or self.queue
 
         # Binding.
@@ -504,7 +504,7 @@ class Publisher(object):
         self.backend = kwargs.get("backend")
         self.encoder = kwargs.get("encoder", serialize)
         if not self.backend:
-            self.backend = AMQPLibBackend(connection=connection,
+            self.backend = DefaultBackend(connection=connection,
                                           encoder=self.encoder)
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
