@@ -88,35 +88,10 @@ for subclassing. Another way of defining the publisher and consumer is
     >>> consumer.wait() # Go into the consumer loop.
 
 """
-from carrot.backend.pyamqplib import Backend
+from carrot.backend.pyamqplib import Backend as AMQPLibBackend
+from carrot.serialize import serialize, deserialize
 import warnings
 
-# Try to import a module that provides json parsing and emitting, starting
-# with the fastest alternative and falling back to the slower ones.
-try:
-    # cjson is the fastest
-    import cjson
-    serialize = cjson.encode
-    deserialize = cjson.decode
-except ImportError:
-    try:
-        # Then try to find simplejson. Later versions has C speedups which
-        # makes it pretty fast.
-        import simplejson
-        serialize = simplejson.dumps
-        deserialize = simplejson.loads
-    except ImportError:
-        try:
-            # Then try to find the python 2.6 stdlib json module.
-            import json
-            serialize = json.dumps
-            deserialize = json.loads
-        except ImportError:
-            # If all of the above fails, fallback to the simplejson
-            # embedded in Django.
-            from django.utils import simplejson
-            serialize = simplejson.dumps
-            deserialize = simplejson.loads
 
 
 class Consumer(object):
@@ -270,8 +245,10 @@ class Consumer(object):
             **kwargs):
         self.connection = connection
         self.backend = kwargs.get("backend")
+        self.decoder = kwargs.get("decoder", deserialize)
         if not self.backend:
-            self.backend = Backend(connection=connection)
+            self.backend = AMQPLibBackend(connection=connection,
+                                          decoder=self.decoder)
         self.queue = queue or self.queue
 
         # Binding.
@@ -279,7 +256,6 @@ class Consumer(object):
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
 
-        self.decoder = kwargs.get("decoder", deserialize)
         self.durable = kwargs.get("durable", self.durable)
         self.exclusive = kwargs.get("exclusive", self.exclusive)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
@@ -289,7 +265,7 @@ class Consumer(object):
 
         # durable implies auto-delete.
         if self.durable:
-            sel.auto_delete = True
+            self.auto_delete = True
 
     def _build_channel(self):
         if self.queue:
@@ -440,7 +416,7 @@ class Consumer(object):
         """
         self.channel_open = True
         self.backend.consume(queue=self.queue, no_ack=True,
-                             callback=self.receive_callback,
+                             callback=self._receive_callback,
                              consumer_tag=self.__class__.__name__)
 
     def iterqueue(self, limit=None):
@@ -526,11 +502,12 @@ class Publisher(object):
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
         self.connection = connection
         self.backend = kwargs.get("backend")
+        self.encoder = kwargs.get("encoder", serialize)
         if not self.backend:
-            self.backend = Backend(connection=connection)
+            self.backend = AMQPLibBackend(connection=connection,
+                                          encoder=self.encoder)
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
-        self.encoder = kwargs.get("encoder", serialize)
         self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
 
     def create_message(self, message_data):
@@ -576,26 +553,29 @@ class Messaging(object):
         self.exchange = kwargs.get("exchange", self.exchange)
         self.queue = kwargs.get("queue", self.queue)
         self.routing_key = kwargs.get("routing_key", self.routing_key)
-        self.publisher = self.publisher_cls(connection_cls,
+        self.publisher = self.publisher_cls(connection,
                 exchange=self.exchange, routing_key=self.routing_key,
                 backend=self.backend)
-        self.consumer = self.consumer_cls(connection_cls, queue=self.queue,
+        self.consumer = self.consumer_cls(connection, queue=self.queue,
                 exchange=self.exchange, routing_key=self.routing_key,
                 backend=self.backend)
-        self.consumer.receive = self.receive_callback
+        self.consumer.register_callback(self.receive)
+        self.callbacks = []
 
-    def _receive_callback(self, message_data, message):
-        self.receive(message_data, message)
+    def register_callback(self, callback):
+        self.callbacks.append(callback)
+
+    def receive(self, message_data, message):
+        if not self.callbacks:
+            raise NotImplementError("No consumer callbacks registered")
+        for callback in self.callbacks:
+            callback(message_data, message)
 
     def send(self, message_data, delivery_mode=None):
         self.publisher.send(message_data, delivery_mode=delivery_mode)
 
     def fetch(self):
         return self.consumer.fetch()
-
-    def receive(self, message_data, message):
-        raise NotImplementedError(
-                "Messaging classes must implement the receive method")
 
     def next(self):
         return self.consumer.next()

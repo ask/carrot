@@ -1,9 +1,18 @@
+from carrot.serialize import deserialize
+
 class BaseMessage(object):
+    """Base class for received messages."""
 
     def __init__(self, backend, **kwargs):
         self.backend = backend
         self.body = kwargs.get("body")
         self.delivery_tag = kwargs.get("delivery_tag")
+        self.decoder = kwargs.get("decoder", deserialize)
+
+    def decode(self):
+        """Deserialize the message body, returning the original
+        python structure sent by the publisher."""
+        return self.decoder(self.body)
 
     def ack(self):
         """Acknowledge this message as being processed.,
@@ -13,7 +22,9 @@ class BaseMessage(object):
 
     def reject(self):
         """Reject this message.
-        The message will then be discarded by the server.
+
+        The message will be discarded by the server.
+
         """
         return self.backend.reject(self.delivery_tag, requeue=False)
 
@@ -21,7 +32,9 @@ class BaseMessage(object):
         """Reject this message and put it back on the queue.
 
         You must not use this method as a means of selecting messages
-        to process."""
+        to process.
+        
+        """
         return self.backend.reject(self.delivery_tag, requeue=True)
 
 

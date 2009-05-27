@@ -2,6 +2,7 @@ import os
 import sys
 import unittest
 import uuid
+sys.path.insert(0, os.pardir)
 sys.path.append(os.getcwd())
 
 from carrot.backend.queue import Message as PyQueueMessage
@@ -11,7 +12,7 @@ from carrot.messaging import Messaging
 
 
 def create_backend():
-    return PyQueueBackend(connection=DummyConnection)
+    return PyQueueBackend(connection=DummyConnection())
 
 
 class TestPyQueueMessage(unittest.TestCase):
@@ -62,14 +63,14 @@ class TestMessaging(unittest.TestCase):
 
     def test_messaging(self):
         b = create_backend()
-        m = TMessaging(connection_cls=DummyConnection, backend=b)
+        m = TMessaging(connection=DummyConnection(), backend=b)
         self.assertTrue(m)
 
         self.assertEquals(m.fetch(), None)
         mdata = {"name": "Cosmo Kramer"}
         m.send(mdata)
         next_msg = m.fetch()
-        next_msg_data = m.decoder(next_msg.body)
+        next_msg_data = next_msg.decode()
         self.assertEquals(next_msg_data, mdata)
         self.assertEquals(m.fetch(), None)
 

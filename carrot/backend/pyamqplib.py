@@ -1,21 +1,64 @@
 from amqplib import client_0_8 as amqp
 from carrot.backend import BaseMessage, BaseBackend
+from carrot.serialize import serialize, deserialize
 
 class Message(BaseMessage):
-    def __init__(self, backend, amqp_message):
+    """A message received by the broker.
+
+    Usually you don't insantiate message objects yourself, but receive
+    them using a :class:`carrot.messaging.Consumer`.
+
+    :param backend: see :attr:`backend`.
+   
+    :param amqp_message: see :attr:`amqp_message`.
+
+    :param channel: see :attr:`channel`.
+
+    :param decoder: see :attr:`decoder`.
+
+   
+    .. attribute:: body
+        The message body. This data is serialized,
+        so you probably want to deserialize it using
+        :meth:`carrot.backend.BaseMessage.decode()`.
+
+    .. attribute:: delivery_tag
+        The message delivery tag, uniquely identifying this message.
+
+    .. attribute:: backend
+        The message backend used.
+        A subclass of :class:`carrot.backend.BaseBackend`.
+
+    .. attribute:: amqp_message
+
+        A :class:`amqplib.client_0_8.basic_message.Message` instance.
+
+    .. attribute:: channel
+
+        The AMQP channel. A :class:`amqplib.client_0_8.channel.Channel` instance.
+
+    .. attribute:: decoder
+
+        A function able to deserialize the serialized message data.
+    
+    """
+    def __init__(self, backend, amqp_message, **kwargs):
         self.amqp_message = amqp_message
         self.backend = backend
-        super(BaseMessage, self).__init__(backend, {
+        kwargs.update({
             "body": amqp_message.body,
             "delivery_tag": amqp_message.delivery_tag})
+
+        super(BaseMessage, self).__init__(backend, **kwargs)
 
 
 class Backend(BaseBackend):
 
-    def __init__(self, connection):
+    def __init__(self, connection, **kwargs):
         self.connection = connection
         self.channel = self.connection.connection.channel()
-
+        self.encoder = kwargs.get("encoder", serialize)
+        self.decoder = kwargs.get("decoder", deserialize)
 
     def queue_declare(self, queue, durable, exclusive, auto_delete):
         self.channel.queue_declare(queue=queue, durable=durable,
@@ -35,7 +78,9 @@ class Backend(BaseBackend):
         message = self.channel.basic_get(queue)
         if not message:
             return None
-        return Message(backend=self, amqp_message=message)
+        return Message(backend=self,
+                       amqp_message=message,
+                       decoder=self.decoder)
 
     def consume(self, queue, no_ack, callback, consumer_tag):
         self.channel.basic_consume(queue=queue, no_ack=no_ack,
