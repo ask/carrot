@@ -236,7 +236,7 @@ class Consumer(object):
                 of words separated by dots (``"."``, like domain names), and
                 two special characters are available; star (``"*"``) and hash
                 (``"#"``). The star matches any word, and the hash matches
-                zero or more words. For example ``"*.stock.#" matches the
+                zero or more words. For example ``"*.stock.#"`` matches the
                 routing keys ``"usd.stock"`` and ``"eur.stock.db"`` but not
                 ``"stock.nasdaq"``.
                 
@@ -254,7 +254,7 @@ class Consumer(object):
 
     .. attribute:: exclusive
 
-        Exclusive queues may only be consumer from by the current connection.
+        Exclusive queues may only be consumed from by the current connection.
         When :attr:`exclusive` is on, this also implies :attr:`auto_delete`.
         Default is ``False``.
 
