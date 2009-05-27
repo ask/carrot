@@ -1,191 +1,7 @@
-"""
-
-Creating a connection
----------------------
-
-    If you're using Django you can use the
-    :class:`carrot.connection.DjangoAMQPConnection` class, by setting the
-    following variables in your ``settings.py``::
-
-       AMQP_SERVER = "localhost"
-       AMQP_PORT = 5672
-       AMQP_USER = "test"
-       AMQP_PASSWORD = "secret"
-       AMQP_VHOST = "/test"
-
-    Then create a connection by doing:
-
-        >>> from carrot.connection import DjangoAMQPConnection
-        >>> amqpconn = DjangoAMQPConnection()
-
-    If you're not using Django, you can create a connection manually by using
-    :class:`carrot.messaging.AMQPConnection`.
-
-    >>> from carrot.connection import AMQPConnection
-    >>> amqpconn = AMQPConnection(hostname="localhost", port=5672,
-    ...                           userid="test", password="test",
-    ...                           vhost="test")
-
-
-Sending messages using a Publisher
-----------------------------------
-
-    >>> from carrot.messaging import Publisher
-    >>> publisher = Publisher(connection=amqpconn,
-    ...                       exchange="feed", routing_key="importer")
-    >>> publisher.send({"import_feed": "http://cnn.com/rss/edition.rss"})
-    >>> publisher.close()
-
-Receiving messages using a Consumer
------------------------------------
-
-    >>> from carrot.messaging import Consumer
-    >>> consumer = Consumer(connection=amqpconn, queue="feed",
-    ...                     exchange="feed", routing_key="importer")
-    >>> def import_feed_callback(message_data, message)
-    ...     feed_url = message_data.get("import_feed")
-    ...     if not feed_url:
-    ...         message.reject()
-    ...     # something importing this feed url
-    ...     # import_feed(feed_url)
-    ...     message.ack()
-    >>> consumer.register_callback(import_feed_callback)
-    >>> consumer.wait() # Go into the consumer loop.
-
-
-Subclassing the messaging classes
----------------------------------
-
-The :class:`Consumer`, and :class:`Publisher` classes are also designed
-for subclassing. Another way of defining the publisher and consumer is
-
-    >>> from carrot.messaging import Publisher, Consumer
-    >>> class FeedPublisher(Publisher):
-    ...     exchange = "feed"
-    ...     routing_key = "importer"
-    ... 
-    ...     def feed_import(feed_url):
-    ...         return self.send({"action": "import_feed",
-    ...                           "feed_url": feed_url})
-    >>> class FeedConsumer(Consumer):
-    ...     queue = "feed"
-    ...     exchange = "feed"
-    ...     routing_key = "importer"
-    ...
-    ...     def receive(self, message_data, message):
-    ...         action = message_data.get("action")
-    ...         if not action:
-    ...             message.reject()
-    ...         if action == "import_feed":
-    ...             # something importing this feed
-    ...             # import_feed(message_data["feed_url"])
-    ...         else:
-    ...             raise Exception("Unknown action: %s" % action)
-    >>> publisher = FeedPublisher(connection=amqpconn)
-    >>> publisher.import_feed("http://cnn.com/rss/edition.rss")
-    >>> publisher.close()
-    >>> consumer = FeedConsumer(connection=amqpconn)
-    >>> consumer.wait() # Go into the consumer loop.
-
-"""
-from amqplib import client_0_8 as amqp
+"""carrot.messaging"""
+from carrot.backends import DefaultBackend
+from carrot.serialize import serialize, deserialize
 import warnings
-
-# Try to import a module that provides json parsing and emitting, starting
-# with the fastest alternative and falling back to the slower ones.
-try:
-    # cjson is the fastest
-    import cjson
-    serialize = cjson.encode
-    deserialize = cjson.decode
-except ImportError:
-    try:
-        # Then try to find simplejson. Later versions has C speedups which
-        # makes it pretty fast.
-        import simplejson
-        serialize = simplejson.dumps
-        deserialize = simplejson.loads
-    except ImportError:
-        try:
-            # Then try to find the python 2.6 stdlib json module.
-            import json
-            serialize = json.dumps
-            deserialize = json.loads
-        except ImportError:
-            # If all of the above fails, fallback to the simplejson
-            # embedded in Django.
-            from django.utils import simplejson
-            serialize = simplejson.dumps
-            deserialize = simplejson.loads
-
-
-class Message(object):
-    """A message received by the broker.
-
-    Usually you don't insantiate message objects yourself, but receive
-    them using a :class:`Consumer`.
-   
-    :param amqp_message: see :attr:`amqp_message`.
-
-    :param channel: see :attr:`channel`.
-
-    :param decoder: see :attr:`decoder`.
-
-
-    .. attribute:: amqp_message
-
-        A :class:`amqplib.client_0_8.basic_message.Message` instance.
-
-    .. attribute:: channel
-
-        The AMQP channel. A :class:`amqplib.client_0_8.channel.Channel` instance.
-
-    .. attribute:: decoder
-
-        A function able to deserialize the serialized message data.
-    
-    """
-    def __init__(self, amqp_message, channel, decoder=None):
-        if not decoder:
-            decoder = deserialize
-        self.amqp_message = amqp_message
-        self.channel = channel
-        self.decoder = decoder
-
-    def decode(self):
-        """Deserialize the message body, returning the original
-        python structure sent by the publisher."""
-        return self.decoder(message.body)
-
-    def ack(self):
-        """Acknowledge this message as being processed.,
-
-        This will remove the message from the queue."""
-        return self.channel.basic_ack(self.delivery_tag)
-
-    def reject(self):
-        """Reject this message.
-
-        The message will be discarded by the server.
-        """
-        return self.channel.basic_reject(self.delivery_tag, requeue=False)
-
-    def requeue(self):
-        """Reject this message and put it back on the queue.
-
-        You must not use this method as a means of selecting messages
-        to process."""
-        return self.channel.basic_reject(self.delivery_tag, requeue=True)
-
-    @property
-    def body(self):
-        """The message body."""
-        return self.amqp_message.body
-
-    @property
-    def delivery_tag(self):
-        """The message delivery tag, uniquely identifying this message."""
-        return self.amqp_message.delivery_tag
 
 
 class Consumer(object):
@@ -201,6 +17,7 @@ class Consumer(object):
     :keyword exclusive: see :attr:`exclusive`.
     :keyword exchange_type: see :attr:`exchange_type`.
     :keyword decoder: see :attr:`decoder`.
+    :keyword backend: see :attr:`backend`.
 
     
     .. attribute:: connection
@@ -305,6 +122,10 @@ class Consumer(object):
 
         A function able to deserialize the message body.
 
+    .. attribute:: backend
+
+        The messaging backend used. Defaults to the ``pyamqplib`` backend.
+
     .. attribute:: callbacks
 
         List of registered callbacks to trigger when a message is received
@@ -326,51 +147,56 @@ class Consumer(object):
         >>> consumer.wait() # Go into receive loop
     
     """
-    queue = None
-    exchange = None
-    routing_key = None
+    queue = ""
+    exchange = ""
+    routing_key = ""
     durable = True
     exclusive = False
     auto_delete = False
     exchange_type = "direct"
     channel_open = False
 
-    def __init__(self, connection, queue=None, exchange=None, routing_key=None,
-            **kwargs):
+    def __init__(self, connection, queue=None, exchange=None,
+            routing_key=None, **kwargs):
         self.connection = connection
+        self.backend = kwargs.get("backend")
+        self.decoder = kwargs.get("decoder", deserialize)
+        if not self.backend:
+            self.backend = DefaultBackend(connection=connection,
+                                          decoder=self.decoder)
+        self.queue = queue or self.queue
 
         # Binding.
         self.queue = queue or self.queue
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
+        self.callbacks = []
 
-        self.decoder = kwargs.get("decoder", deserialize)
+        # Options
         self.durable = kwargs.get("durable", self.durable)
         self.exclusive = kwargs.get("exclusive", self.exclusive)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
-        self.channel = self._build_channel()
-        self.callbacks = []
 
         # durable implies auto-delete.
         if self.durable:
-            sel.auto_delete = True
+            self.auto_delete = True
 
-    def _build_channel(self):
-        channel = self.connection.connection.channel()
+        self._declare_channel()
+
+    def _declare_channel(self):
         if self.queue:
-            channel.queue_declare(queue=self.queue, durable=self.durable,
-                                  exclusive=self.exclusive,
-                                  auto_delete=self.auto_delete)
+            self.backend.queue_declare(queue=self.queue, durable=self.durable,
+                                       exclusive=self.exclusive,
+                                       auto_delete=self.auto_delete)
         if self.exchange:
-            channel.exchange_declare(exchange=self.exchange,
-                                     type=self.exchange_type,
-                                     durable=self.durable,
-                                     auto_delete=self.auto_delete)
+            self.backend.exchange_declare(exchange=self.exchange,
+                                          type=self.exchange_type,
+                                          durable=self.durable,
+                                          auto_delete=self.auto_delete)
         if self.queue:
-            channel.queue_bind(queue=self.queue, exchange=self.exchange,
-                               routing_key=self.routing_key)
-        return channel
+            self.backend.queue_bind(queue=self.queue, exchange=self.exchange,
+                                    routing_key=self.routing_key)
 
     def _receive_callback(self, message):
         message_data = self.message_to_python(message)
@@ -379,7 +205,7 @@ class Consumer(object):
     def message_to_python(self, message):
         """Decode encoded message back to python.
        
-        :param message: A :class:`Message` instance.
+        :param message: A :class:`carrot.backends.base.BaseMessage` instance.
 
         """
         return self.decoder(message.body)
@@ -387,17 +213,12 @@ class Consumer(object):
     def fetch(self):
         """Receive the next message waiting on the queue.
 
-        :returns: A :class:`Message` instance,
+        :returns: A :class:`carrot.backends.base.BaseMessage` instance,
             or ``None`` if there's no messages to be received.
 
         """
-        if not self.channel.connection:
-            self.channel = self._build_channel()
-        raw_message = self.channel.basic_get(self.queue)
-        if not raw_message:
-            return None
-        return Message(raw_message, channel=self.channel,
-                       decoder=self.decoder)
+        message = self.backend.get(self.queue)
+        return message
 
     def receive(self, message_data, message):
         """This method is called when a new message is received by 
@@ -409,7 +230,7 @@ class Consumer(object):
 
         :param message_data: The deserialized message data.
 
-        :param message: The :class:`Message` instance.
+        :param message: The :class:`carrot.backends.base.BaseMessage` instance.
         
         :raises NotImplementedError: If no callbacks has been registered.
 
@@ -430,7 +251,7 @@ class Consumer(object):
 
             * message
 
-                The :class:`Message` instance.
+                The :class:`carrot.backends.base.BaseMessage` instance.
         """
         self.callbacks.append(callback)
 
@@ -442,13 +263,15 @@ class Consumer(object):
 
         :keyword ack: By default, an ack is sent to the server
             signifying that the message has been accepted. This means
-            that the :meth:`Message.ack` and :meth:`Message.reject` methods
+            that the :meth:`carrot.backends.base.BaseMessage.ack` and
+            :meth:`carrot.backends.base.BaseMessage.reject` methods
             on the message object are no longer valid.
             If the ack argument is set to ``False``, this behaviour is
             disabled and the receiver is required to manually handle
             acknowledgment.
 
-        :returns: The resulting :class:`Message` object.
+        :returns: The resulting :class:`carrot.backends.base.BaseMessage`
+            object.
 
         """
         message = self.fetch()
@@ -495,13 +318,6 @@ class Consumer(object):
                 message.ack()
                 discarded_count = discarded_count + 1
 
-    def next(self):
-        """*DEPRECATED*: Process the next pending message.
-        Deprecated in favour of :meth:`process_next`"""
-        warnings.warn("next() is deprecated, use process_next() instead.",
-                DeprecationWarning)
-        return self.process_next()
-
     def wait(self):
         """Go into consume mode.
 
@@ -510,14 +326,10 @@ class Consumer(object):
         callbacks.
 
         """
-        if not self.channel.connection:
-            self.channel = self._build_channel()
         self.channel_open = True
-        self.channel.basic_consume(queue=self.queue, no_ack=True,
-                callback=self._receive_callback,
-                consumer_tag=self.__class__.__name__)
-        while True:
-            self.channel.wait()
+        self.backend.consume(queue=self.queue, no_ack=True,
+                             callback=self._receive_callback,
+                             consumer_tag=self.__class__.__name__)
 
     def iterqueue(self, limit=None):
         """Infinite iterator yielding pending messages.
@@ -529,32 +341,27 @@ class Consumer(object):
             this number of messages in total.
         """
         for items_since_start in itertools.count():
-            item = self.next()
+            item = self.process_next()
             if item is None or (limit and items_since_start > limit):
                 raise StopIteration
             yield item
 
     def close(self):
-        """Close the channel to the queue.
-        
-        Any operation that requires a connection will re-establish the
-        connection even if close was called explicitly.  """
+        """Close the channel to the queue."""
         if self.channel_open:
-            self.channel.basic_cancel(self.__class__.__name__)
-        if getattr(self, "channel") and self.channel.is_open:
-            self.channel.close()
+            self.backend.cancel(self.__class__.__name__)
+        self.backend.close()
 
 
 class Publisher(object):
     """Message publisher.
 
     :param connection: see :attr:`connection`.
-
     :param exchange: see :attr:`exchange`.
-
     :param routing_key: see :attr:`routing_key`.
 
-    :param encoder: see :attr:`encoder`.
+    :keyword encoder: see :attr:`encoder`.
+    :keyword backend: see :attr:`backend`.
 
 
     .. attribute:: connection
@@ -594,6 +401,10 @@ class Publisher(object):
         to :meth:`send`. Note that any consumer of the messages sent
         must have a decoder supporting the serialization scheme.
 
+    .. attribute:: backend
+
+        The backend used. Defaults to the ``pyamqplib`` backend.
+
     """
 
     exchange = ""
@@ -602,22 +413,20 @@ class Publisher(object):
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
         self.connection = connection
+        self.backend = kwargs.get("backend")
+        self.encoder = kwargs.get("encoder", serialize)
+        if not self.backend:
+            self.backend = DefaultBackend(connection=connection,
+                                          encoder=self.encoder)
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
-        self.encoder = kwargs.get("encoder", serialize)
         self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
-        self.channel = self._build_channel()
-
-    def _build_channel(self):
-        return self.connection.connection.channel()
 
     def create_message(self, message_data):
         """With any data, serialize it and encapsulate it in a AMQP
         message with the proper headers set."""
         message_data = self.encoder(message_data)
-        message = amqp.Message(message_data)
-        message.properties["delivery_mode"] = self.delivery_mode
-        return message
+        return self.backend.prepare_message(message_data, self.delivery_mode)
 
     def send(self, message_data, delivery_mode=None):
         """Send a message.
@@ -629,23 +438,12 @@ class Publisher(object):
 
         """
         message = self.create_message(message_data)
-
-        # Recreate channel if connection lost.
-        if not self.channel.connection:
-            self.channel = self._build_channel()
-
-        self.channel.basic_publish(message, exchange=self.exchange,
-                                   routing_key=self.routing_key)
+        self.backend.publish(message, exchange=self.exchange,
+                                      routing_key=self.routing_key)
 
     def close(self):
-        """Close connection to queue.
-        
-        *Note* Whenever :meth:`send` is called, the connection is
-        re-established, even if :meth:`close` was called explicitly.
-        
-        """
-        if getattr(self, "channel") and self.channel.is_open:
-            self.channel.close()
+        """Close connection to queue."""
+        self.backend.close()
 
 
 class Messaging(object):
@@ -658,17 +456,27 @@ class Messaging(object):
 
     def __init__(self, connection, **kwargs):
         self.connection = connection
+        self.backend = kwargs.get("backend")
         self.exchange = kwargs.get("exchange", self.exchange)
         self.queue = kwargs.get("queue", self.queue)
         self.routing_key = kwargs.get("routing_key", self.routing_key)
         self.publisher = self.publisher_cls(connection,
-                exchange=self.exchange, routing_key=self.routing_key)
+                exchange=self.exchange, routing_key=self.routing_key,
+                backend=self.backend)
         self.consumer = self.consumer_cls(connection, queue=self.queue,
-                exchange=self.exchange, routing_key=self.routing_key)
-        self.consumer.receive = self._receive_callback
+                exchange=self.exchange, routing_key=self.routing_key,
+                backend=self.backend)
+        self.consumer.register_callback(self.receive)
+        self.callbacks = []
 
-    def _receive_callback(self, message_data, message):
-        self.receive(message_data, message)
+    def register_callback(self, callback):
+        self.callbacks.append(callback)
+
+    def receive(self, message_data, message):
+        if not self.callbacks:
+            raise NotImplementError("No consumer callbacks registered")
+        for callback in self.callbacks:
+            callback(message_data, message)
 
     def send(self, message_data, delivery_mode=None):
         self.publisher.send(message_data, delivery_mode=delivery_mode)
@@ -676,13 +484,20 @@ class Messaging(object):
     def fetch(self):
         return self.consumer.fetch()
 
-    def receive(self, message_data, message):
-        raise NotImplementedError(
-                "Messaging classes must implement the receive method")
-
     def next(self):
         return self.consumer.next()
+
+    def fetch(self):
+        return self.consumer.fetch()
 
     def close(self):
         self.consumer.close()
         self.publisher.close()
+
+    @property
+    def encoder(self):
+        return self.publisher.encoder
+
+    @property
+    def decoder(self):
+        return self.consumer.decoder

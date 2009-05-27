@@ -20,6 +20,7 @@ setup(
     url=carrot.__homepage__,
     platforms=["any"],
     packages=find_packages(exclude=['ez_setup']),
+    test_suite="nose.collector",
     install_requires=[
         'amqplib',
     ],
@@ -29,5 +30,5 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
     ],
-    long_description=codecs.open('README', "r", "utf-8").read(),
+    long_description=codecs.open('README.rst', "r", "utf-8").read(),
 )
