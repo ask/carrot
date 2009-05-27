@@ -86,11 +86,10 @@ There are some concepts you need to know about before you start:
 
     * Routing keys
 
-        Every message has a routing key, which is words separated by dots.
-        The interpretation of the routing key depends on the exchange_type.
-        There are four default exchange types defined by the AMQP standard,
-        and vendors can define custom types (so see the vendor documentation,
-        for details).
+        Every message has a routing key.  The interpretation of the routing
+        key depends on the exchange_type. There are four default exchange
+        types defined by the AMQP standard, and vendors can define custom
+        types (so see your vendors manual for details).
 
         These are the default exchange types defined by AMQP/0.8:
 
@@ -101,7 +100,8 @@ There are some concepts you need to know about before you start:
 
             * fanout exchange
 
-                Always matches, even if the binding does not have a key.
+                Always matches, even if the binding does not have a routing
+                key.
 
             * topic exchange
 
@@ -166,6 +166,10 @@ Receiving messages using a Consumer
 
 This consumer declares a queue named ``"feed"``, receiving messages with
 the routing key ``"importer"`` from the ``"feed"`` exchange.
+
+The example then uses the consumers ``wait()`` method to go into consume
+mode, where it continously polls the queue for new messages, and when a
+message is received it passes the message to all registered callbacks.
 
     >>> from carrot.messaging import Consumer
     >>> consumer = Consumer(connection=amqpconn, queue="feed",
@@ -242,4 +246,4 @@ License
 This software is licensed under the ``New BSD License``. See the ``LICENSE``
 file in the top distribution directory for the full license text.
 
-.. # vim: syntax=rst expandtab tabstop=4 shiftwidth=4 shiftround
+
