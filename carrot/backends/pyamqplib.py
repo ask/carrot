@@ -20,14 +20,14 @@ class Message(BaseMessage):
     .. attribute:: body
         The message body. This data is serialized,
         so you probably want to deserialize it using
-        :meth:`carrot.backend.BaseMessage.decode()`.
+        :meth:`carrot.backends.BaseMessage.decode()`.
 
     .. attribute:: delivery_tag
         The message delivery tag, uniquely identifying this message.
 
     .. attribute:: backend
         The message backend used.
-        A subclass of :class:`carrot.backend.BaseBackend`.
+        A subclass of :class:`carrot.backends.BaseBackend`.
 
     .. attribute:: amqp_message
 
