@@ -1,4 +1,4 @@
-"""Easy RabbitMQ/ZeroMQ (AMQP) messaging queue."""
+"""AMQP Messaging Framework for Python"""
 VERSION = (0, 4, "0-pre1")
 __version__ = ".".join(map(str, VERSION))
 __author__ = "Ask Solem"
