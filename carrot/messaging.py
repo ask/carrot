@@ -1,97 +1,7 @@
-"""
-
-Creating a connection
----------------------
-
-    If you're using Django you can use the
-    :class:`carrot.connection.DjangoAMQPConnection` class, by setting the
-    following variables in your ``settings.py``::
-
-       AMQP_SERVER = "localhost"
-       AMQP_PORT = 5672
-       AMQP_USER = "test"
-       AMQP_PASSWORD = "secret"
-       AMQP_VHOST = "/test"
-
-    Then create a connection by doing:
-
-        >>> from carrot.connection import DjangoAMQPConnection
-        >>> amqpconn = DjangoAMQPConnection()
-
-    If you're not using Django, you can create a connection manually by using
-    :class:`carrot.messaging.AMQPConnection`.
-
-    >>> from carrot.connection import AMQPConnection
-    >>> amqpconn = AMQPConnection(hostname="localhost", port=5672,
-    ...                           userid="test", password="test",
-    ...                           vhost="test")
-
-
-Sending messages using a Publisher
-----------------------------------
-
-    >>> from carrot.messaging import Publisher
-    >>> publisher = Publisher(connection=amqpconn,
-    ...                       exchange="feed", routing_key="importer")
-    >>> publisher.send({"import_feed": "http://cnn.com/rss/edition.rss"})
-    >>> publisher.close()
-
-Receiving messages using a Consumer
------------------------------------
-
-    >>> from carrot.messaging import Consumer
-    >>> consumer = Consumer(connection=amqpconn, queue="feed",
-                            exchange="feed", routing_key="importer")
-    >>> def import_feed_callback(message_data, message)
-    ...     feed_url = message_data.get("import_feed")
-    ...     if not feed_url:
-    ...         message.reject()
-    ...     # something importing this feed url
-    ...     # import_feed(feed_url)
-    ...     message.ack()
-    >>> consumer.register_callback(import_feed_callback)
-    >>> consumer.wait() # Go into the consumer loop.
-
-
-Subclassing the messaging classes
----------------------------------
-
-The :class:`Consumer`, and :class:`Publisher` classes are also designed
-for subclassing. Another way of defining the publisher and consumer is
-
-    >>> from carrot.messaging import Publisher, Consumer
-    >>> class FeedPublisher(Publisher):
-    ...     exchange = "feed"
-    ...     routing_key = "importer"
-    ... 
-    ...     def feed_import(feed_url):
-    ...         return self.send({"action": "import_feed",
-    ...                           "feed_url": feed_url})
-    >>> class FeedConsumer(Consumer):
-    ...     queue = "feed"
-    ...     exchange = "feed"
-    ...     routing_key = "importer"
-    ...
-    ...     def receive(self, message_data, message):
-    ...         action = message_data.get("action")
-    ...         if not action:
-    ...             message.reject()
-    ...         if action == "import_feed":
-    ...             # something importing this feed
-    ...             # import_feed(message_data["feed_url"])
-    ...         else:
-    ...             raise Exception("Unknown action: %s" % action)
-    >>> publisher = FeedPublisher(connection=amqpconn)
-    >>> publisher.import_feed("http://cnn.com/rss/edition.rss")
-    >>> publisher.close()
-    >>> consumer = FeedConsumer(connection=amqpconn)
-    >>> consumer.wait() # Go into the consumer loop.
-
-"""
+"""carrot.messaging"""
 from carrot.backends import DefaultBackend
 from carrot.serialize import serialize, deserialize
 import warnings
-
 
 
 class Consumer(object):
@@ -246,8 +156,8 @@ class Consumer(object):
     exchange_type = "direct"
     channel_open = False
 
-    def __init__(self, connection, queue=None, exchange=None, routing_key=None,
-            **kwargs):
+    def __init__(self, connection, queue=None, exchange=None,
+            routing_key=None, **kwargs):
         self.connection = connection
         self.backend = kwargs.get("backend")
         self.decoder = kwargs.get("decoder", deserialize)
@@ -260,20 +170,21 @@ class Consumer(object):
         self.queue = queue or self.queue
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
+        self.callbacks = []
 
         # Options
         self.durable = kwargs.get("durable", self.durable)
         self.exclusive = kwargs.get("exclusive", self.exclusive)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
-        self.callbacks = []
-        self._build_channel()
 
         # durable implies auto-delete.
         if self.durable:
             self.auto_delete = True
 
-    def _build_channel(self):
+        self._declare_channel()
+
+    def _declare_channel(self):
         if self.queue:
             self.backend.queue_declare(queue=self.queue, durable=self.durable,
                                        exclusive=self.exclusive,
