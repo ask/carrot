@@ -288,7 +288,7 @@ class Consumer(object):
     def message_to_python(self, message):
         """Decode encoded message back to python.
        
-        :param message: A :class:`Message` instance.
+        :param message: A :class:`carrot.backends.base.BaseMessage` instance.
 
         """
         return self.decoder(message.body)
@@ -296,7 +296,7 @@ class Consumer(object):
     def fetch(self):
         """Receive the next message waiting on the queue.
 
-        :returns: A :class:`Message` instance,
+        :returns: A :class:`carrot.backends.base.BaseMessage` instance,
             or ``None`` if there's no messages to be received.
 
         """
@@ -313,7 +313,7 @@ class Consumer(object):
 
         :param message_data: The deserialized message data.
 
-        :param message: The :class:`Message` instance.
+        :param message: The :class:`carrot.backends.base.BaseMessage` instance.
         
         :raises NotImplementedError: If no callbacks has been registered.
 
@@ -334,7 +334,7 @@ class Consumer(object):
 
             * message
 
-                The :class:`Message` instance.
+                The :class:`carrot.backends.base.BaseMessage` instance.
         """
         self.callbacks.append(callback)
 
@@ -346,13 +346,14 @@ class Consumer(object):
 
         :keyword ack: By default, an ack is sent to the server
             signifying that the message has been accepted. This means
-            that the :meth:`Message.ack` and :meth:`Message.reject` methods
+            that the :meth:`carrot.backends.base.BaseMessage.ack` and
+            :meth:`carrot.backends.base.BaseMessage.reject` methods
             on the message object are no longer valid.
             If the ack argument is set to ``False``, this behaviour is
             disabled and the receiver is required to manually handle
             acknowledgment.
 
-        :returns: The resulting :class:`Message` object.
+        :returns: The resulting :class:`carrot.backends.base.BaseMessage` object.
 
         """
         message = self.fetch()
