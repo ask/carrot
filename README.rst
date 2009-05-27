@@ -76,7 +76,7 @@ There are some concepts you need to know about before you start:
     
     * Consumers
 
-        Consumers declares an exchange, binds it to a queue and receives
+        Consumers declares a queue, binds it to a exchange and receives
         messages from it.
 
     * Queues
