@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.messaging &mdash; Carrot v0.3.9 documentation</title>
+    <title>carrot.messaging &mdash; Carrot v0.4.0-pre1 documentation</title>
     <link rel="stylesheet" href="../static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
       URL_ROOT:    '../',
-      VERSION:     '0.3.9',
+      VERSION:     '0.4.0-pre1',
       COLLAPSE_MODINDEX: false,
       FILE_SUFFIX: '.html',
       HAS_SOURCE:  true
@@ -19,21 +19,24 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.3.9 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.4.0-pre1 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
-    <link rel="prev" title="API Reference" href="index.html" /> 
+    <link rel="next" title="carrot.backends" href="carrot.backends.html" />
+    <link rel="prev" title="carrot.connection" href="carrot.connection.html" /> 
   </head>
   <body>
 
     <div class="header-wrapper">
       <div class="header">
-	<h1><a href="../index.html">Carrot v0.3.9 documentation</a></h1>
+	<h1><a href="../index.html">Carrot v0.4.0-pre1 documentation</a></h1>
 	<div class="rel">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a> |
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |
-          <a href="index.html" title="API Reference"
+          <a href="carrot.backends.html" title="carrot.backends"
+             accesskey="N">next</a> |
+          <a href="carrot.connection.html" title="carrot.connection"
              accesskey="P">previous</a>
 	</div>
       </div>
@@ -48,94 +51,9 @@
 		
   <div class="section" id="module-carrot.messaging">
 <h1>carrot.messaging<a class="headerlink" href="#module-carrot.messaging" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="creating-a-connection">
-<h2>Creating a connection<a class="headerlink" href="#creating-a-connection" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<p>If you&#8217;re using Django you can use the
-<tt class="xref docutils literal"><span class="pre">carrot.connection.DjangoAMQPConnection</span></tt> class, by setting the
-following variables in your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">AMQP_SERVER</span> <span class="o">=</span> <span class="s">&quot;localhost&quot;</span>
-<span class="n">AMQP_PORT</span> <span class="o">=</span> <span class="mf">5672</span>
-<span class="n">AMQP_USER</span> <span class="o">=</span> <span class="s">&quot;test&quot;</span>
-<span class="n">AMQP_PASSWORD</span> <span class="o">=</span> <span class="s">&quot;secret&quot;</span>
-<span class="n">AMQP_VHOST</span> <span class="o">=</span> <span class="s">&quot;/test&quot;</span>
-</pre></div>
-</div>
-<p>Then create a connection by doing:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.connection</span> <span class="kn">import</span> <span class="n">DjangoAMQPConnection</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">amqpconn</span> <span class="o">=</span> <span class="n">DjangoAMQPConnection</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>If you&#8217;re not using Django, you can create a connection manually by using
-<tt class="xref docutils literal"><span class="pre">carrot.messaging.AMQPConnection</span></tt>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.connection</span> <span class="kn">import</span> <span class="n">AMQPConnection</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">amqpconn</span> <span class="o">=</span> <span class="n">AMQPConnection</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mf">5672</span><span class="p">,</span>
-<span class="gp">... </span>                          <span class="n">userid</span><span class="o">=</span><span class="s">&quot;test&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&quot;test&quot;</span><span class="p">,</span>
-<span class="gp">... </span>                          <span class="n">vhost</span><span class="o">=</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</blockquote>
-</div>
-<div class="section" id="sending-messages-using-a-publisher">
-<h2>Sending messages using a Publisher<a class="headerlink" href="#sending-messages-using-a-publisher" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
-<span class="gp">... </span>                      <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s">&quot;import_feed&quot;</span><span class="p">:</span> <span class="s">&quot;http://cnn.com/rss/edition.rss&quot;</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="receiving-messages-using-a-consumer">
-<h2>Receiving messages using a Consumer<a class="headerlink" href="#receiving-messages-using-a-consumer" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Consumer</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span>
-<span class="go">                        exchange=&quot;feed&quot;, routing_key=&quot;importer&quot;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">import_feed_callback</span><span class="p">(</span><span class="n">message_data</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">feed_url</span> <span class="o">=</span> <span class="n">message_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;import_feed&quot;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">feed_url</span><span class="p">:</span>
-<span class="gp">... </span>        <span class="n">message</span><span class="o">.</span><span class="n">reject</span><span class="p">()</span>
-<span class="gp">... </span>    <span class="c"># something importing this feed url</span>
-<span class="gp">... </span>    <span class="c"># import_feed(feed_url)</span>
-<span class="gp">... </span>    <span class="n">message</span><span class="o">.</span><span class="n">ack</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span><span class="n">import_feed_callback</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span> <span class="c"># Go into the consumer loop.</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="subclassing-the-messaging-classes">
-<h2>Subclassing the messaging classes<a class="headerlink" href="#subclassing-the-messaging-classes" title="Permalink to this headline">¶</a></h2>
-<p>The <a title="carrot.messaging.Consumer" class="reference internal" href="#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">Consumer</span></tt></a>, and <a title="carrot.messaging.Publisher" class="reference internal" href="#carrot.messaging.Publisher"><tt class="xref docutils literal"><span class="pre">Publisher</span></tt></a> classes are also designed
-for subclassing. Another way of defining the publisher and consumer is</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span><span class="p">,</span> <span class="n">Consumer</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">FeedPublisher</span><span class="p">(</span><span class="n">Publisher</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">exchange</span> <span class="o">=</span> <span class="s">&quot;feed&quot;</span>
-<span class="gp">... </span>    <span class="n">routing_key</span> <span class="o">=</span> <span class="s">&quot;importer&quot;</span>
-<span class="gp">... </span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">feed_import</span><span class="p">(</span><span class="n">feed_url</span><span class="p">):</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s">&quot;action&quot;</span><span class="p">:</span> <span class="s">&quot;import_feed&quot;</span><span class="p">,</span>
-<span class="gp">... </span>                          <span class="s">&quot;feed_url&quot;</span><span class="p">:</span> <span class="n">feed_url</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">FeedConsumer</span><span class="p">(</span><span class="n">Consumer</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">queue</span> <span class="o">=</span> <span class="s">&quot;feed&quot;</span>
-<span class="gp">... </span>    <span class="n">exchange</span> <span class="o">=</span> <span class="s">&quot;feed&quot;</span>
-<span class="gp">... </span>    <span class="n">routing_key</span> <span class="o">=</span> <span class="s">&quot;importer&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message_data</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-<span class="gp">... </span>        <span class="n">action</span> <span class="o">=</span> <span class="n">message_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;action&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="n">message</span><span class="o">.</span><span class="n">reject</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s">&quot;import_feed&quot;</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="c"># something importing this feed</span>
-<span class="gp">... </span>            <span class="c"># import_feed(message_data[&quot;feed_url&quot;])</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Unknown action: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">action</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">FeedPublisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">import_feed</span><span class="p">(</span><span class="s">&quot;http://cnn.com/rss/edition.rss&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">FeedConsumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span> <span class="c"># Go into the consumer loop.</span>
-</pre></div>
-</div>
+<p>The introduction to carrot that was here previously has been moved
+to the <a class="reference external" href="http://ask.github.com/carrot/introduction.html#example">introduction</a> page.</p>
+<p>carrot.messaging</p>
 <dl class="class">
 <dt id="carrot.messaging.Consumer">
 <em class="property">
@@ -155,6 +73,7 @@ class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">
 <li><em>exclusive</em> &#8211; see <a title="carrot.messaging.Consumer.exclusive" class="reference internal" href="#carrot.messaging.Consumer.exclusive"><tt class="xref docutils literal"><span class="pre">exclusive</span></tt></a>.</li>
 <li><em>exchange_type</em> &#8211; see <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">exchange_type</span></tt></a>.</li>
 <li><em>decoder</em> &#8211; see <a title="carrot.messaging.Consumer.decoder" class="reference internal" href="#carrot.messaging.Consumer.decoder"><tt class="xref docutils literal"><span class="pre">decoder</span></tt></a>.</li>
+<li><em>backend</em> &#8211; see <a title="carrot.messaging.Consumer.backend" class="reference internal" href="#carrot.messaging.Consumer.backend"><tt class="xref docutils literal"><span class="pre">backend</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -163,7 +82,7 @@ class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.connection">
 <tt class="descname">connection</tt><a class="headerlink" href="#carrot.messaging.Consumer.connection" title="Permalink to this definition">¶</a></dt>
-<dd>A <tt class="xref docutils literal"><span class="pre">carrot.connection.AMQPConnection</span></tt> instance.</dd></dl>
+<dd>A <a title="carrot.connection.AMQPConnection" class="reference external" href="carrot.connection.html#carrot.connection.AMQPConnection"><tt class="xref docutils literal"><span class="pre">carrot.connection.AMQPConnection</span></tt></a> instance.</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.queue">
@@ -200,8 +119,8 @@ pattern matching scheme. The message routing key then consists
 of words separated by dots (<tt class="docutils literal"><span class="pre">&quot;.&quot;</span></tt>, like domain names), and
 two special characters are available; star (<tt class="docutils literal"><span class="pre">&quot;*&quot;</span></tt>) and hash
 (<tt class="docutils literal"><span class="pre">&quot;#&quot;</span></tt>). The star matches any word, and the hash matches
-zero or more words. For example <tt class="docutils literal"><span class="pre">&quot;*.stock.#&quot;</span> <span class="pre">matches</span> <span class="pre">the</span>
-<span class="pre">routing</span> <span class="pre">keys</span> <span class="pre">``&quot;usd.stock&quot;</span></tt> and <tt class="docutils literal"><span class="pre">&quot;eur.stock.db&quot;</span></tt> but not
+zero or more words. For example <tt class="docutils literal"><span class="pre">&quot;*.stock.#&quot;</span></tt> matches the
+routing keys <tt class="docutils literal"><span class="pre">&quot;usd.stock&quot;</span></tt> and <tt class="docutils literal"><span class="pre">&quot;eur.stock.db&quot;</span></tt> but not
 <tt class="docutils literal"><span class="pre">&quot;stock.nasdaq&quot;</span></tt>.</p>
 </blockquote>
 </li>
@@ -225,7 +144,7 @@ using it. Default is <tt class="xref docutils literal"><span class="pre">False</
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.exclusive">
 <tt class="descname">exclusive</tt><a class="headerlink" href="#carrot.messaging.Consumer.exclusive" title="Permalink to this definition">¶</a></dt>
-<dd>Exclusive queues may only be consumer from by the current connection.
+<dd>Exclusive queues may only be consumed from by the current connection.
 When <a title="carrot.messaging.Consumer.exclusive" class="reference internal" href="#carrot.messaging.Consumer.exclusive"><tt class="xref docutils literal"><span class="pre">exclusive</span></tt></a> is on, this also implies <a title="carrot.messaging.Consumer.auto_delete" class="reference internal" href="#carrot.messaging.Consumer.auto_delete"><tt class="xref docutils literal"><span class="pre">auto_delete</span></tt></a>.
 Default is <tt class="xref docutils literal"><span class="pre">False</span></tt>.</dd></dl>
 
@@ -277,6 +196,11 @@ Rajith Attapattu. Recommended reading.</p>
 <dd>A function able to deserialize the message body.</dd></dl>
 
 <dl class="attribute">
+<dt id="carrot.messaging.Consumer.backend">
+<tt class="descname">backend</tt><a class="headerlink" href="#carrot.messaging.Consumer.backend" title="Permalink to this definition">¶</a></dt>
+<dd>The messaging backend used. Defaults to the <tt class="docutils literal"><span class="pre">pyamqplib</span></tt> backend.</dd></dl>
+
+<dl class="attribute">
 <dt id="carrot.messaging.Consumer.callbacks">
 <tt class="descname">callbacks</tt><a class="headerlink" href="#carrot.messaging.Consumer.callbacks" title="Permalink to this definition">¶</a></dt>
 <dd>List of registered callbacks to trigger when a message is received
@@ -306,10 +230,7 @@ connection.</td>
 <dl class="method">
 <dt id="carrot.messaging.Consumer.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Close the channel to the queue.</p>
-<p>Any operation that requires a connection will re-establish the
-connection even if close was called explicitly.</p>
-</dd></dl>
+<dd>Close the channel to the queue.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.discard_all">
@@ -330,7 +251,7 @@ filter returns.</td>
 <p>Example using filter:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">waiting_feeds_only</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">try</span><span class="p">:</span>
-<span class="gp">... </span>        <span class="n">message_data</span> <span class="o">=</span> <span class="n">simplejson</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">message_data</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
 <span class="gp">... </span>    <span class="k">except</span><span class="p">:</span> <span class="c"># Should probably be more specific.</span>
 <span class="gp">... </span>        <span class="k">pass</span>
 <span class="gp">...</span>
@@ -350,7 +271,7 @@ filter returns.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A <a title="carrot.messaging.Message" class="reference internal" href="#carrot.messaging.Message"><tt class="xref docutils literal"><span class="pre">Message</span></tt></a> instance,
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a> instance,
 or <tt class="xref docutils literal"><span class="pre">None</span></tt> if there&#8217;s no messages to be received.</td>
 </tr>
 </tbody>
@@ -382,17 +303,11 @@ this number of messages in total.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>message</em> &#8211; A <a title="carrot.messaging.Message" class="reference internal" href="#carrot.messaging.Message"><tt class="xref docutils literal"><span class="pre">Message</span></tt></a> instance.</td>
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>message</em> &#8211; A <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a> instance.</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
-
-<dl class="method">
-<dt id="carrot.messaging.Consumer.next">
-<tt class="descname">next</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.next" title="Permalink to this definition">¶</a></dt>
-<dd><em>DEPRECATED</em>: Process the next pending message.
-Deprecated in favour of <a title="carrot.messaging.Consumer.process_next" class="reference internal" href="#carrot.messaging.Consumer.process_next"><tt class="xref docutils literal"><span class="pre">process_next()</span></tt></a></dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.process_next">
@@ -406,13 +321,15 @@ if successful passes the message on to <a title="carrot.messaging.Consumer.recei
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>ack</em> &#8211; By default, an ack is sent to the server
 signifying that the message has been accepted. This means
-that the <a title="carrot.messaging.Message.ack" class="reference internal" href="#carrot.messaging.Message.ack"><tt class="xref docutils literal"><span class="pre">Message.ack()</span></tt></a> and <a title="carrot.messaging.Message.reject" class="reference internal" href="#carrot.messaging.Message.reject"><tt class="xref docutils literal"><span class="pre">Message.reject()</span></tt></a> methods
+that the <a title="carrot.backends.base.BaseMessage.ack" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage.ack"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage.ack()</span></tt></a> and
+<a title="carrot.backends.base.BaseMessage.reject" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage.reject"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage.reject()</span></tt></a> methods
 on the message object are no longer valid.
 If the ack argument is set to <tt class="xref docutils literal"><span class="pre">False</span></tt>, this behaviour is
 disabled and the receiver is required to manually handle
 acknowledgment.</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">The resulting <a title="carrot.messaging.Message" class="reference internal" href="#carrot.messaging.Message"><tt class="xref docutils literal"><span class="pre">Message</span></tt></a> object.</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">The resulting <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a>
+object.</td>
 </tr>
 </tbody>
 </table>
@@ -432,7 +349,7 @@ You can register callbacks using <a title="carrot.messaging.Consumer.register_ca
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><em>message_data</em> &#8211; The deserialized message data.</li>
-<li><em>message</em> &#8211; The <a title="carrot.messaging.Message" class="reference internal" href="#carrot.messaging.Message"><tt class="xref docutils literal"><span class="pre">Message</span></tt></a> instance.</li>
+<li><em>message</em> &#8211; The <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a> instance.</li>
 </ul>
 </td>
 </tr>
@@ -458,7 +375,7 @@ You can register callbacks using <a title="carrot.messaging.Consumer.register_ca
 </li>
 <li><p class="first">message</p>
 <blockquote>
-<p>The <a title="carrot.messaging.Message" class="reference internal" href="#carrot.messaging.Message"><tt class="xref docutils literal"><span class="pre">Message</span></tt></a> instance.</p>
+<p>The <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a> instance.</p>
 </blockquote>
 </li>
 </ul>
@@ -472,81 +389,6 @@ You can register callbacks using <a title="carrot.messaging.Consumer.register_ca
 <p>This runs an infinite loop, processing all incoming messages
 using <a title="carrot.messaging.Consumer.receive" class="reference internal" href="#carrot.messaging.Consumer.receive"><tt class="xref docutils literal"><span class="pre">receive()</span></tt></a> to apply the message to all registered
 callbacks.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="carrot.messaging.Message">
-<em class="property">
-class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">Message</tt><big>(</big><em>amqp_message</em>, <em>channel</em>, <em>decoder=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Message" title="Permalink to this definition">¶</a></dt>
-<dd><p>A message received by the broker.</p>
-<p>Usually you don&#8217;t insantiate message objects yourself, but receive
-them using a <a title="carrot.messaging.Consumer" class="reference internal" href="#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">Consumer</span></tt></a>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>amqp_message</em> &#8211; see <a title="carrot.messaging.Message.amqp_message" class="reference internal" href="#carrot.messaging.Message.amqp_message"><tt class="xref docutils literal"><span class="pre">amqp_message</span></tt></a>.</li>
-<li><em>channel</em> &#8211; see <a title="carrot.messaging.Message.channel" class="reference internal" href="#carrot.messaging.Message.channel"><tt class="xref docutils literal"><span class="pre">channel</span></tt></a>.</li>
-<li><em>decoder</em> &#8211; see <a title="carrot.messaging.Message.decoder" class="reference internal" href="#carrot.messaging.Message.decoder"><tt class="xref docutils literal"><span class="pre">decoder</span></tt></a>.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="attribute">
-<dt id="carrot.messaging.Message.amqp_message">
-<tt class="descname">amqp_message</tt><a class="headerlink" href="#carrot.messaging.Message.amqp_message" title="Permalink to this definition">¶</a></dt>
-<dd>A <tt class="xref docutils literal"><span class="pre">amqplib.client_0_8.basic_message.Message</span></tt> instance.</dd></dl>
-
-<dl class="attribute">
-<dt id="carrot.messaging.Message.channel">
-<tt class="descname">channel</tt><a class="headerlink" href="#carrot.messaging.Message.channel" title="Permalink to this definition">¶</a></dt>
-<dd>The AMQP channel. A <tt class="xref docutils literal"><span class="pre">amqplib.client_0_8.channel.Channel</span></tt> instance.</dd></dl>
-
-<dl class="attribute">
-<dt id="carrot.messaging.Message.decoder">
-<tt class="descname">decoder</tt><a class="headerlink" href="#carrot.messaging.Message.decoder" title="Permalink to this definition">¶</a></dt>
-<dd>A function able to deserialize the serialized message data.</dd></dl>
-
-<dl class="method">
-<dt id="carrot.messaging.Message.ack">
-<tt class="descname">ack</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Message.ack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Acknowledge this message as being processed.,</p>
-<p>This will remove the message from the queue.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="carrot.messaging.Message.body">
-<tt class="descname">body</tt><a class="headerlink" href="#carrot.messaging.Message.body" title="Permalink to this definition">¶</a></dt>
-<dd>The message body.</dd></dl>
-
-<dl class="method">
-<dt id="carrot.messaging.Message.decode">
-<tt class="descname">decode</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Message.decode" title="Permalink to this definition">¶</a></dt>
-<dd>Deserialize the message body, returning the original
-python structure sent by the publisher.</dd></dl>
-
-<dl class="attribute">
-<dt id="carrot.messaging.Message.delivery_tag">
-<tt class="descname">delivery_tag</tt><a class="headerlink" href="#carrot.messaging.Message.delivery_tag" title="Permalink to this definition">¶</a></dt>
-<dd>The message delivery tag, uniquely identifying this message.</dd></dl>
-
-<dl class="method">
-<dt id="carrot.messaging.Message.reject">
-<tt class="descname">reject</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Message.reject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reject this message.</p>
-<p>The message will be discarded by the server.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="carrot.messaging.Message.requeue">
-<tt class="descname">requeue</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Message.requeue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reject this message and put it back on the queue.</p>
-<p>You must not use this method as a means of selecting messages
-to process.</p>
 </dd></dl>
 
 </dd></dl>
@@ -582,6 +424,7 @@ class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">
 <li><em>exchange</em> &#8211; see <a title="carrot.messaging.Publisher.exchange" class="reference internal" href="#carrot.messaging.Publisher.exchange"><tt class="xref docutils literal"><span class="pre">exchange</span></tt></a>.</li>
 <li><em>routing_key</em> &#8211; see <a title="carrot.messaging.Publisher.routing_key" class="reference internal" href="#carrot.messaging.Publisher.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a>.</li>
 <li><em>encoder</em> &#8211; see <a title="carrot.messaging.Publisher.encoder" class="reference internal" href="#carrot.messaging.Publisher.encoder"><tt class="xref docutils literal"><span class="pre">encoder</span></tt></a>.</li>
+<li><em>backend</em> &#8211; see <a title="carrot.messaging.Publisher.backend" class="reference internal" href="#carrot.messaging.Publisher.backend"><tt class="xref docutils literal"><span class="pre">backend</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -590,7 +433,7 @@ class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.connection">
 <tt class="descname">connection</tt><a class="headerlink" href="#carrot.messaging.Publisher.connection" title="Permalink to this definition">¶</a></dt>
-<dd>The AMQP connection. A <tt class="xref docutils literal"><span class="pre">carrot.connection.AMQPConnection</span></tt>
+<dd>The AMQP connection. A <a title="carrot.connection.AMQPConnection" class="reference external" href="carrot.connection.html#carrot.connection.AMQPConnection"><tt class="xref docutils literal"><span class="pre">carrot.connection.AMQPConnection</span></tt></a>
 instance.</dd></dl>
 
 <dl class="attribute">
@@ -637,13 +480,15 @@ preserved if the server dies or restarts.</p>
 to <a title="carrot.messaging.Publisher.send" class="reference internal" href="#carrot.messaging.Publisher.send"><tt class="xref docutils literal"><span class="pre">send()</span></tt></a>. Note that any consumer of the messages sent
 must have a decoder supporting the serialization scheme.</dd></dl>
 
+<dl class="attribute">
+<dt id="carrot.messaging.Publisher.backend">
+<tt class="descname">backend</tt><a class="headerlink" href="#carrot.messaging.Publisher.backend" title="Permalink to this definition">¶</a></dt>
+<dd>The backend used. Defaults to the <tt class="docutils literal"><span class="pre">pyamqplib</span></tt> backend.</dd></dl>
+
 <dl class="method">
 <dt id="carrot.messaging.Publisher.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Close connection to queue.</p>
-<p><em>Note</em> Whenever <a title="carrot.messaging.Publisher.send" class="reference internal" href="#carrot.messaging.Publisher.send"><tt class="xref docutils literal"><span class="pre">send()</span></tt></a> is called, the connection is
-re-established, even if <a title="carrot.messaging.Publisher.close" class="reference internal" href="#carrot.messaging.Publisher.close"><tt class="xref docutils literal"><span class="pre">close()</span></tt></a> was called explicitly.</p>
-</dd></dl>
+<dd>Close connection to queue.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Publisher.create_message">
@@ -673,7 +518,6 @@ dictionary or a string.</li>
 </dd></dl>
 
 </div>
-</div>
 
 
 	      </div>
@@ -683,15 +527,15 @@ dictionary or a string.</li>
 	<div class="sidebar">
 	  <h3>Contents</h3>
 	  <ul class="current">
-<li class="toctree-l1"><a class="reference external" href="../introduction.html">carrot - Simple RabbitMQ/ZeroMQ (AMQP) messaging queue support for Python/Django.</a></li>
+<li class="toctree-l1"><a class="reference external" href="../introduction.html">carrot - AMQP Messaging Framework for Python</a></li>
 <li class="toctree-l1 current"><a class="reference external" href="index.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference external" href="">carrot.messaging</a><ul>
-<li class="toctree-l3"><a class="reference external" href="#creating-a-connection">Creating a connection</a></li>
-<li class="toctree-l3"><a class="reference external" href="#sending-messages-using-a-publisher">Sending messages using a Publisher</a></li>
-<li class="toctree-l3"><a class="reference external" href="#receiving-messages-using-a-consumer">Receiving messages using a Consumer</a></li>
-<li class="toctree-l3"><a class="reference external" href="#subclassing-the-messaging-classes">Subclassing the messaging classes</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference external" href="carrot.connection.html">carrot.connection</a></li>
+<li class="toctree-l2 current"><a class="current reference external" href="">carrot.messaging</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.backends.html">carrot.backends</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.backends.base.html">carrot.backends.base</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.backends.pyamqplib.html">carrot.backends.pyamqplib</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.backends.queue.html">carrot.backends.queue</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.serialization.html">carrot.serialization</a></li>
 </ul>
 </li>
 </ul>
@@ -718,7 +562,9 @@ dictionary or a string.</li>
              >index</a> |
           <a href="../modindex.html" title="Global Module Index"
              >modules</a> |
-          <a href="index.html" title="API Reference"
+          <a href="carrot.backends.html" title="carrot.backends"
+             >next</a> |
+          <a href="carrot.connection.html" title="carrot.connection"
              >previous</a>
             <br/>
             <a href="../sources/reference/carrot.messaging.txt"

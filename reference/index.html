@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>API Reference &mdash; Carrot v0.3.9 documentation</title>
+    <title>API Reference &mdash; Carrot v0.4.0-pre1 documentation</title>
     <link rel="stylesheet" href="../static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
       URL_ROOT:    '../',
-      VERSION:     '0.3.9',
+      VERSION:     '0.4.0-pre1',
       COLLAPSE_MODINDEX: false,
       FILE_SUFFIX: '.html',
       HAS_SOURCE:  true
@@ -19,23 +19,23 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.3.9 documentation" href="../index.html" />
-    <link rel="next" title="carrot.messaging" href="carrot.messaging.html" />
-    <link rel="prev" title="carrot - Simple RabbitMQ/ZeroMQ (AMQP) messaging queue support for Python/Django." href="../introduction.html" /> 
+    <link rel="top" title="Carrot v0.4.0-pre1 documentation" href="../index.html" />
+    <link rel="next" title="carrot.connection" href="carrot.connection.html" />
+    <link rel="prev" title="carrot - AMQP Messaging Framework for Python" href="../introduction.html" /> 
   </head>
   <body>
 
     <div class="header-wrapper">
       <div class="header">
-	<h1><a href="../index.html">Carrot v0.3.9 documentation</a></h1>
+	<h1><a href="../index.html">Carrot v0.4.0-pre1 documentation</a></h1>
 	<div class="rel">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a> |
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |
-          <a href="carrot.messaging.html" title="carrot.messaging"
+          <a href="carrot.connection.html" title="carrot.connection"
              accesskey="N">next</a> |
-          <a href="../introduction.html" title="carrot - Simple RabbitMQ/ZeroMQ (AMQP) messaging queue support for Python/Django."
+          <a href="../introduction.html" title="carrot - AMQP Messaging Framework for Python"
              accesskey="P">previous</a>
 	</div>
       </div>
@@ -54,20 +54,20 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Release:</th><td class="field-body">0.3</td>
+<tr class="field"><th class="field-name">Release:</th><td class="field-body">0.4</td>
 </tr>
-<tr class="field"><th class="field-name">Date:</th><td class="field-body">May 26, 2009</td>
+<tr class="field"><th class="field-name">Date:</th><td class="field-body">May 28, 2009</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="carrot.messaging.html">carrot.messaging</a><ul>
-<li class="toctree-l2"><a class="reference external" href="carrot.messaging.html#creating-a-connection">Creating a connection</a></li>
-<li class="toctree-l2"><a class="reference external" href="carrot.messaging.html#sending-messages-using-a-publisher">Sending messages using a Publisher</a></li>
-<li class="toctree-l2"><a class="reference external" href="carrot.messaging.html#receiving-messages-using-a-consumer">Receiving messages using a Consumer</a></li>
-<li class="toctree-l2"><a class="reference external" href="carrot.messaging.html#subclassing-the-messaging-classes">Subclassing the messaging classes</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference external" href="carrot.connection.html">carrot.connection</a></li>
+<li class="toctree-l1"><a class="reference external" href="carrot.messaging.html">carrot.messaging</a></li>
+<li class="toctree-l1"><a class="reference external" href="carrot.backends.html">carrot.backends</a></li>
+<li class="toctree-l1"><a class="reference external" href="carrot.backends.base.html">carrot.backends.base</a></li>
+<li class="toctree-l1"><a class="reference external" href="carrot.backends.pyamqplib.html">carrot.backends.pyamqplib</a></li>
+<li class="toctree-l1"><a class="reference external" href="carrot.backends.queue.html">carrot.backends.queue</a></li>
+<li class="toctree-l1"><a class="reference external" href="carrot.serialization.html">carrot.serialization</a></li>
 </ul>
 </div>
 
@@ -79,9 +79,15 @@
 	<div class="sidebar">
 	  <h3>Contents</h3>
 	  <ul class="current">
-<li class="toctree-l1"><a class="reference external" href="../introduction.html">carrot - Simple RabbitMQ/ZeroMQ (AMQP) messaging queue support for Python/Django.</a></li>
+<li class="toctree-l1"><a class="reference external" href="../introduction.html">carrot - AMQP Messaging Framework for Python</a></li>
 <li class="toctree-l1 current"><a class="current reference external" href="">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference external" href="carrot.connection.html">carrot.connection</a></li>
 <li class="toctree-l2"><a class="reference external" href="carrot.messaging.html">carrot.messaging</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.backends.html">carrot.backends</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.backends.base.html">carrot.backends.base</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.backends.pyamqplib.html">carrot.backends.pyamqplib</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.backends.queue.html">carrot.backends.queue</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.serialization.html">carrot.serialization</a></li>
 </ul>
 </li>
 </ul>
@@ -108,9 +114,9 @@
              >index</a> |
           <a href="../modindex.html" title="Global Module Index"
              >modules</a> |
-          <a href="carrot.messaging.html" title="carrot.messaging"
+          <a href="carrot.connection.html" title="carrot.connection"
              >next</a> |
-          <a href="../introduction.html" title="carrot - Simple RabbitMQ/ZeroMQ (AMQP) messaging queue support for Python/Django."
+          <a href="../introduction.html" title="carrot - AMQP Messaging Framework for Python"
              >previous</a>
             <br/>
             <a href="../sources/reference/index.txt"
