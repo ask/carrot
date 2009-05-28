@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>carrot.backends.base &mdash; Carrot v0.4.0-pre1 documentation</title>
+    <link rel="stylesheet" href="../static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+      URL_ROOT:    '../',
+      VERSION:     '0.4.0-pre1',
+      COLLAPSE_MODINDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="Carrot v0.4.0-pre1 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="index.html" />
+    <link rel="next" title="carrot.backends.pyamqplib" href="carrot.backends.pyamqplib.html" />
+    <link rel="prev" title="carrot.backends" href="carrot.backends.html" /> 
+  </head>
+  <body>
+
+    <div class="header-wrapper">
+      <div class="header">
+	<h1><a href="../index.html">Carrot v0.4.0-pre1 documentation</a></h1>
+	<div class="rel">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a> |
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |
+          <a href="carrot.backends.pyamqplib.html" title="carrot.backends.pyamqplib"
+             accesskey="N">next</a> |
+          <a href="carrot.backends.html" title="carrot.backends"
+             accesskey="P">previous</a>
+	</div>
+      </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+	<div class="document">
+	  <div class="documentwrapper">
+	    <div class="bodywrapper">
+	      <div class="body">
+		
+  <div class="section" id="module-carrot.backends.base">
+<h1>carrot.backends.base<a class="headerlink" href="#module-carrot.backends.base" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="carrot.backends.base.BaseMessage">
+<em class="property">
+class </em><tt class="descclassname">carrot.backends.base.</tt><tt class="descname">BaseMessage</tt><big>(</big><em>backend</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for received messages.</p>
+<dl class="method">
+<dt id="carrot.backends.base.BaseMessage.ack">
+<tt class="descname">ack</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseMessage.ack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acknowledge this message as being processed.,</p>
+<p>This will remove the message from the queue.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseMessage.decode">
+<tt class="descname">decode</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseMessage.decode" title="Permalink to this definition">¶</a></dt>
+<dd>Deserialize the message body, returning the original
+python structure sent by the publisher.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseMessage.reject">
+<tt class="descname">reject</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseMessage.reject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reject this message.</p>
+<p>The message will be discarded by the server.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseMessage.requeue">
+<tt class="descname">requeue</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseMessage.requeue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reject this message and put it back on the queue.</p>
+<p>You must not use this method as a means of selecting messages
+to process.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<div class="sidebar">
+	  <h3>Contents</h3>
+	  <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="../introduction.html">carrot - AMQP Messaging Framework for Python</a></li>
+<li class="toctree-l1 current"><a class="reference external" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference external" href="carrot.connection.html">carrot.connection</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.messaging.html">carrot.messaging</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.backends.html">carrot.backends</a></li>
+<li class="toctree-l2 current"><a class="current reference external" href="">carrot.backends.base</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.backends.pyamqplib.html">carrot.backends.pyamqplib</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.backends.queue.html">carrot.backends.queue</a></li>
+<li class="toctree-l2"><a class="reference external" href="carrot.serialization.html">carrot.serialization</a></li>
+</ul>
+</li>
+</ul>
+
+	  <h3 style="margin-top: 1.5em;">Search</h3>
+	  <form class="search" action="../search.html" method="get">
+            <input type="text" name="q" size="18" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+	</div>
+	<div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+	<div class="left">
+          <a href="../genindex.html" title="General Index"
+             >index</a> |
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |
+          <a href="carrot.backends.pyamqplib.html" title="carrot.backends.pyamqplib"
+             >next</a> |
+          <a href="carrot.backends.html" title="carrot.backends"
+             >previous</a>
+            <br/>
+            <a href="../sources/reference/carrot.backends.base.txt"
+               rel="nofollow">Show Source</a>
+	</div>
+
+	<div class="right">
+	  &copy; Copyright 2009, Ask Solem.<br/>
+	  Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.1.
+	</div>
+	<div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>
