@@ -8,7 +8,7 @@
 Introduction
 ------------
 `carrot` is a AMQP messaging queue framework with support for pluggable
-backends. Currently `py-amqplib`_ is the library for production use, and
+back ends. Currently `py-amqplib`_ is the library for production use, and
 the Python `Queue` module is used while unit testing.
 
 The aim of `carrot` is to make messaging in Python easier and more high-level
@@ -101,7 +101,7 @@ There are some concepts you need to know about before you start:
                 Matches if the routing key property of the message and
                 the ``routing_key`` attribute of the consumer are identical.
 
-            * fanout exchange
+            * fan-out exchange
 
                 Always matches, even if the binding does not have a routing
                 key.
@@ -171,7 +171,7 @@ This consumer declares a queue named ``"feed"``, receiving messages with
 the routing key ``"importer"`` from the ``"feed"`` exchange.
 
 The example then uses the consumers ``wait()`` method to go into consume
-mode, where it continously polls the queue for new messages, and when a
+mode, where it continuously polls the queue for new messages, and when a
 message is received it passes the message to all registered callbacks.
 
     >>> from carrot.messaging import Consumer
@@ -192,8 +192,8 @@ Receiving messages without a callback
 
 You can also poll the queue manually, by using the ``fetch`` method.
 This method returns a ``Message`` object, from where you can get the
-message body, deserialize the body to get the data, acknowledge, reject or
-requeue the message.
+message body, de-serialize the body to get the data, acknowledge, reject or
+re-queue the message.
 
     >>> consumer = Consumer(connection=amqpconn, queue="feed",
     ...                     exchange="feed", routing_key="importer")
@@ -205,11 +205,11 @@ requeue the message.
     ...     # No messages waiting on the queue.
     >>> consumer.close()
 
-Subclassing the messaging classes
+Sub-classing the messaging classes
 ---------------------------------
 
 The ``Consumer``, and ``Publisher`` classes are also designed
-for subclassing. Another way of defining the above publisher and consumer is,
+for sub-classing. Another way of defining the above publisher and consumer is,
 
     >>> from carrot.messaging import Publisher, Consumer
 
