@@ -11,7 +11,7 @@ Introduction
 backends. Currently `py-amqplib`_ is the library for production use, and
 the Python `Queue` module is used while unit testing.
 
-The aim of `carrot` is to make messaging in python easier and more high-level
+The aim of `carrot` is to make messaging in Python easier and more high-level
 than the existing libraries, while re-using what is already available as much
 as possible.
 
@@ -24,7 +24,7 @@ You'll need to have one of these installed, personally we prefer `RabbitMQ`_.
 
 Before you start playing with ``carrot``, you should probably read up on
 AMQP, and you could start with the excellent article about using RabbitMQ
-under python by Jason, called `Rabbits and warrens`_.
+under Python by Jason, called `Rabbits and warrens`_.
 
 .. _`RabbitMQ`: http://www.rabbitmq.com/
 .. _`ZeroMQ`: http://www.zeromq.org/
@@ -44,15 +44,18 @@ To install using ``pip``,::
 
     $ pip install carrot
 
+
 To install using ``easy_install``,::
 
     $ easy_install carrot
+
 
 If you have downloaded a source tarball you can install it
 by doing the following,::
 
     $ python setup.py build
     # python setup.py install # as root
+
 
 Examples
 ========
@@ -87,7 +90,7 @@ There are some concepts you need to know about before you start:
     * Routing keys
 
         Every message has a routing key.  The interpretation of the routing
-        key depends on the exchange_type. There are four default exchange
+        key depends on the exchange type. There are four default exchange
         types defined by the AMQP standard, and vendors can define custom
         types (so see your vendors manual for details).
 
