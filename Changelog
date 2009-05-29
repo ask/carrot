@@ -1,11 +1,24 @@
-==============
-Change history
-==============
+================
+ Change history
+================
 
-0.4.0-pre2 :date:`2009-05-27 04:27 P.M CET` :author:askh@opera.com
+0.4.0-pre3 :date:`2009-05-29 02:27 P.M CET` :author:askh@opera.com
 ------------------------------------------------------------------
 
-	* Added ``connection_timeout``
+	* Publisher.send: Now supports message priorities (a number between ``0``
+		and ``9``).
+
+	* Publihser.send: Added ``routing_key`` keyword argument. Can override
+		the routing key for a single message.
+
+	* Publisher.send: Support for the ``immediate`` and ``mandatory`` flags.
+
+0.4.0-pre2 :date:`2009-05-29 02:27 P.M CET` :author:askh@opera.com
+------------------------------------------------------------------
+
+	* AMQPConnection: Added ``connect_timeout`` timeout option, which is
+		the timeout in seconds before we exhaust trying to establish a
+		connection to the AMQP server.
 
 0.4.0-pre1 :date:`2009-05-27 04:27 P.M CET` :author:askh@opera.com
 ------------------------------------------------------------------
