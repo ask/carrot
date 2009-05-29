@@ -430,15 +430,27 @@ class Publisher(object):
         message_data = self.encoder(message_data)
         return self.backend.prepare_message(message_data, self.delivery_mode)
 
-    def send(self, message_data, routing_key=None, delivery_mode=None):
+    def send(self, message_data, routing_key=None, delivery_mode=None,
+            mandatory=False, immediate=False):
         """Send a message.
        
         :param message_data: The message data to send. Can be a list,
             dictionary or a string.
 
-        :param routing_key: A custom routing key for the message.
+        :keyword routing_key: A custom routing key for the message.
             If not set, the default routing key set in the :attr:`routing_key`
             attribute is used.
+
+        :keyword mandatory: If set, the message has mandatory routing.
+            By default the message is silently dropped by the server if it
+            can't be routed to a queue. However - If the message is mandatory,
+            an exception will be raised instead.
+
+        :keyword immediate: Request immediate delivery.
+            If the message cannot be routed to a queue consumer immediately,
+            an exception will be raised. This is instead of the default
+            behaviour, where the server will accept and queue the message,
+            but with no guarantee that the message will ever be consumed.
 
         :keyword delivery_mode: Override the default :attr:`delivery_mode`.
 
@@ -446,8 +458,9 @@ class Publisher(object):
         if not routing_key:
             routing_key = self.routing_key
         message = self.create_message(message_data)
-        self.backend.publish(message, exchange=self.exchange,
-                                      routing_key=routing_key)
+        self.backend.publish(message,
+                             exchange=self.exchange, routing_key=routing_key,
+                             mandatory=mandatory, immediate=immediate)
 
     def close(self):
         """Close connection to queue."""
