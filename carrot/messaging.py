@@ -375,8 +375,10 @@ class Publisher(object):
 
     .. attribute:: routing_key
 
-        The routing key added to all messages sent using this publisher.
+        The default routing key for messages sent using this publisher.
         See :attr:`Consumer.routing_key` for more information.
+        You can override the routing key by passing an explicit
+        ``routing_key`` argument to :meth:`send`.
 
     .. attribute:: delivery_mode
 
@@ -428,18 +430,24 @@ class Publisher(object):
         message_data = self.encoder(message_data)
         return self.backend.prepare_message(message_data, self.delivery_mode)
 
-    def send(self, message_data, delivery_mode=None):
+    def send(self, message_data, routing_key=None, delivery_mode=None):
         """Send a message.
        
         :param message_data: The message data to send. Can be a list,
             dictionary or a string.
 
+        :param routing_key: A custom routing key for the message.
+            If not set, the default routing key set in the :attr:`routing_key`
+            attribute is used.
+
         :keyword delivery_mode: Override the default :attr:`delivery_mode`.
 
         """
+        if not routing_key:
+            routing_key = self.routing_key
         message = self.create_message(message_data)
         self.backend.publish(message, exchange=self.exchange,
-                                      routing_key=self.routing_key)
+                                      routing_key=routing_key)
 
     def close(self):
         """Close connection to queue."""
