@@ -424,11 +424,12 @@ class Publisher(object):
         self.routing_key = routing_key or self.routing_key
         self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
 
-    def create_message(self, message_data):
+    def create_message(self, message_data, priority=None):
         """With any data, serialize it and encapsulate it in a AMQP
         message with the proper headers set."""
         message_data = self.encoder(message_data)
-        return self.backend.prepare_message(message_data, self.delivery_mode)
+        return self.backend.prepare_message(message_data, self.delivery_mode,
+                                            priority=priority)
 
     def send(self, message_data, routing_key=None, delivery_mode=None,
             mandatory=False, immediate=False):
@@ -454,10 +455,12 @@ class Publisher(object):
 
         :keyword delivery_mode: Override the default :attr:`delivery_mode`.
 
+        :keyword priority: The message priority, ``0`` to ``9``.
+
         """
         if not routing_key:
             routing_key = self.routing_key
-        message = self.create_message(message_data)
+        message = self.create_message(message_data, priority=priority)
         self.backend.publish(message,
                              exchange=self.exchange, routing_key=routing_key,
                              mandatory=mandatory, immediate=immediate)

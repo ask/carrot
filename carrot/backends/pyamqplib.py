@@ -155,13 +155,16 @@ class Backend(BaseBackend):
         """Reject and requeue a message by delivery tag."""
         return self.channel.basic_reject(delivery_tag, requeue=True)
 
-    def prepare_message(self, message_data, delivery_mode):
+    def prepare_message(self, message_data, delivery_mode, priority=None):
         """Encapsulate data into a AMQP message."""
-        message = amqp.Message(message_data)
+        message = amqp.Message(message_data, priority=priority)
         message.properties["delivery_mode"] = delivery_mode
         return message
 
-    def publish(self, message, exchange, routing_key):
+    def publish(self, message, exchange, routing_key, mandatory=None,
+            immediate=None):
         """Publish a message to a named exchange."""
         return self.channel.basic_publish(message, exchange=exchange,
-                                          routing_key=routing_key)
+                                          routing_key=routing_key,
+                                          mandatory=mandatory,
+                                          immediate=immediate)
