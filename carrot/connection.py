@@ -1,5 +1,7 @@
 from amqplib import client_0_8 as amqp
 
+DEFAULT_CONNECT_TIMEOUT = 5 # seconds
+
 
 class AMQPConnection(object):
     """A network/socket connection to an AMQP message broker.
@@ -12,6 +14,7 @@ class AMQPConnection(object):
     :keyword port: see :attr:`port`.
     :keyword insist: see :attr:`insist`.
     :keyword connect_timeout: see :attr:`connect_timeout`.
+    :keyword ssl: see :attr:`ssl`.
 
 
     .. attribute:: hostname
@@ -59,7 +62,7 @@ class AMQPConnection(object):
     virtual_host = "/"
     port = 5672
     insist = False
-    connect_timeout = None
+    connect_timeout = DEFAULT_CONNECT_TIMEOUT
     ssl = False
 
     @property
