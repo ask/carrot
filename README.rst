@@ -60,13 +60,10 @@ by doing the following,::
     # python setup.py install # as root
 
 
-Examples
-========
+Terminology
+===========
 
-To send messages you need to define a ``Publisher``, and to receive
-messages you need to define a ``Consumer``.
-
-There are some concepts you need to know about before you start:
+There are some concepts you should be familiar with before starting:
 
     * Publishers
 
@@ -104,7 +101,7 @@ There are some concepts you need to know about before you start:
                 Matches if the routing key property of the message and
                 the ``routing_key`` attribute of the consumer are identical.
 
-            * Dan-out exchange
+            * Fan-out exchange
 
                 Always matches, even if the binding does not have a routing
                 key.
@@ -120,13 +117,9 @@ There are some concepts you need to know about before you start:
                 routing keys ``"usd.stock"`` and ``"eur.stock.db"`` but not
                 ``"stock.nasdaq"``.
 
-By default every message is encoded using `JSON`_, so sending
-Python data structures like dictionaries and lists works. If you want
-to support more complicated data, you might want to configure the publisher
-and consumer to use something like ``pickle``, by providing them with
-an ``encoder`` and ``decoder`` respectively.
 
-.. _`JSON`: http://www.json.org/
+Examples
+========
 
 Creating a connection
 ---------------------
@@ -139,7 +132,6 @@ Creating a connection
     >>> amqpconn = AMQPConnection(hostname="localhost", port=5672,
     ...                           userid="test", password="test",
     ...                           vhost="test")
-
 
 
     If you're using Django you can use the
@@ -169,6 +161,16 @@ of ``importer`` to the ``"feed"`` exchange,
     ...                       exchange="feed", routing_key="importer")
     >>> publisher.send({"import_feed": "http://cnn.com/rss/edition.rss"})
     >>> publisher.close()
+
+
+By default every message is encoded using `JSON`_, so sending
+Python data structures like dictionaries and lists works. If you want
+to support more complicated data, you might want to configure the publisher
+and consumer to use something like ``pickle``, by providing them with
+an ``encoder`` and ``decoder`` respectively.
+
+.. _`JSON`: http://www.json.org/
+
 
 Receiving messages using a Consumer
 -----------------------------------
@@ -214,8 +216,8 @@ re-queue the message.
 Sub-classing the messaging classes
 ---------------------------------
 
-The ``Consumer``, and ``Publisher`` classes are also designed
-for sub-classing. Another way of defining the above publisher and consumer is,
+The ``Consumer``, and ``Publisher`` classes can also be subclassed. Thus you
+can define the above publisher and consumer like so:
 
     >>> from carrot.messaging import Publisher, Consumer
 
