@@ -99,17 +99,17 @@ There are some concepts you need to know about before you start:
 
         These are the default exchange types defined by AMQP/0.8:
 
-            * direct exchange
+            * Direct exchange
 
                 Matches if the routing key property of the message and
                 the ``routing_key`` attribute of the consumer are identical.
 
-            * fan-out exchange
+            * Dan-out exchange
 
                 Always matches, even if the binding does not have a routing
                 key.
 
-            * topic exchange
+            * Topic exchange
 
                 Matches the routing key property of the message by a primitive
                 pattern matching scheme. The message routing key then consists
@@ -131,9 +131,20 @@ an ``encoder`` and ``decoder`` respectively.
 Creating a connection
 ---------------------
 
+    You can create a connection manually by creating an instance of
+    ``carrot.messaging.AMQPConnection``, with the appropriate options for
+    connection to your AMQP server:
+
+    >>> from carrot.connection import AMQPConnection
+    >>> amqpconn = AMQPConnection(hostname="localhost", port=5672,
+    ...                           userid="test", password="test",
+    ...                           vhost="test")
+
+
+
     If you're using Django you can use the
-    ``carrot.connection.DjangoAMQPConnection`` class, by setting the
-    following variables in your ``settings.py``::
+    ``carrot.connection.DjangoAMQPConnection`` class instead, which loads the
+    connection settings from your ``settings.py``::
 
        AMQP_SERVER = "localhost"
        AMQP_PORT = 5672
@@ -145,14 +156,6 @@ Creating a connection
 
         >>> from carrot.connection import DjangoAMQPConnection
         >>> amqpconn = DjangoAMQPConnection()
-
-    If you're not using Django, you can create a connection manually by using
-    ``carrot.messaging.AMQPConnection``.
-
-    >>> from carrot.connection import AMQPConnection
-    >>> amqpconn = AMQPConnection(hostname="localhost", port=5672,
-    ...                           userid="test", password="test",
-    ...                           vhost="test")
 
 
 Sending messages using a Publisher
