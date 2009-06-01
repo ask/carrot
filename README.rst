@@ -124,9 +124,9 @@ Examples
 Creating a connection
 ---------------------
 
-    You can create a connection manually by creating an instance of
+    You can set up a connection by creating an instance of
     ``carrot.messaging.AMQPConnection``, with the appropriate options for
-    connection to your AMQP server:
+    your AMQP server:
 
     >>> from carrot.connection import AMQPConnection
     >>> amqpconn = AMQPConnection(hostname="localhost", port=5672,
