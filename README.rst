@@ -4,27 +4,29 @@
 
 :Version: 0.4.0-pre1
 
-
 Introduction
 ------------
-`carrot` is a AMQP messaging queue framework with support for pluggable
-back ends. Currently `py-amqplib`_ is the library for production use, and
-the Python `Queue` module is used while unit testing.
 
-The aim of `carrot` is to make messaging in Python easier and more high-level
-than the existing libraries, while re-using what is already available as much
-as possible.
+`carrot` is an `AMQP`_ messaging queue framework. AMQP is the Advanced Message
+Queuing Protocol, an open standard protocol for message orientation, queuing,
+routing, reliability and security.
 
-`AMQP`_ is the Advanced Message Queuing Protocol, and is an open standard
-protocol for message orientation, queuing, routing, reliability and security.
+The aim of `carrot` is to make messaging in Python as easy as possible by
+providing a high-level interface form producing and consuming messages. At the
+same time it is a goal to re-use what is already available as much as possible.
 
-Several AMQP message broker implementations exists,
-including `RabbitMQ`_, `ZeroMQ`_ and `Apache ActiveMQ`_.
-You'll need to have one of these installed, personally we prefer `RabbitMQ`_.
+`carrot` supprots pluggable messaging back-ends, so it is possible to support
+several messaging systems. At the time of release, the `py-amqplib`_ based
+backend is considered suitable for production use.
+
+Several AMQP message broker implementations exists, including `RabbitMQ`_,
+`ZeroMQ`_ and `Apache ActiveMQ`_. You'll need to have one of these installed,
+personally we've been using `RabbitMQ`_.
 
 Before you start playing with ``carrot``, you should probably read up on
 AMQP, and you could start with the excellent article about using RabbitMQ
-under Python by Jason, called `Rabbits and warrens`_.
+under Python, `Rabbits and warrens`_. For more detailed information, you can
+refer to the `Wikipedia article about AMQP`_.
 
 .. _`RabbitMQ`: http://www.rabbitmq.com/
 .. _`ZeroMQ`: http://www.zeromq.org/
@@ -33,9 +35,10 @@ under Python by Jason, called `Rabbits and warrens`_.
 .. _`Django`: http://www.djangoproject.com/
 .. _`Rabbits and warrens`: http://blogs.digitar.com/jjww/2009/01/rabbits-and-warrens/
 .. _`py-amqplib`: http://barryp.org/software/py-amqplib/
+.. _`Wikipedia article about AMQP`: http://en.wikipedia.org/wiki/AMQP
 
 Installation
-=============
+============
 
 You can install ``carrot`` either via the Python Package Index (PyPI)
 or from source.
@@ -76,7 +79,7 @@ There are some concepts you need to know about before you start:
         routes the messages to consumers by matching the routing key in the
         message with the routing key the consumer provides when binding to
         the exchange.
-    
+
     * Consumers
 
         Consumers declares a queue, binds it to a exchange and receives
@@ -116,7 +119,7 @@ There are some concepts you need to know about before you start:
                 zero or more words. For example ``"*.stock.#"`` matches the
                 routing keys ``"usd.stock"`` and ``"eur.stock.db"`` but not
                 ``"stock.nasdaq"``.
-    
+
 By default every message is encoded using `JSON`_, so sending
 Python data structures like dictionaries and lists works. If you want
 to support more complicated data, you might want to configure the publisher
@@ -155,7 +158,7 @@ Creating a connection
 Sending messages using a Publisher
 ----------------------------------
 
-Here we create a publisher sending messages with a routing key 
+Here we create a publisher sending messages with a routing key
 of ``importer`` to the ``"feed"`` exchange,
 
     >>> from carrot.messaging import Publisher
@@ -216,7 +219,7 @@ for sub-classing. Another way of defining the above publisher and consumer is,
     >>> class FeedPublisher(Publisher):
     ...     exchange = "feed"
     ...     routing_key = "importer"
-    ... 
+    ...
     ...     def feed_import(feed_url):
     ...         return self.send({"action": "import_feed",
     ...                           "feed_url": feed_url})
@@ -248,5 +251,3 @@ License
 
 This software is licensed under the ``New BSD License``. See the ``LICENSE``
 file in the top distribution directory for the full license text.
-
-
