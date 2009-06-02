@@ -432,7 +432,7 @@ class Publisher(object):
                                             priority=priority)
 
     def send(self, message_data, routing_key=None, delivery_mode=None,
-            mandatory=False, immediate=False):
+            mandatory=False, immediate=False, priority=0):
         """Send a message.
        
         :param message_data: The message data to send. Can be a list,
