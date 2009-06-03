@@ -42,9 +42,9 @@ class Backend(BaseBackend):
             else:
                 time.sleep(0.3)
 
-    def prepare_message(self, message_data, delivery_mode):
+    def prepare_message(self, message_data, delivery_mode, **kwargs):
         return message_data
 
-    def publish(self, message, exchange, routing_key):
+    def publish(self, message, exchange, routing_key, **kwargs):
         """Publish a message to the queue."""
         mqueue.put(message)

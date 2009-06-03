@@ -1,4 +1,4 @@
-from carrot.serialization import deserialize
+from carrot.serialization import serialize, deserialize
 
 
 class BaseMessage(object):
@@ -40,6 +40,8 @@ class BaseMessage(object):
 
 
 class BaseBackend(object):
+    encoder = serialize
+    decoder = deserialize
 
     def __init__(self, connection):
         self.connection = connection
@@ -71,10 +73,10 @@ class BaseBackend(object):
     def requeue(self, delivery_tag):
         pass
 
-    def prepare_message(self, message_data, delivery_mode):
+    def prepare_message(self, message_data, delivery_mode, **kwargs):
         return message_data
 
-    def publish(self, message, exchange, routing_key):
+    def publish(self, message, exchange, routing_key, **kwargs):
         pass
 
     def close(self):
