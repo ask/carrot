@@ -190,8 +190,8 @@ class Consumer(object):
         self.warn_if_exists = kwargs.get("warn_if_exists",
                                          self.warn_if_exists)
 
-        # durable implies auto-delete.
-        if self.durable:
+        # exclusive implies auto-delete.
+        if self.exclusive:
             self.auto_delete = True
 
         self._declare_channel()
