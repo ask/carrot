@@ -6,20 +6,16 @@
 
 """
 from amqplib import client_0_8 as amqp
+from amqplib.client_0_8.exceptions import AMQPChannelException
 from carrot.backends.base import BaseMessage, BaseBackend
 from carrot.serialization import serialize, deserialize
 import warnings
 
-WARN_QUEUE_EXISTS = """
-A queue with that name already exists, so a recently changed
-``routing_key`` or other settings might be ignored unless you
-rename the queue or restart the broker.
-""".strip()
-
 
 class QueueAlreadyExistsWarning(UserWarning):
-    pass
-QueueAlreadyExistsWarning.__doc__ = WARN_QUEUE_EXISTS
+    """A queue with that name already exists, so a recently changed
+    ``routing_key`` or other settings might be ignored unless you
+    rename the queue or restart the broker."""
 
 
 class Message(BaseMessage):
@@ -121,7 +117,8 @@ class Backend(BaseBackend):
         """Declare a named queue."""
         
         if warn_if_exists and self.queue_exists(queue):
-            warnings.warn(QueueAlreadyExistsWarning(WARN_QUEUE_EXISTS))
+            warnings.warn(QueueAlreadyExistsWarning(
+                QueueAlreadyExistsWarning.__doc__))
 
         self.channel.queue_declare(queue=queue, durable=durable,
                                    exclusive=exclusive,
