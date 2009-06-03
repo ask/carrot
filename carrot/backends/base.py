@@ -73,6 +73,9 @@ class BaseBackend(object):
     def requeue(self, delivery_tag):
         pass
 
+    def message_to_python(self, raw_message):
+        return raw_message
+
     def prepare_message(self, message_data, delivery_mode, **kwargs):
         return message_data
 

@@ -212,9 +212,9 @@ class Consumer(object):
             self.backend.queue_bind(queue=self.queue, exchange=self.exchange,
                                     routing_key=self.routing_key)
 
-    def _receive_callback(self, message):
-        message_data = self.message_to_python(message)
-        self.receive(message_data, message)
+    def _receive_callback(self, raw_message):
+        message = self.backend.message_to_python(raw_message)
+        self.receive(message.decode(), message)
 
     def message_to_python(self, message):
         """Decode encoded message back to python.

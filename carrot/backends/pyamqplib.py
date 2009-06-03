@@ -137,6 +137,10 @@ class Backend(BaseBackend):
         self.channel.queue_bind(queue=queue, exchange=exchange,
                                 routing_key=routing_key)
 
+    def message_to_python(self, raw_message):
+        return Message(backend=self, amqp_message=amqp_message,
+                decoder=self.decoder)
+
     def get(self, queue):
         """Receive a message from a declared queue by name.
 
@@ -145,12 +149,10 @@ class Backend(BaseBackend):
             there was no messages waiting on the queue.
 
         """
-        message = self.channel.basic_get(queue)
-        if not message:
+        raw_message = self.channel.basic_get(queue)
+        if not raw_message:
             return None
-        return Message(backend=self,
-                       amqp_message=message,
-                       decoder=self.decoder)
+        return self.message_to_python(raw_message)
 
     def consume(self, queue, no_ack, callback, consumer_tag):
         """Go into an infinite loop, calling the ``callback`` when
