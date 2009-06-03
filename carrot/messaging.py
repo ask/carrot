@@ -82,12 +82,12 @@ class Consumer(object):
         also define additional exchange types, so see your message brokers
         manual for more information about available exchange types.
 
-            *direct
+            * Direct
 
                 Direct match between the routing key in the message, and the
                 routing criteria used when a queue is bound to this exchange.
 
-            *topic
+            * Topic
 
                 Wildcard match between the routing key and the routing pattern
                 specified in the binding. The routing key is treated as zero
@@ -95,13 +95,13 @@ class Consumer(object):
                 wildcard characters. ``"*"`` matches a single word and ``"#"``
                 matches zero or more words.
 
-            *fanout
+            * Fanout
 
                 Queues are bound to this exchange with no arguments. Hence any
                 message sent to this exchange will be forwarded to all queues
                 bound to this exchange.
 
-            *headers
+            * Headers
 
                 Queues are bound to this exchange with a table of arguments
                 containing headers and values (optional). A special argument
