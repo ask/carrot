@@ -214,7 +214,7 @@ re-queue the message.
     >>> consumer.close()
 
 Sub-classing the messaging classes
----------------------------------
+----------------------------------
 
 The ``Consumer``, and ``Publisher`` classes can also be subclassed. Thus you
 can define the above publisher and consumer like so:
