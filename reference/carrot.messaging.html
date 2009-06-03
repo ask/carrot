@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.messaging &mdash; Carrot v0.4.0-pre1 documentation</title>
+    <title>carrot.messaging &mdash; Carrot v0.4.0-pre7 documentation</title>
     <link rel="stylesheet" href="../static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
       URL_ROOT:    '../',
-      VERSION:     '0.4.0-pre1',
+      VERSION:     '0.4.0-pre7',
       COLLAPSE_MODINDEX: false,
       FILE_SUFFIX: '.html',
       HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.4.0-pre1 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.4.0-pre7 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends" href="carrot.backends.html" />
     <link rel="prev" title="carrot.connection" href="carrot.connection.html" /> 
@@ -28,7 +28,7 @@
 
     <div class="header-wrapper">
       <div class="header">
-	<h1><a href="../index.html">Carrot v0.4.0-pre1 documentation</a></h1>
+	<h1><a href="../index.html">Carrot v0.4.0-pre7 documentation</a></h1>
 	<div class="rel">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a> |
@@ -156,23 +156,30 @@ covers most of the common messaging use cases. An AMQP broker can
 also define additional exchange types, so see your message brokers
 manual for more information about available exchange types.</p>
 <blockquote>
-<p><a href="#id1"><span class="problematic" id="id2">*</span></a>direct</p>
+<ul>
+<li><p class="first">Direct</p>
 <blockquote>
-Direct match between the routing key in the message, and the
-routing criteria used when a queue is bound to this exchange.</blockquote>
-<p><a href="#id3"><span class="problematic" id="id4">*</span></a>topic</p>
+<p>Direct match between the routing key in the message, and the
+routing criteria used when a queue is bound to this exchange.</p>
+</blockquote>
+</li>
+<li><p class="first">Topic</p>
 <blockquote>
-Wildcard match between the routing key and the routing pattern
+<p>Wildcard match between the routing key and the routing pattern
 specified in the binding. The routing key is treated as zero
 or more words delimited by <tt class="docutils literal"><span class="pre">&quot;.&quot;</span></tt> and supports special
 wildcard characters. <tt class="docutils literal"><span class="pre">&quot;*&quot;</span></tt> matches a single word and <tt class="docutils literal"><span class="pre">&quot;#&quot;</span></tt>
-matches zero or more words.</blockquote>
-<p><a href="#id5"><span class="problematic" id="id6">*</span></a>fanout</p>
+matches zero or more words.</p>
+</blockquote>
+</li>
+<li><p class="first">Fanout</p>
 <blockquote>
-Queues are bound to this exchange with no arguments. Hence any
+<p>Queues are bound to this exchange with no arguments. Hence any
 message sent to this exchange will be forwarded to all queues
-bound to this exchange.</blockquote>
-<p><a href="#id7"><span class="problematic" id="id8">*</span></a>headers</p>
+bound to this exchange.</p>
+</blockquote>
+</li>
+<li><p class="first">Headers</p>
 <blockquote>
 <p>Queues are bound to this exchange with a table of arguments
 containing headers and values (optional). A special argument
@@ -181,9 +188,12 @@ named &#8220;x-match&#8221; determines the matching algorithm, where
 <tt class="docutils literal"><span class="pre">&quot;any&quot;</span></tt> implies <tt class="docutils literal"><span class="pre">OR</span></tt> (at least one pair must match).</p>
 <dl class="docutils">
 <dt><em>NOTE</em>: carrot has poor support for header exchanges at</dt>
-<dd>this point.</dd>
+<dd><p class="first last">this point.</p>
+</dd>
 </dl>
 </blockquote>
+</li>
+</ul>
 <p>This description of AMQP exchange types was shamelessly stolen
 from the blog post <a class="reference external" href="http://bit.ly/amqp-exchange-types">AMQP in 10 minutes: Part 4</a> by
 Rajith Attapattu. Recommended reading.</p>
@@ -206,6 +216,15 @@ Rajith Attapattu. Recommended reading.</p>
 <dd>List of registered callbacks to trigger when a message is received
 by <a title="carrot.messaging.Consumer.wait" class="reference internal" href="#carrot.messaging.Consumer.wait"><tt class="xref docutils literal"><span class="pre">wait()</span></tt></a>, <a title="carrot.messaging.Consumer.process_next" class="reference internal" href="#carrot.messaging.Consumer.process_next"><tt class="xref docutils literal"><span class="pre">process_next()</span></tt></a> or <a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a>.</dd></dl>
 
+<dl class="attribute">
+<dt id="carrot.messaging.Consumer.warn_if_exists">
+<tt class="descname">warn_if_exists</tt><a class="headerlink" href="#carrot.messaging.Consumer.warn_if_exists" title="Permalink to this definition">¶</a></dt>
+<dd>Emit a warning if the queue has already been declared. If a queue
+already exists, and you try to redeclare the queue with new settings,
+the new settings will be silently ignored, so this can be
+useful if you&#8217;ve recently changed the <a title="carrot.messaging.Consumer.routing_key" class="reference internal" href="#carrot.messaging.Consumer.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a> attribute
+or other settings.</dd></dl>
+
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -219,7 +238,7 @@ connection.</td>
 </table>
 <p>Example Usage</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">DjangoAMQPConnection</span><span class="p">(),</span>
-<span class="gp">... </span>                    <span class="n">queue</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">)</span> 
+<span class="gp">... </span>              <span class="n">queue</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">process_message</span><span class="p">(</span><span class="n">message_data</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Got message </span><span class="si">%s</span><span class="s">: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span>
 <span class="gp">... </span>            <span class="n">message</span><span class="o">.</span><span class="n">delivery_tag</span><span class="p">,</span> <span class="n">message_data</span><span class="p">))</span>
@@ -338,7 +357,7 @@ object.</td>
 <dl class="method">
 <dt id="carrot.messaging.Consumer.receive">
 <tt class="descname">receive</tt><big>(</big><em>message_data</em>, <em>message</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.receive" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is called when a new message is received by 
+<dd><p>This method is called when a new message is received by
 running <a title="carrot.messaging.Consumer.wait" class="reference internal" href="#carrot.messaging.Consumer.wait"><tt class="xref docutils literal"><span class="pre">wait()</span></tt></a>, <a title="carrot.messaging.Consumer.process_next" class="reference internal" href="#carrot.messaging.Consumer.process_next"><tt class="xref docutils literal"><span class="pre">process_next()</span></tt></a> or <a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a>.</p>
 <p>When a message is received, it passes the message on to the
 callbacks listed in the <a title="carrot.messaging.Consumer.callbacks" class="reference internal" href="#carrot.messaging.Consumer.callbacks"><tt class="xref docutils literal"><span class="pre">callbacks</span></tt></a> attribute.
@@ -444,8 +463,10 @@ instance.</dd></dl>
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.routing_key">
 <tt class="descname">routing_key</tt><a class="headerlink" href="#carrot.messaging.Publisher.routing_key" title="Permalink to this definition">¶</a></dt>
-<dd>The routing key added to all messages sent using this publisher.
-See <a title="carrot.messaging.Consumer.routing_key" class="reference internal" href="#carrot.messaging.Consumer.routing_key"><tt class="xref docutils literal"><span class="pre">Consumer.routing_key</span></tt></a> for more information.</dd></dl>
+<dd>The default routing key for messages sent using this publisher.
+See <a title="carrot.messaging.Consumer.routing_key" class="reference internal" href="#carrot.messaging.Consumer.routing_key"><tt class="xref docutils literal"><span class="pre">Consumer.routing_key</span></tt></a> for more information.
+You can override the routing key by passing an explicit
+<tt class="docutils literal"><span class="pre">routing_key</span></tt> argument to <a title="carrot.messaging.Publisher.send" class="reference internal" href="#carrot.messaging.Publisher.send"><tt class="xref docutils literal"><span class="pre">send()</span></tt></a>.</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.delivery_mode">
@@ -492,13 +513,13 @@ must have a decoder supporting the serialization scheme.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Publisher.create_message">
-<tt class="descname">create_message</tt><big>(</big><em>message_data</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.create_message" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">create_message</tt><big>(</big><em>message_data</em>, <em>priority=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.create_message" title="Permalink to this definition">¶</a></dt>
 <dd>With any data, serialize it and encapsulate it in a AMQP
 message with the proper headers set.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Publisher.send">
-<tt class="descname">send</tt><big>(</big><em>message_data</em>, <em>delivery_mode=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.send" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">send</tt><big>(</big><em>message_data</em>, <em>routing_key=None</em>, <em>delivery_mode=None</em>, <em>mandatory=False</em>, <em>immediate=False</em>, <em>priority=0</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.send" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send a message.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -507,7 +528,20 @@ message with the proper headers set.</dd></dl>
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><em>message_data</em> &#8211; The message data to send. Can be a list,
 dictionary or a string.</li>
+<li><em>routing_key</em> &#8211; A custom routing key for the message.
+If not set, the default routing key set in the <a title="carrot.messaging.Publisher.routing_key" class="reference internal" href="#carrot.messaging.Publisher.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a>
+attribute is used.</li>
+<li><em>mandatory</em> &#8211; If set, the message has mandatory routing.
+By default the message is silently dropped by the server if it
+can&#8217;t be routed to a queue. However - If the message is mandatory,
+an exception will be raised instead.</li>
+<li><em>immediate</em> &#8211; Request immediate delivery.
+If the message cannot be routed to a queue consumer immediately,
+an exception will be raised. This is instead of the default
+behaviour, where the server will accept and queue the message,
+but with no guarantee that the message will ever be consumed.</li>
 <li><em>delivery_mode</em> &#8211; Override the default <a title="carrot.messaging.Publisher.delivery_mode" class="reference internal" href="#carrot.messaging.Publisher.delivery_mode"><tt class="xref docutils literal"><span class="pre">delivery_mode</span></tt></a>.</li>
+<li><em>priority</em> &#8211; The message priority, <tt class="docutils literal"><span class="pre">0</span></tt> to <tt class="docutils literal"><span class="pre">9</span></tt>.</li>
 </ul>
 </td>
 </tr>
