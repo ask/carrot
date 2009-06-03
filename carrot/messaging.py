@@ -2,6 +2,7 @@
 from carrot.backends import DefaultBackend
 from carrot.serialization import serialize, deserialize
 import warnings
+import uuid
 
 
 class Consumer(object):
