@@ -5,11 +5,11 @@ DEFAULT_CONNECT_TIMEOUT = 5 # seconds
 
 class AMQPConnection(object):
     """A network/socket connection to an AMQP message broker.
-    
+
     :param hostname: see :attr:`hostname`.
     :param userid: see :attr:`userid`.
     :param password: see :attr:`password`.
-    
+
     :keyword virtual_host: see :attr:`virtual_host`.
     :keyword port: see :attr:`port`.
     :keyword insist: see :attr:`insist`.
@@ -103,6 +103,7 @@ class AMQPConnection(object):
 
 class DummyConnection(object):
     """A connection class that does nothing, for non-networked backends."""
+
     def __init__(self, *args, **kwargs):
         pass
 
@@ -141,6 +142,7 @@ class DjangoAMQPConnection(AMQPConnection):
         the default is ``5672`` (amqp).
 
     """
+
     def __init__(self, *args, **kwargs):
         from django.conf import settings
         kwargs["hostname"] = kwargs.get("hostname",

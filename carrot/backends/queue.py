@@ -4,6 +4,7 @@ import time
 
 mqueue = Queue()
 
+
 class Message(BaseMessage):
     """Message received from the backend.
 
@@ -11,10 +12,11 @@ class Message(BaseMessage):
 
     """
 
+
 class Backend(BaseBackend):
     """Backend using the Python :mod:`Queue` library. Usually only
     used while executing unit tests.
-    
+
     Please not that this backend does not support queues, exchanges
     or routing keys, so *all messages will be sent to all consumers*.
 
@@ -46,4 +48,3 @@ class Backend(BaseBackend):
     def publish(self, message, exchange, routing_key):
         """Publish a message to the queue."""
         mqueue.put(message)
-        

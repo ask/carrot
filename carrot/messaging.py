@@ -19,7 +19,7 @@ class Consumer(object):
     :keyword decoder: see :attr:`decoder`.
     :keyword backend: see :attr:`backend`.
 
-    
+
     .. attribute:: connection
 
         A :class:`carrot.connection.AMQPConnection` instance.
@@ -56,7 +56,7 @@ class Consumer(object):
                 zero or more words. For example ``"*.stock.#"`` matches the
                 routing keys ``"usd.stock"`` and ``"eur.stock.db"`` but not
                 ``"stock.nasdaq"``.
-                
+
 
     .. attribute:: durable
 
@@ -143,17 +143,17 @@ class Consumer(object):
         exclusive and the queue already exists and is owned by another
         connection.
 
-    
+
     Example Usage
 
         >>> consumer = Consumer(connection=DjangoAMQPConnection(),
-        ...                     queue="foo", exchange="foo", routing_key="foo") 
+        ...               queue="foo", exchange="foo", routing_key="foo")
         >>> def process_message(message_data, message):
         ...     print("Got message %s: %s" % (
         ...             message.delivery_tag, message_data))
         >>> consumer.register_callback(process_message)
         >>> consumer.wait() # Go into receive loop
-    
+
     """
     queue = ""
     exchange = ""
@@ -217,7 +217,7 @@ class Consumer(object):
 
     def message_to_python(self, message):
         """Decode encoded message back to python.
-       
+
         :param message: A :class:`carrot.backends.base.BaseMessage` instance.
 
         """
@@ -234,7 +234,7 @@ class Consumer(object):
         return message
 
     def receive(self, message_data, message):
-        """This method is called when a new message is received by 
+        """This method is called when a new message is received by
         running :meth:`wait`, :meth:`process_next` or :meth:`iterqueue`.
 
         When a message is received, it passes the message on to the
@@ -244,7 +244,7 @@ class Consumer(object):
         :param message_data: The deserialized message data.
 
         :param message: The :class:`carrot.backends.base.BaseMessage` instance.
-        
+
         :raises NotImplementedError: If no callbacks has been registered.
 
         """
@@ -451,7 +451,7 @@ class Publisher(object):
     def send(self, message_data, routing_key=None, delivery_mode=None,
             mandatory=False, immediate=False, priority=0):
         """Send a message.
-       
+
         :param message_data: The message data to send. Can be a list,
             dictionary or a string.
 

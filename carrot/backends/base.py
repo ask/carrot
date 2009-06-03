@@ -1,5 +1,6 @@
 from carrot.serialization import deserialize
 
+
 class BaseMessage(object):
     """Base class for received messages."""
 
@@ -16,7 +17,7 @@ class BaseMessage(object):
 
     def ack(self):
         """Acknowledge this message as being processed.,
-        
+
         This will remove the message from the queue."""
         return self.backend.ack(self.delivery_tag)
 
@@ -33,7 +34,7 @@ class BaseMessage(object):
 
         You must not use this method as a means of selecting messages
         to process.
-        
+
         """
         return self.backend.reject(self.delivery_tag, requeue=True)
 
@@ -74,7 +75,7 @@ class BaseBackend(object):
         return message_data
 
     def publish(self, message, exchange, routing_key):
-        pass 
+        pass
 
     def close(self):
         pass

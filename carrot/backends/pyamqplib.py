@@ -25,14 +25,14 @@ class Message(BaseMessage):
     them using a :class:`carrot.messaging.Consumer`.
 
     :param backend: see :attr:`backend`.
-   
+
     :param amqp_message: see :attr:`amqp_message`.
 
     :param channel: see :attr:`channel`.
 
     :param decoder: see :attr:`decoder`.
 
-   
+
     .. attribute:: body
 
         The message body. This data is serialized,
@@ -54,13 +54,15 @@ class Message(BaseMessage):
 
     .. attribute:: channel
 
-        The AMQP channel. A :class:`amqplib.client_0_8.channel.Channel` instance.
+        The AMQP channel. A :class:`amqplib.client_0_8.channel.Channel`
+        instance.
 
     .. attribute:: decoder
 
         A function able to deserialize the serialized message data.
-    
+
     """
+
     def __init__(self, backend, amqp_message, **kwargs):
         self.amqp_message = amqp_message
         self.backend = backend
@@ -78,7 +80,7 @@ class Backend(BaseBackend):
     :param encoder: see :attr:`encoder`.
     :param decoder: see :attr:`decoder`.
 
-    
+
     .. attribute:: connection
 
     A :class:`carrot.connection.AMQPConnection` instance. An established
@@ -115,7 +117,7 @@ class Backend(BaseBackend):
     def queue_declare(self, queue, durable, exclusive, auto_delete,
             warn_if_exists=False):
         """Declare a named queue."""
-        
+
         if warn_if_exists and self.queue_exists(queue):
             warnings.warn(QueueAlreadyExistsWarning(
                 QueueAlreadyExistsWarning.__doc__))
@@ -137,7 +139,7 @@ class Backend(BaseBackend):
 
     def get(self, queue):
         """Receive a message from a declared queue by name.
-        
+
         :returns: A :class:`Message` object if a message was received,
             ``None`` otherwise. If ``None`` was returned, it probably means
             there was no messages waiting on the queue.
