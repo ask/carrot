@@ -131,6 +131,14 @@ class Consumer(object):
         List of registered callbacks to trigger when a message is received
         by :meth:`wait`, :meth:`process_next` or :meth:`iterqueue`.
 
+    .. attribute:: warn_if_exists
+
+        Emit a warning if the queue has already been declared. If a queue
+        already exists, and you try to redeclare the queue with new settings,
+        the new settings will be silently ignored, so this can be
+        useful if you've recently changed the :attr:`routing_key` attribute
+        or other settings.
+
     :raises `amqplib.client_0_8.channel.AMQPChannelException`: if the queue is
         exclusive and the queue already exists and is owned by another
         connection.
@@ -155,6 +163,7 @@ class Consumer(object):
     auto_delete = False
     exchange_type = "direct"
     channel_open = False
+    warn_if_exists = False
 
     def __init__(self, connection, queue=None, exchange=None,
             routing_key=None, **kwargs):
@@ -178,6 +187,9 @@ class Consumer(object):
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
 
+        self.warn_if_exists = kwargs.get("warn_if_exists",
+                                         self.warn_if_exists)
+
         # durable implies auto-delete.
         if self.durable:
             self.auto_delete = True
@@ -188,7 +200,8 @@ class Consumer(object):
         if self.queue:
             self.backend.queue_declare(queue=self.queue, durable=self.durable,
                                        exclusive=self.exclusive,
-                                       auto_delete=self.auto_delete)
+                                       auto_delete=self.auto_delete,
+                                       warn_if_exists=self.warn_if_exists)
         if self.exchange:
             self.backend.exchange_declare(exchange=self.exchange,
                                           type=self.exchange_type,
@@ -327,9 +340,13 @@ class Consumer(object):
 
         """
         self.channel_open = True
+        consumer_tag = "%s.%s-%s" % (
+                self.__class__.__module__,
+                self.__class__.__name__,
+                uuid.uuid4())
         self.backend.consume(queue=self.queue, no_ack=True,
                              callback=self._receive_callback,
-                             consumer_tag=self.__class__.__name__)
+                             consumer_tag=consumer_tag)
 
     def iterqueue(self, limit=None):
         """Infinite iterator yielding pending messages.
