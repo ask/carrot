@@ -18,7 +18,7 @@ class Consumer(object):
     :keyword exclusive: see :attr:`exclusive`.
     :keyword exchange_type: see :attr:`exchange_type`.
     :keyword decoder: see :attr:`decoder`.
-    :keyword backend: see :attr:`backend`.
+    :keyword backend_cls: see :attr:`backend_cls`.
 
 
     .. attribute:: connection
@@ -123,9 +123,10 @@ class Consumer(object):
 
         A function able to deserialize the message body.
 
-    .. attribute:: backend
+    .. attribute:: backend_cls
 
-        The messaging backend used. Defaults to the ``pyamqplib`` backend.
+        The messaging backend class used. Defaults to the ``pyamqplib``
+        backend.
 
     .. attribute:: callbacks
 
@@ -165,15 +166,15 @@ class Consumer(object):
     exchange_type = "direct"
     channel_open = False
     warn_if_exists = False
+    backend_cls = DefaultBackend
 
     def __init__(self, connection, queue=None, exchange=None,
             routing_key=None, **kwargs):
         self.connection = connection
-        self.backend = kwargs.get("backend")
         self.decoder = kwargs.get("decoder", deserialize)
-        if not self.backend:
-            self.backend = DefaultBackend(connection=connection,
-                                          decoder=self.decoder)
+        self.backend_cls = kwargs.get("backend_cls", self.backend_cls)
+        self.backend = self.backend_cls(connection=connection,
+                                        decoder=self.decoder)
         self.queue = queue or self.queue
 
         # Binding.
@@ -379,7 +380,7 @@ class Publisher(object):
     :param routing_key: see :attr:`routing_key`.
 
     :keyword encoder: see :attr:`encoder`.
-    :keyword backend: see :attr:`backend`.
+    :keyword backend_cls: see :attr:`backend_cls`.
 
 
     .. attribute:: connection
@@ -421,23 +422,24 @@ class Publisher(object):
         to :meth:`send`. Note that any consumer of the messages sent
         must have a decoder supporting the serialization scheme.
 
-    .. attribute:: backend
+    .. attribute:: backend_cls
 
-        The backend used. Defaults to the ``pyamqplib`` backend.
+        The messaging backend class used. Defaults to the ``pyamqplib``
+        backend.
 
     """
 
     exchange = ""
     routing_key = ""
     delivery_mode = 2 # Persistent
+    backend_cls = DefaultBackend
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
         self.connection = connection
-        self.backend = kwargs.get("backend")
         self.encoder = kwargs.get("encoder", serialize)
-        if not self.backend:
-            self.backend = DefaultBackend(connection=connection,
-                                          encoder=self.encoder)
+        self.backend_cls = kwargs.get("backend_cls", self.backend_cls)
+        self.backend = self.backend_cls(connection=connection,
+                                        encoder=self.encoder)
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
         self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
@@ -489,7 +491,7 @@ class Publisher(object):
 
 
 class Messaging(object):
-    """A message publisher and consumer."""
+    """A combined message publisher and consumer."""
     queue = ""
     exchange = ""
     routing_key = ""
@@ -498,16 +500,16 @@ class Messaging(object):
 
     def __init__(self, connection, **kwargs):
         self.connection = connection
-        self.backend = kwargs.get("backend")
+        self.backend_cls = kwargs.get("backend_cls")
         self.exchange = kwargs.get("exchange", self.exchange)
         self.queue = kwargs.get("queue", self.queue)
         self.routing_key = kwargs.get("routing_key", self.routing_key)
         self.publisher = self.publisher_cls(connection,
                 exchange=self.exchange, routing_key=self.routing_key,
-                backend=self.backend)
+                backend_cls=self.backend_cls)
         self.consumer = self.consumer_cls(connection, queue=self.queue,
                 exchange=self.exchange, routing_key=self.routing_key,
-                backend=self.backend)
+                backend_cls=self.backend_cls)
         self.consumer.register_callback(self.receive)
         self.callbacks = []
 

@@ -62,8 +62,8 @@ class TMessaging(Messaging):
 class TestMessaging(unittest.TestCase):
 
     def test_messaging(self):
-        b = create_backend()
-        m = TMessaging(connection=DummyConnection(), backend=b)
+        m = TMessaging(connection=DummyConnection(),
+                       backend_cls=PyQueueBackend)
         self.assertTrue(m)
 
         self.assertEquals(m.fetch(), None)

@@ -43,7 +43,7 @@ class BaseBackend(object):
     encoder = serialize
     decoder = deserialize
 
-    def __init__(self, connection):
+    def __init__(self, connection, **kwargs):
         self.connection = connection
 
     def queue_declare(self, *args, **kwargs):
