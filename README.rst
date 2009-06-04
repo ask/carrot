@@ -150,30 +150,11 @@ Creating a connection
         >>> amqpconn = DjangoAMQPConnection()
 
 
-Sending messages using a Publisher
-----------------------------------
-
-Here we create a publisher sending messages with a routing key
-of ``importer`` to the ``"feed"`` exchange,
-
-    >>> from carrot.messaging import Publisher
-    >>> publisher = Publisher(connection=amqpconn,
-    ...                       exchange="feed", routing_key="importer")
-    >>> publisher.send({"import_feed": "http://cnn.com/rss/edition.rss"})
-    >>> publisher.close()
-
-
-By default every message is encoded using `JSON`_, so sending
-Python data structures like dictionaries and lists works. If you want
-to support more complicated data, you might want to configure the publisher
-and consumer to use something like ``pickle``, by providing them with
-an ``encoder`` and ``decoder`` respectively.
-
-.. _`JSON`: http://www.json.org/
-
 
 Receiving messages using a Consumer
 -----------------------------------
+
+First we open up a Python shell and start a message consumer.
 
 This consumer declares a queue named ``"feed"``, receiving messages with
 the routing key ``"importer"`` from the ``"feed"`` exchange.
@@ -189,11 +170,40 @@ message is received it passes the message to all registered callbacks.
     ...     feed_url = message_data.get("import_feed")
     ...     if not feed_url:
     ...         message.reject()
+    ...     print("Got feed import message for: %s" % feed_url)
     ...     # something importing this feed url
     ...     # import_feed(feed_url)
     ...     message.ack()
     >>> consumer.register_callback(import_feed_callback)
     >>> consumer.wait() # Go into the consumer loop.
+
+Sending messages using a Publisher
+----------------------------------
+
+Then we open up another Python shell to send some messages to the consumer
+defined in the last section.
+
+    >>> from carrot.messaging import Publisher
+    >>> publisher = Publisher(connection=amqpconn,
+    ...                       exchange="feed", routing_key="importer")
+    >>> publisher.send({"import_feed": "http://cnn.com/rss/edition.rss"})
+    >>> publisher.close()
+
+
+Look in the first Python shell again (where ``consumer.wait()`` is running),
+where the following text has been printed to the screen::
+
+   Got feed import message for: http://cnn.com/rss/edition.rss  
+
+
+By default every message is encoded using `JSON`_, so sending
+Python data structures like dictionaries and lists works. If you want
+to support more complicated data, you might want to configure the publisher
+and consumer to use something like ``pickle``, by providing them with
+an ``encoder`` and ``decoder`` respectively.
+
+.. _`JSON`: http://www.json.org/
+
 
 Receiving messages without a callback
 --------------------------------------
