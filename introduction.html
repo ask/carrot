@@ -196,25 +196,9 @@ connection settings from your <tt class="docutils literal"><span class="pre">set
 </div>
 </blockquote>
 </div>
-<div class="section" id="sending-messages-using-a-publisher">
-<h2>Sending messages using a Publisher<a class="headerlink" href="#sending-messages-using-a-publisher" title="Permalink to this headline">¶</a></h2>
-<p>Here we create a publisher sending messages with a routing key
-of <tt class="docutils literal"><span class="pre">importer</span></tt> to the <tt class="docutils literal"><span class="pre">&quot;feed&quot;</span></tt> exchange,</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
-<span class="gp">... </span>                      <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s">&quot;import_feed&quot;</span><span class="p">:</span> <span class="s">&quot;http://cnn.com/rss/edition.rss&quot;</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>By default every message is encoded using <a class="reference external" href="http://www.json.org/">JSON</a>, so sending
-Python data structures like dictionaries and lists works. If you want
-to support more complicated data, you might want to configure the publisher
-and consumer to use something like <tt class="docutils literal"><span class="pre">pickle</span></tt>, by providing them with
-an <tt class="docutils literal"><span class="pre">encoder</span></tt> and <tt class="docutils literal"><span class="pre">decoder</span></tt> respectively.</p>
-</div>
 <div class="section" id="receiving-messages-using-a-consumer">
 <h2>Receiving messages using a Consumer<a class="headerlink" href="#receiving-messages-using-a-consumer" title="Permalink to this headline">¶</a></h2>
+<p>First we open up a Python shell and start a message consumer.</p>
 <p>This consumer declares a queue named <tt class="docutils literal"><span class="pre">&quot;feed&quot;</span></tt>, receiving messages with
 the routing key <tt class="docutils literal"><span class="pre">&quot;importer&quot;</span></tt> from the <tt class="docutils literal"><span class="pre">&quot;feed&quot;</span></tt> exchange.</p>
 <p>The example then uses the consumers <tt class="docutils literal"><span class="pre">wait()</span></tt> method to go into consume
@@ -227,6 +211,7 @@ message is received it passes the message to all registered callbacks.</p>
 <span class="gp">... </span>    <span class="n">feed_url</span> <span class="o">=</span> <span class="n">message_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;import_feed&quot;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">feed_url</span><span class="p">:</span>
 <span class="gp">... </span>        <span class="n">message</span><span class="o">.</span><span class="n">reject</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Got feed import message for: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">feed_url</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="c"># something importing this feed url</span>
 <span class="gp">... </span>    <span class="c"># import_feed(feed_url)</span>
 <span class="gp">... </span>    <span class="n">message</span><span class="o">.</span><span class="n">ack</span><span class="p">()</span>
@@ -234,6 +219,27 @@ message is received it passes the message to all registered callbacks.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span> <span class="c"># Go into the consumer loop.</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="sending-messages-using-a-publisher">
+<h2>Sending messages using a Publisher<a class="headerlink" href="#sending-messages-using-a-publisher" title="Permalink to this headline">¶</a></h2>
+<p>Then we open up another Python shell to send some messages to the consumer
+defined in the last section.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s">&quot;import_feed&quot;</span><span class="p">:</span> <span class="s">&quot;http://cnn.com/rss/edition.rss&quot;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Look in the first Python shell again (where <tt class="docutils literal"><span class="pre">consumer.wait()</span></tt> is running),
+where the following text has been printed to the screen:</p>
+<div class="highlight-python"><pre>Got feed import message for: http://cnn.com/rss/edition.rss</pre>
+</div>
+<p>By default every message is encoded using <a class="reference external" href="http://www.json.org/">JSON</a>, so sending
+Python data structures like dictionaries and lists works. If you want
+to support more complicated data, you might want to configure the publisher
+and consumer to use something like <tt class="docutils literal"><span class="pre">pickle</span></tt>, by providing them with
+an <tt class="docutils literal"><span class="pre">encoder</span></tt> and <tt class="docutils literal"><span class="pre">decoder</span></tt> respectively.</p>
 </div>
 <div class="section" id="receiving-messages-without-a-callback">
 <h2>Receiving messages without a callback<a class="headerlink" href="#receiving-messages-without-a-callback" title="Permalink to this headline">¶</a></h2>
@@ -315,8 +321,8 @@ file in the top distribution directory for the full license text.</p>
 <li class="toctree-l1 current"><a class="current reference external" href="">carrot - AMQP Messaging Framework for Python</a><ul>
 <li class="toctree-l2"><a class="reference external" href="#introduction">Introduction</a></li>
 <li class="toctree-l2"><a class="reference external" href="#creating-a-connection">Creating a connection</a></li>
-<li class="toctree-l2"><a class="reference external" href="#sending-messages-using-a-publisher">Sending messages using a Publisher</a></li>
 <li class="toctree-l2"><a class="reference external" href="#receiving-messages-using-a-consumer">Receiving messages using a Consumer</a></li>
+<li class="toctree-l2"><a class="reference external" href="#sending-messages-using-a-publisher">Sending messages using a Publisher</a></li>
 <li class="toctree-l2"><a class="reference external" href="#receiving-messages-without-a-callback">Receiving messages without a callback</a></li>
 <li class="toctree-l2"><a class="reference external" href="#sub-classing-the-messaging-classes">Sub-classing the messaging classes</a></li>
 </ul>
