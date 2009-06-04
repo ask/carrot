@@ -35,7 +35,7 @@ class TestPyQueueMessage(unittest.TestCase):
                             delivery_tag=delivery_tag)
         self.assertEquals(m1.body, message_body)
         self.assertEquals(m1.delivery_tag, delivery_tag)
-        
+
         m1.ack()
         m2.reject()
         m3.requeue()
@@ -73,4 +73,3 @@ class TestMessaging(unittest.TestCase):
         next_msg_data = next_msg.decode()
         self.assertEquals(next_msg_data, mdata)
         self.assertEquals(m.fetch(), None)
-
