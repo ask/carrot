@@ -27,7 +27,7 @@ class BaseMessage(object):
         The message will be discarded by the server.
 
         """
-        return self.backend.reject(self.delivery_tag, requeue=False)
+        return self.backend.reject(self.delivery_tag)
 
     def requeue(self):
         """Reject this message and put it back on the queue.
@@ -36,7 +36,7 @@ class BaseMessage(object):
         to process.
 
         """
-        return self.backend.reject(self.delivery_tag, requeue=True)
+        return self.backend.requeue(self.delivery_tag)
 
 
 class BaseBackend(object):
