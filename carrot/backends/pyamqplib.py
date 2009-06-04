@@ -138,7 +138,7 @@ class Backend(BaseBackend):
                                 routing_key=routing_key)
 
     def message_to_python(self, raw_message):
-        return Message(backend=self, amqp_message=amqp_message,
+        return Message(backend=self, amqp_message=raw_message,
                 decoder=self.decoder)
 
     def get(self, queue):
