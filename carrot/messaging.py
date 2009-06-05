@@ -514,7 +514,7 @@ class Messaging(object):
 
     def receive(self, message_data, message):
         if not self.callbacks:
-            raise NotImplementError("No consumer callbacks registered")
+            raise NotImplementedError("No consumer callbacks registered")
         for callback in self.callbacks:
             callback(message_data, message)
 
