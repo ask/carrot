@@ -2,6 +2,50 @@
  Change history
 ================
 
+0.4.0 :date:`xxxx-xx-xx xx:xx x.x CET` :author:askh@opera.com
+------------------------------------------------------------------
+
+*IMPORTANT* Please don't use ``Consumer.wait`` in production. Use either
+of ``Consumer.iterconsume`` or ``Consumer.iterqueue``.
+
+*IMPORTANT* The ``ack`` argument to ``Consumer.process_next`` has been
+removed, use the instance-wide ``auto_ack`` argument/attribute instead.
+
+*IMPORANT* ``Consumer.message_to_python`` has been removed, use
+``message.decode()`` on the returned message object instead.
+
+*IMPORTANT* Consumer/Publisher/Messaging now no longer takes a backend
+instance, but a backend class, so the ``backend`` argument is renamed to
+``backend_cls``.
+
+	* ``Consumer.iterconsume``: New sane way to use basic_consume instead of ``Consumer.wait``:
+		(Consmer.wait now uses this behind the scenes, just wrapped around
+		a highly unsafe infinite loop.)
+
+	* Consumer: New options: ``auto_ack`` and ``no_ack``. Auto ack means the
+	consumer will automatically acknowledge new messages, and No-Ack means it
+	will disable acknowledgement on the server alltogether (probably not what
+	you want) 
+
+	* ``Consumer.iterqueue``: Now supports infinite argument, which means the
+		iterator doesn't raise ``StopIteration`` if there's no messages,
+		but instead yields ``None`` (thus never ends)
+
+	* message argument to consumer callbacks is now a
+		``carrot.backends.pyamqplib.Message`` instance. See `[GH #4]`_.
+		Thanks gregoirecachet!
+
+.. _`[GH #4]`: http://github.com/ask/carrot/issues/closed/#issue/4
+ 
+	* AMQPConnection, Consumer, Publisher and Messaging now supports
+		the with statement. They automatically close when the with-statement
+		block exists.
+
+	* Consumer tags are now automatically generated for each class instance,
+		so you should never get the "consumer tag already open" error anymore.
+
+	* Loads of new unit tests.
+
 0.4.0-pre7 :date:`2009-06-03 05:08 P.M CET` :author:askh@opera.com
 ------------------------------------------------------------------
 
