@@ -1,6 +1,7 @@
 """carrot.messaging"""
 from carrot.backends import DefaultBackend
 from carrot.serialization import serialize, deserialize
+import itertools
 import warnings
 import uuid
 
@@ -224,8 +225,7 @@ class Consumer(object):
             or ``None`` if there's no messages to be received.
 
         """
-        message = self.backend.get(self.queue)
-        return message
+        return self.backend.get(self.queue)
 
     def receive(self, message_data, message):
         """This method is called when a new message is received by
@@ -325,6 +325,12 @@ class Consumer(object):
                 message.ack()
                 discarded_count = discarded_count + 1
 
+    def _generate_consumer_tag(self):
+        return "%s.%s-%s" % (
+                self.__class__.__module__,
+                self.__class__.__name__,
+                uuid.uuid4())
+
     def wait(self):
         """Go into consume mode.
 
@@ -334,10 +340,7 @@ class Consumer(object):
 
         """
         self.channel_open = True
-        consumer_tag = "%s.%s-%s" % (
-                self.__class__.__module__,
-                self.__class__.__name__,
-                uuid.uuid4())
+        consumer_tag = self._generate_consumer_tag()
         self.backend.consume(queue=self.queue, no_ack=True,
                              callback=self._receive_callback,
                              consumer_tag=consumer_tag)
