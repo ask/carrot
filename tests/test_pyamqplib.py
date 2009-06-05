@@ -192,7 +192,6 @@ class TestMessaging(unittest.TestCase):
         consumer.close()
         publisher.close()
 
-
     def test_consumer_process_next(self):
         consumer = self.create_consumer()
         publisher = self.create_publisher()
