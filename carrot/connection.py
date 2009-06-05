@@ -64,6 +64,7 @@ class AMQPConnection(object):
     insist = False
     connect_timeout = DEFAULT_CONNECT_TIMEOUT
     ssl = False
+    _closed = True
 
     @property
     def host(self):
@@ -84,6 +85,14 @@ class AMQPConnection(object):
 
         self.connect()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, e_type, e_value, e_trace):
+        if e_type:
+            raise e_type(e_value)
+        self.close()
+
     def connect(self):
         """Establish a connection to the AMQP server."""
         self.connection = amqp.Connection(host=self.host,
@@ -93,25 +102,36 @@ class AMQPConnection(object):
                                         insist=self.insist,
                                         ssl=self.ssl,
                                         connect_timeout=self.connect_timeout)
+        self._closed = False
         return self.connection
 
     def close(self):
         """Close the currently open connection."""
         if self.connection:
             self.connection.close()
+        self._closed = True
 
 
 class DummyConnection(object):
     """A connection class that does nothing, for non-networked backends."""
+    _closed = True
 
     def __init__(self, *args, **kwargs):
-        pass
+        self._closed = False
+    
+    def __enter__(self):
+        return self
+
+    def __exit__(self, e_type, e_value, e_trace):
+        if e_type:
+            raise e_type(e_value)
+        self.close()
 
     def connect(self):
         pass
 
     def close(self):
-        pass
+        self._closed = True
 
     @property
     def host(self):

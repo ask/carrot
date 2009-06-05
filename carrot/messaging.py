@@ -168,6 +168,7 @@ class Consumer(object):
     channel_open = False
     warn_if_exists = False
     backend_cls = DefaultBackend
+    _closed = True
 
     def __init__(self, connection, queue=None, exchange=None,
             routing_key=None, **kwargs):
@@ -199,6 +200,14 @@ class Consumer(object):
 
         self._declare_channel()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, e_type, e_value, e_trace):
+        if e_type:
+            raise e_type(e_value)
+        self.close()
+
     def _declare_channel(self):
         if self.queue:
             self.backend.queue_declare(queue=self.queue, durable=self.durable,
@@ -213,6 +222,7 @@ class Consumer(object):
         if self.queue:
             self.backend.queue_bind(queue=self.queue, exchange=self.exchange,
                                     routing_key=self.routing_key)
+        self._closed = False
 
     def _receive_callback(self, raw_message):
         message = self.backend.message_to_python(raw_message)
@@ -366,6 +376,7 @@ class Consumer(object):
         if self.channel_open:
             self.backend.cancel(self.__class__.__name__)
         self.backend.close()
+        self._closed = True
 
 
 class Publisher(object):
@@ -429,6 +440,7 @@ class Publisher(object):
     routing_key = ""
     delivery_mode = 2 # Persistent
     backend_cls = DefaultBackend
+    _closed = True
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
         self.connection = connection
@@ -439,6 +451,15 @@ class Publisher(object):
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
         self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
+        self._closed = False
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, e_type, e_value, e_trace):
+        if e_type:
+            raise e_type(e_value)
+        self.close()
 
     def create_message(self, message_data, priority=None):
         """With any data, serialize it and encapsulate it in a AMQP
@@ -484,6 +505,7 @@ class Publisher(object):
     def close(self):
         """Close connection to queue."""
         self.backend.close()
+        self._closed = True
 
 
 class Messaging(object):
@@ -493,6 +515,7 @@ class Messaging(object):
     routing_key = ""
     publisher_cls = Publisher
     consumer_cls = Consumer
+    _closed = True
 
     def __init__(self, connection, **kwargs):
         self.connection = connection
@@ -508,6 +531,15 @@ class Messaging(object):
                 backend_cls=self.backend_cls)
         self.consumer.register_callback(self.receive)
         self.callbacks = []
+        self._closed = False
+    
+    def __enter__(self):
+        return self
+
+    def __exit__(self, e_type, e_value, e_trace):
+        if e_type:
+            raise e_type(e_value)
+        self.close()
 
     def register_callback(self, callback):
         self.callbacks.append(callback)
@@ -533,6 +565,7 @@ class Messaging(object):
     def close(self):
         self.consumer.close()
         self.publisher.close()
+        self._closed = True
 
     @property
     def encoder(self):
