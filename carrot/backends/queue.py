@@ -1,6 +1,7 @@
 from Queue import Queue
 from carrot.backends.base import BaseMessage, BaseBackend
 import time
+import itertools
 
 mqueue = Queue()
 
@@ -35,12 +36,13 @@ class Backend(BaseBackend):
 
     def consume(self, queue, no_ack, callback, consumer_tag):
         """Go into consume mode."""
-        while True:
+        for total_message_count in itertools.count():
             message = mqueue.get()
             if message:
                 callback(message.decode(), message)
+                yield True
             else:
-                time.sleep(0.3)
+                time.sleep(0.1)
 
     def prepare_message(self, message_data, delivery_mode, **kwargs):
         return message_data

@@ -154,14 +154,22 @@ class Backend(BaseBackend):
             return None
         return self.message_to_python(raw_message)
 
-    def consume(self, queue, no_ack, callback, consumer_tag):
-        """Go into an infinite loop, calling the ``callback`` when
-        new messages are received."""
+    def declare_consume(self, queue, no_ack, callback, consumer_tag):
         self.channel.basic_consume(queue=queue, no_ack=no_ack,
                                    callback=callback,
                                    consumer_tag=consumer_tag)
-        while True:
+
+    def consume(self, queue, no_ack, callback, consumer_tag, limit=None):
+        """Returns an iterator that waits for one message at a time,
+        calling the callback when messages arrive."""
+        self.channel.basic_consume(queue=queue, no_ack=no_ack,
+                                   callback=callback,
+                                   consumer_tag=consumer_tag)
+        for total_message_count in itertools.count():
+            if limit and total_message_count > limit:
+                raise StopIteration
             self.channel.wait()
+            yield True
 
     def cancel(self, consumer_tag):
         """Cancel a channel by consumer tag."""

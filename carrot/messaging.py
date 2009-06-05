@@ -232,6 +232,12 @@ class Consumer(object):
             raise e_type(e_value)
         self.close()
 
+    def _generate_consumer_tag(self):
+        return "%s.%s-%s" % (
+                self.__class__.__module__,
+                self.__class__.__name__,
+                str(uuid.uuid4()))
+
     def _declare_channel(self, queue_name, routing_key):
         if self.queue:
             self.backend.queue_declare(queue=queue_name, durable=self.durable,
@@ -355,21 +361,55 @@ class Consumer(object):
                 message.ack()
                 discarded_count = discarded_count + 1
 
-    def wait(self):
+    def iterconsume(self, limit=None):
+        """Iterator processing new messages as they arrive.
+        Every new message will be passed to the callbacks, and the iterator
+        returns ``True``. The iterator is infinite unless the ``limit``
+        argument is specified or someone closes the consumer.
+
+        :meth:`iterconsume` uses transient requests for messages on the
+        server, while :meth:`iterequeue` uses synchronous access. In most
+        cases you want :meth:`iterconsume`, but if your environment does not
+        support this behaviour you can resort to using :meth:`iterqueue`
+        instead.
+
+        Also, :meth:`iterconsume` does not return the message
+        at each step, something which :meth:`iterqueue` does.
+
+        :keyword limit: Maximum number of messages to process.
+
+        :raises StopIteration: if limit is set and the message limit has been
+        reached.
+
+        """
+        self.channel_open = True
+        return self.backend.consume(queue=self.queue, no_ack=True,
+                                    callback=self._receive_callback,
+                                    consumer_tag=self.consumer_tag,
+                                    limit=limit)
+
+    def wait(self, limit=None):
         """Go into consume mode.
+
+        Mostly for testing purposes and simple programs, you probably
+        want :meth:`iterconsume` or :meth:`iterqueue` instead.
 
         This runs an infinite loop, processing all incoming messages
         using :meth:`receive` to apply the message to all registered
         callbacks.
 
         """
-        self.channel_open = True
-        self.backend.consume(queue=self.queue, no_ack=True,
-                             callback=self._receive_callback,
-                             consumer_tag=self.consumer_tag)
+        it = self.iterconsume(limit)
+        while True:
+            return it.next()
 
     def iterqueue(self, limit=None, infinite=False):
-        """Infinite iterator yielding pending messages.
+        """Infinite iterator yielding pending messages, by using
+        synchronous direct access to the queue (``basic_get``).
+        
+        :meth:`iterqueue` is used where synchronous functionality is more
+        important than performance. If you can, use :meth:`iterconsume`
+        instead.
 
         :keyword limit: If set, the iterator stops when it has processed
             this number of messages in total.
@@ -381,6 +421,7 @@ class Consumer(object):
 
         :raises StopIteration: If there is no messages waiting, and the
             iterator is not infinite.
+
         """
         for items_since_start in itertools.count():
             item = self.process_next()
