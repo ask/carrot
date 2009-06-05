@@ -428,8 +428,6 @@ class Consumer(object):
 
         """
         for items_since_start in itertools.count():
-            import sys
-            sys.stderr.write("TRYING TO FETCH FROM %s\n" % self.queue)
             item = self.fetch()
             if (not infinite and item is None) or \
                     (limit and items_since_start >= limit):
