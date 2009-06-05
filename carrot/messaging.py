@@ -221,6 +221,7 @@ class Consumer(object):
         if self.exclusive:
             self.auto_delete = True
 
+        self.consumer_tag = self._generate_consumer_tag()
         self._declare_channel(self.queue, self.routing_key)
 
     def __enter__(self):
@@ -363,10 +364,9 @@ class Consumer(object):
 
         """
         self.channel_open = True
-        consumer_tag = self._generate_consumer_tag()
         self.backend.consume(queue=self.queue, no_ack=True,
                              callback=self._receive_callback,
-                             consumer_tag=consumer_tag)
+                             consumer_tag=self.consumer_tag)
 
     def iterqueue(self, limit=None, infinite=False):
         """Infinite iterator yielding pending messages.
@@ -392,7 +392,7 @@ class Consumer(object):
     def close(self):
         """Close the channel to the queue."""
         if self.channel_open:
-            self.backend.cancel(self.__class__.__name__)
+            self.backend.cancel(self.consumer_tag)
         self.backend.close()
         self._closed = True
 
