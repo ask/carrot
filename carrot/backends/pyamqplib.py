@@ -167,7 +167,7 @@ class Backend(BaseBackend):
                                    callback=callback,
                                    consumer_tag=consumer_tag)
         for total_message_count in itertools.count():
-            if limit and total_message_count > limit:
+            if limit and total_message_count >= limit:
                 raise StopIteration
             self.channel.wait()
             yield True
