@@ -217,14 +217,6 @@ class Consumer(object):
         message = self.backend.message_to_python(raw_message)
         self.receive(message.decode(), message)
 
-    def message_to_python(self, message):
-        """Decode encoded message back to python.
-
-        :param message: A :class:`carrot.backends.base.BaseMessage` instance.
-
-        """
-        return self.decoder(message.body)
-
     def fetch(self):
         """Receive the next message waiting on the queue.
 
