@@ -245,12 +245,11 @@ can define the above publisher and consumer like so:
     ...     routing_key = "importer"
     ...
     ...     def receive(self, message_data, message):
-    ...         action = message_data.get("action")
-    ...         if not action:
-    ...             message.reject()
+    ...         action = message_data["action"]
     ...         if action == "import_feed":
     ...             # something importing this feed
     ...             # import_feed(message_data["feed_url"])
+                    message.ack()
     ...         else:
     ...             raise Exception("Unknown action: %s" % action)
 
