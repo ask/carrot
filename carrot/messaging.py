@@ -6,6 +6,64 @@ import warnings
 import uuid
 
 
+def cycleiterators(iterables, limit=None):
+    """Cycle between iterators.
+
+    :param iterables: List of iterators to cycle between.
+
+    :keyword limit: An optional maximum number of cycles.
+
+    :raises StopIteration: When there are no values left in any
+        of the iterators, or if limit is set and the limit has been reached.
+
+    It's probably best explained by three simple examples:
+
+        >>> it = cycleiterators([iter([1, 2, 3]),
+        ...                      iter([4, 5, 6]),
+        ...                      iter([7, 8, 9])])
+        >>> list(it)
+        [1, 4, 7, 2, 5, 8, 3, 6, 9]
+
+        >>> it = cycleiterators([iter([1, 2, 3]),
+        ...                      iter([4, 5]),
+        ...                      iter([7, 8, 9])])
+        >>> list(it)
+        [1, 5, 7, 2, 5, 8, 3, 9]
+
+        >>> it = cycleiterators([iter([1, 2, 3]),
+        ...                      iter([4, 5, 6]),
+        ...                      iter([7, 8, 9])], limit=6)
+        >>> list(it)
+        [1, 4, 7, 2, 5, 8]
+
+    """
+
+    def maybe_it(it):
+        if hasattr(it, "next"):
+            return it
+        return iter(it)
+                values_so_far += 1
+
+    iterators = map(maybe_it, iterables)
+
+    values_so_far = 0
+    for iterations_so_far in itertools.count():
+        got_value = False
+        for it in iterators:
+            try:
+                value = it.next()
+            except StopIteration:
+                pass
+            else:
+                got_value = True
+                if limit and values_so_far >= limit:
+                    raise StopIteration
+                values_so_far += 1
+                yield value
+        if not got_value:
+            raise StopIteration
+
+
 class Consumer(object):
     """Message consumer.
 
@@ -401,7 +459,7 @@ class Consumer(object):
         """
         it = self.iterconsume(limit)
         while True:
-            return it.next()
+            it.next()
 
     def iterqueue(self, limit=None, infinite=False):
         """Infinite iterator yielding pending messages, by using
@@ -426,7 +484,7 @@ class Consumer(object):
         for items_since_start in itertools.count():
             item = self.process_next()
             if (not infinite and item is None) or \
-                    (limit and items_since_start > limit):
+                    (limit and items_since_start >= limit):
                 raise StopIteration
             yield item
 
