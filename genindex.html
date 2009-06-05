@@ -45,7 +45,7 @@
 
    <h1 id="index">Index</h1>
 
-   <a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#Q"><strong>Q</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#V"><strong>V</strong></a> | <a href="#W"><strong>W</strong></a> 
+   <a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#Q"><strong>Q</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#V"><strong>V</strong></a> | <a href="#W"><strong>W</strong></a> 
 
    <hr />
 
@@ -58,8 +58,9 @@
   <dd><dl>
     <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.ack">(carrot.backends.pyamqplib.Backend method)</a></dt>
   </dl></dd>
-<dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message.amqp_message">amqp_message (carrot.backends.pyamqplib.Message attribute)</a></dt></dl></td><td width="33%" valign="top"><dl>
-<dt><a href="reference/carrot.connection.html#carrot.connection.AMQPConnection">AMQPConnection (class in carrot.connection)</a></dt>
+<dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message.amqp_message">amqp_message (carrot.backends.pyamqplib.Message attribute)</a></dt>
+<dt><a href="reference/carrot.connection.html#carrot.connection.AMQPConnection">AMQPConnection (class in carrot.connection)</a></dt></dl></td><td width="33%" valign="top"><dl>
+<dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.auto_ack">auto_ack (carrot.messaging.Consumer attribute)</a></dt>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.auto_delete">auto_delete (carrot.messaging.Consumer attribute)</a></dt>
 </dl></td></tr></table>
 
@@ -68,13 +69,13 @@
 <dl>
 
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message.backend">backend (carrot.backends.pyamqplib.Message attribute)</a></dt>
-  <dd><dl>
-    <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.backend">(carrot.messaging.Consumer attribute)</a></dt>
-    <dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.backend">(carrot.messaging.Publisher attribute)</a></dt>
-  </dl></dd>
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend">Backend (class in carrot.backends.pyamqplib)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.backends.queue.html#carrot.backends.queue.Backend">(class in carrot.backends.queue)</a></dt>
+  </dl></dd>
+<dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.backend_cls">backend_cls (carrot.messaging.Consumer attribute)</a>, <a href="reference/carrot.messaging.html#carrot.messaging.Consumer.backend_cls">[1]</a></dt>
+  <dd><dl>
+    <dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.backend_cls">(carrot.messaging.Publisher attribute)</a>, <a href="reference/carrot.messaging.html#carrot.messaging.Publisher.backend_cls">[1]</a></dt>
   </dl></dd></dl></td><td width="33%" valign="top"><dl>
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseMessage">BaseMessage (class in carrot.backends.base)</a></dt>
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message.body">body (carrot.backends.pyamqplib.Message attribute)</a></dt>
@@ -184,7 +185,8 @@
 <dl>
 
 <dt><a href="reference/carrot.connection.html#carrot.connection.AMQPConnection.insist">insist (carrot.connection.AMQPConnection attribute)</a></dt>
-<dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.iterqueue">iterqueue() (carrot.messaging.Consumer method)</a></dt></dl></td><td width="33%" valign="top"><dl>
+<dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.iterconsume">iterconsume() (carrot.messaging.Consumer method)</a></dt></dl></td><td width="33%" valign="top"><dl>
+<dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.iterqueue">iterqueue() (carrot.messaging.Consumer method)</a></dt>
 </dl></td></tr></table>
 
 <h2 id="M">M</h2>
@@ -194,9 +196,15 @@
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message">Message (class in carrot.backends.pyamqplib)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.backends.queue.html#carrot.backends.queue.Message">(class in carrot.backends.queue)</a></dt>
-  </dl></dd>
-<dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.message_to_python">message_to_python() (carrot.messaging.Consumer method)</a></dt></dl></td><td width="33%" valign="top"><dl>
+  </dl></dd></dl></td><td width="33%" valign="top"><dl>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Messaging">Messaging (class in carrot.messaging)</a></dt>
+</dl></td></tr></table>
+
+<h2 id="N">N</h2>
+<table width="100%" class="indextable"><tr><td width="33%" valign="top">
+<dl>
+
+<dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.no_ack">no_ack (carrot.messaging.Consumer attribute)</a></dt></dl></td><td width="33%" valign="top"><dl>
 </dl></td></tr></table>
 
 <h2 id="P">P</h2>

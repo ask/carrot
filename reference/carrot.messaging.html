@@ -73,7 +73,9 @@ class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">
 <li><em>exclusive</em> &#8211; see <a title="carrot.messaging.Consumer.exclusive" class="reference internal" href="#carrot.messaging.Consumer.exclusive"><tt class="xref docutils literal"><span class="pre">exclusive</span></tt></a>.</li>
 <li><em>exchange_type</em> &#8211; see <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">exchange_type</span></tt></a>.</li>
 <li><em>decoder</em> &#8211; see <a title="carrot.messaging.Consumer.decoder" class="reference internal" href="#carrot.messaging.Consumer.decoder"><tt class="xref docutils literal"><span class="pre">decoder</span></tt></a>.</li>
-<li><em>backend</em> &#8211; see <a title="carrot.messaging.Consumer.backend" class="reference internal" href="#carrot.messaging.Consumer.backend"><tt class="xref docutils literal"><span class="pre">backend</span></tt></a>.</li>
+<li><em>backend_cls</em> &#8211; see <a title="carrot.messaging.Consumer.backend_cls" class="reference internal" href="#carrot.messaging.Consumer.backend_cls"><tt class="xref docutils literal"><span class="pre">backend_cls</span></tt></a>.</li>
+<li><em>auto_ack</em> &#8211; see <a title="carrot.messaging.Consumer.auto_ack" class="reference internal" href="#carrot.messaging.Consumer.auto_ack"><tt class="xref docutils literal"><span class="pre">auto_ack</span></tt></a>.</li>
+<li><em>no_ack</em> &#8211; see <a title="carrot.messaging.Consumer.no_ack" class="reference internal" href="#carrot.messaging.Consumer.no_ack"><tt class="xref docutils literal"><span class="pre">no_ack</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -206,9 +208,10 @@ Rajith Attapattu. Recommended reading.</p>
 <dd>A function able to deserialize the message body.</dd></dl>
 
 <dl class="attribute">
-<dt id="carrot.messaging.Consumer.backend">
-<tt class="descname">backend</tt><a class="headerlink" href="#carrot.messaging.Consumer.backend" title="Permalink to this definition">¶</a></dt>
-<dd>The messaging backend used. Defaults to the <tt class="docutils literal"><span class="pre">pyamqplib</span></tt> backend.</dd></dl>
+<dt id="carrot.messaging.Consumer.backend_cls">
+<tt class="descname">backend_cls</tt><a class="headerlink" href="#carrot.messaging.Consumer.backend_cls" title="Permalink to this definition">¶</a></dt>
+<dd>The messaging backend class used. Defaults to the <tt class="docutils literal"><span class="pre">pyamqplib</span></tt>
+backend.</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.callbacks">
@@ -224,6 +227,25 @@ already exists, and you try to redeclare the queue with new settings,
 the new settings will be silently ignored, so this can be
 useful if you&#8217;ve recently changed the <a title="carrot.messaging.Consumer.routing_key" class="reference internal" href="#carrot.messaging.Consumer.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a> attribute
 or other settings.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.Consumer.auto_ack">
+<tt class="descname">auto_ack</tt><a class="headerlink" href="#carrot.messaging.Consumer.auto_ack" title="Permalink to this definition">¶</a></dt>
+<dd>Acknowledgement is handled automatically once messages are received.
+This means that the <a title="carrot.backends.base.BaseMessage.ack" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage.ack"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage.ack()</span></tt></a> and
+<a title="carrot.backends.base.BaseMessage.reject" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage.reject"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage.reject()</span></tt></a> methods
+on the message object are no longer valid.
+By default <a title="carrot.messaging.Consumer.auto_ack" class="reference internal" href="#carrot.messaging.Consumer.auto_ack"><tt class="xref docutils literal"><span class="pre">auto_ack</span></tt></a> is set to <tt class="xref docutils literal"><span class="pre">False</span></tt>, and the receiver is
+required to manually handle acknowledgment.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.Consumer.no_ack">
+<tt class="descname">no_ack</tt><a class="headerlink" href="#carrot.messaging.Consumer.no_ack" title="Permalink to this definition">¶</a></dt>
+<dd>Disable acknowledgement on the server-side. This is different from
+<a title="carrot.messaging.Consumer.auto_ack" class="reference internal" href="#carrot.messaging.Consumer.auto_ack"><tt class="xref docutils literal"><span class="pre">auto_ack</span></tt></a> in that acknowledgement is turned off altogether.
+This functionality increases performance but at the cost of
+reliability. Messages can get lost if a client dies before it can
+deliver them to the application.</dd></dl>
 
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -246,6 +268,11 @@ connection.</td>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span> <span class="c"># Go into receive loop</span>
 </pre></div>
 </div>
+<dl class="attribute">
+<dt>
+<tt class="descname">backend_cls</tt></dt>
+<dd>alias of <tt class="xref docutils literal"><span class="pre">Backend</span></tt></dd></dl>
+
 <dl class="method">
 <dt id="carrot.messaging.Consumer.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.close" title="Permalink to this definition">¶</a></dt>
@@ -284,7 +311,7 @@ filter returns.</td>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.fetch">
-<tt class="descname">fetch</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.fetch" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fetch</tt><big>(</big><em>no_ack=None</em>, <em>auto_ack=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.fetch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Receive the next message waiting on the queue.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -298,31 +325,59 @@ or <tt class="xref docutils literal"><span class="pre">None</span></tt> if there
 </dd></dl>
 
 <dl class="method">
-<dt id="carrot.messaging.Consumer.iterqueue">
-<tt class="descname">iterqueue</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.iterqueue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Infinite iterator yielding pending messages.</p>
-<p>Obviously you shouldn&#8217;t consume the whole iterator at
-once, without using a <tt class="docutils literal"><span class="pre">limit</span></tt>.</p>
+<dt id="carrot.messaging.Consumer.iterconsume">
+<tt class="descname">iterconsume</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.iterconsume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterator processing new messages as they arrive.
+Every new message will be passed to the callbacks, and the iterator
+returns <tt class="xref docutils literal"><span class="pre">True</span></tt>. The iterator is infinite unless the <tt class="docutils literal"><span class="pre">limit</span></tt>
+argument is specified or someone closes the consumer.</p>
+<p><a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a> uses transient requests for messages on the
+server, while <tt class="xref docutils literal"><span class="pre">iterequeue()</span></tt> uses synchronous access. In most
+cases you want <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a>, but if your environment does not
+support this behaviour you can resort to using <a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a>
+instead.</p>
+<p>Also, <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a> does not return the message
+at each step, something which <a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a> does.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>limit</em> &#8211; If set, the iterator stops when it has processed
-this number of messages in total.</td>
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>limit</em> &#8211; Maximum number of messages to process.</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Raises StopIteration:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">if limit is set and the message limit has been</td>
 </tr>
 </tbody>
 </table>
+<p>reached.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="carrot.messaging.Consumer.message_to_python">
-<tt class="descname">message_to_python</tt><big>(</big><em>message</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.message_to_python" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decode encoded message back to python.</p>
+<dt id="carrot.messaging.Consumer.iterqueue">
+<tt class="descname">iterqueue</tt><big>(</big><em>limit=None</em>, <em>infinite=False</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.iterqueue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Infinite iterator yielding pending messages, by using
+synchronous direct access to the queue (<tt class="docutils literal"><span class="pre">basic_get</span></tt>).</p>
+<p><a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a> is used where synchronous functionality is more
+important than performance. If you can, use <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a>
+instead.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>message</em> &#8211; A <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a> instance.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><em>limit</em> &#8211; If set, the iterator stops when it has processed
+this number of messages in total.</li>
+<li><em>infinite</em> &#8211; Don&#8217;t raise <tt class="xref docutils literal"><span class="pre">StopIteration</span></tt> if there is no
+messages waiting, but return <tt class="xref docutils literal"><span class="pre">None</span></tt> instead. If infinite you
+obviously shouldn&#8217;t consume the whole iterator at once without
+using a <tt class="docutils literal"><span class="pre">limit</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Raises StopIteration:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><p class="first last">If there is no messages waiting, and the
+iterator is not infinite.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -330,7 +385,7 @@ this number of messages in total.</td>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.process_next">
-<tt class="descname">process_next</tt><big>(</big><em>ack=True</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.process_next" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">process_next</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.process_next" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes the next pending message on the queue.</p>
 <p>This function tries to fetch a message from the queue, and
 if successful passes the message on to <a title="carrot.messaging.Consumer.receive" class="reference internal" href="#carrot.messaging.Consumer.receive"><tt class="xref docutils literal"><span class="pre">receive()</span></tt></a>.</p>
@@ -338,15 +393,6 @@ if successful passes the message on to <a title="carrot.messaging.Consumer.recei
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>ack</em> &#8211; By default, an ack is sent to the server
-signifying that the message has been accepted. This means
-that the <a title="carrot.backends.base.BaseMessage.ack" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage.ack"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage.ack()</span></tt></a> and
-<a title="carrot.backends.base.BaseMessage.reject" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage.reject"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage.reject()</span></tt></a> methods
-on the message object are no longer valid.
-If the ack argument is set to <tt class="xref docutils literal"><span class="pre">False</span></tt>, this behaviour is
-disabled and the receiver is required to manually handle
-acknowledgment.</td>
-</tr>
 <tr class="field"><th class="field-name">Returns:</th><td class="field-body">The resulting <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a>
 object.</td>
 </tr>
@@ -403,8 +449,10 @@ You can register callbacks using <a title="carrot.messaging.Consumer.register_ca
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.wait">
-<tt class="descname">wait</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.wait" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">wait</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.wait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Go into consume mode.</p>
+<p>Mostly for testing purposes and simple programs, you probably
+want <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a> or <a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a> instead.</p>
 <p>This runs an infinite loop, processing all incoming messages
 using <a title="carrot.messaging.Consumer.receive" class="reference internal" href="#carrot.messaging.Consumer.receive"><tt class="xref docutils literal"><span class="pre">receive()</span></tt></a> to apply the message to all registered
 callbacks.</p>
@@ -416,7 +464,7 @@ callbacks.</p>
 <dt id="carrot.messaging.Messaging">
 <em class="property">
 class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">Messaging</tt><big>(</big><em>connection</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging" title="Permalink to this definition">¶</a></dt>
-<dd><p>A message publisher and consumer.</p>
+<dd><p>A combined message publisher and consumer.</p>
 <dl class="attribute">
 <dt id="carrot.messaging.Messaging.consumer_cls">
 <tt class="descname">consumer_cls</tt><a class="headerlink" href="#carrot.messaging.Messaging.consumer_cls" title="Permalink to this definition">¶</a></dt>
@@ -443,7 +491,7 @@ class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">
 <li><em>exchange</em> &#8211; see <a title="carrot.messaging.Publisher.exchange" class="reference internal" href="#carrot.messaging.Publisher.exchange"><tt class="xref docutils literal"><span class="pre">exchange</span></tt></a>.</li>
 <li><em>routing_key</em> &#8211; see <a title="carrot.messaging.Publisher.routing_key" class="reference internal" href="#carrot.messaging.Publisher.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a>.</li>
 <li><em>encoder</em> &#8211; see <a title="carrot.messaging.Publisher.encoder" class="reference internal" href="#carrot.messaging.Publisher.encoder"><tt class="xref docutils literal"><span class="pre">encoder</span></tt></a>.</li>
-<li><em>backend</em> &#8211; see <a title="carrot.messaging.Publisher.backend" class="reference internal" href="#carrot.messaging.Publisher.backend"><tt class="xref docutils literal"><span class="pre">backend</span></tt></a>.</li>
+<li><em>backend_cls</em> &#8211; see <a title="carrot.messaging.Publisher.backend_cls" class="reference internal" href="#carrot.messaging.Publisher.backend_cls"><tt class="xref docutils literal"><span class="pre">backend_cls</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -502,9 +550,15 @@ to <a title="carrot.messaging.Publisher.send" class="reference internal" href="#
 must have a decoder supporting the serialization scheme.</dd></dl>
 
 <dl class="attribute">
-<dt id="carrot.messaging.Publisher.backend">
-<tt class="descname">backend</tt><a class="headerlink" href="#carrot.messaging.Publisher.backend" title="Permalink to this definition">¶</a></dt>
-<dd>The backend used. Defaults to the <tt class="docutils literal"><span class="pre">pyamqplib</span></tt> backend.</dd></dl>
+<dt id="carrot.messaging.Publisher.backend_cls">
+<tt class="descname">backend_cls</tt><a class="headerlink" href="#carrot.messaging.Publisher.backend_cls" title="Permalink to this definition">¶</a></dt>
+<dd>The messaging backend class used. Defaults to the <tt class="docutils literal"><span class="pre">pyamqplib</span></tt>
+backend.</dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">backend_cls</tt></dt>
+<dd>alias of <tt class="xref docutils literal"><span class="pre">Backend</span></tt></dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Publisher.close">

@@ -108,9 +108,9 @@ format used. Defaults to <a title="carrot.serialization.deserialize" class="refe
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.consume">
-<tt class="descname">consume</tt><big>(</big><em>queue</em>, <em>no_ack</em>, <em>callback</em>, <em>consumer_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.consume" title="Permalink to this definition">¶</a></dt>
-<dd>Go into an infinite loop, calling the <tt class="docutils literal"><span class="pre">callback</span></tt> when
-new messages are received.</dd></dl>
+<tt class="descname">consume</tt><big>(</big><em>queue</em>, <em>no_ack</em>, <em>callback</em>, <em>consumer_tag</em>, <em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.consume" title="Permalink to this definition">¶</a></dt>
+<dd>Returns an iterator that waits for one message at a time,
+calling the callback when messages arrive.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.exchange_declare">
@@ -119,7 +119,7 @@ new messages are received.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.get">
-<tt class="descname">get</tt><big>(</big><em>queue</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.get" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get</tt><big>(</big><em>queue</em>, <em>no_ack=False</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Receive a message from a declared queue by name.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

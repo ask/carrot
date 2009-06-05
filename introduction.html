@@ -282,12 +282,11 @@ can define the above publisher and consumer like so:</p>
 <span class="gp">... </span>    <span class="n">routing_key</span> <span class="o">=</span> <span class="s">&quot;importer&quot;</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="k">def</span> <span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message_data</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-<span class="gp">... </span>        <span class="n">action</span> <span class="o">=</span> <span class="n">message_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;action&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="n">message</span><span class="o">.</span><span class="n">reject</span><span class="p">()</span>
+<span class="gp">... </span>        <span class="n">action</span> <span class="o">=</span> <span class="n">message_data</span><span class="p">[</span><span class="s">&quot;action&quot;</span><span class="p">]</span>
 <span class="gp">... </span>        <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s">&quot;import_feed&quot;</span><span class="p">:</span>
 <span class="gp">... </span>            <span class="c"># something importing this feed</span>
 <span class="gp">... </span>            <span class="c"># import_feed(message_data[&quot;feed_url&quot;])</span>
+<span class="go">                message.ack()</span>
 <span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
 <span class="gp">... </span>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Unknown action: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">action</span><span class="p">)</span>
 </pre></div>
