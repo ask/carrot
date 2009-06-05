@@ -20,6 +20,8 @@ class Consumer(object):
     :keyword exchange_type: see :attr:`exchange_type`.
     :keyword decoder: see :attr:`decoder`.
     :keyword backend_cls: see :attr:`backend_cls`.
+    :keyword auto_ack: see :attr:`auto_ack`.
+    :keyword no_ack: see :attr:`no_ack`.
 
 
     .. attribute:: connection
@@ -142,6 +144,24 @@ class Consumer(object):
         useful if you've recently changed the :attr:`routing_key` attribute
         or other settings.
 
+    .. attribute:: auto_ack 
+
+        Acknowledgement is handled automatically once messages are received.
+        This means that the :meth:`carrot.backends.base.BaseMessage.ack` and
+        :meth:`carrot.backends.base.BaseMessage.reject` methods
+        on the message object are no longer valid.
+        By default :attr:`auto_ack` is set to ``False``, and the receiver is
+        required to manually handle acknowledgment.
+
+    .. attribute:: no_ack
+
+        Disable acknowledgement on the server-side. This is different from
+        :attr:`auto_ack` in that acknowledgement is turned off altogether.
+        This functionality increases performance but at the cost of
+        reliability. Messages can get lost if a client dies before it can
+        deliver them to the application.
+    
+
     :raises `amqplib.client_0_8.channel.AMQPChannelException`: if the queue is
         exclusive and the queue already exists and is owned by another
         connection.
@@ -168,6 +188,8 @@ class Consumer(object):
     channel_open = False
     warn_if_exists = False
     backend_cls = DefaultBackend
+    auto_ack = False
+    no_ack = False
     _closed = True
 
     def __init__(self, connection, queue=None, exchange=None,
@@ -193,12 +215,13 @@ class Consumer(object):
 
         self.warn_if_exists = kwargs.get("warn_if_exists",
                                          self.warn_if_exists)
+        self.auto_ack = kwargs.get("auto_ack", self.auto_ack)
 
         # exclusive implies auto-delete.
         if self.exclusive:
             self.auto_delete = True
 
-        self._declare_channel()
+        self._declare_channel(self.queue, self.routing_key)
 
     def __enter__(self):
         return self
@@ -208,9 +231,9 @@ class Consumer(object):
             raise e_type(e_value)
         self.close()
 
-    def _declare_channel(self):
+    def _declare_channel(self, queue_name, routing_key):
         if self.queue:
-            self.backend.queue_declare(queue=self.queue, durable=self.durable,
+            self.backend.queue_declare(queue=queue_name, durable=self.durable,
                                        exclusive=self.exclusive,
                                        auto_delete=self.auto_delete,
                                        warn_if_exists=self.warn_if_exists)
@@ -220,22 +243,29 @@ class Consumer(object):
                                           durable=self.durable,
                                           auto_delete=self.auto_delete)
         if self.queue:
-            self.backend.queue_bind(queue=self.queue, exchange=self.exchange,
-                                    routing_key=self.routing_key)
+            self.backend.queue_bind(queue=queue_name, exchange=self.exchange,
+                                    routing_key=routing_key)
         self._closed = False
 
     def _receive_callback(self, raw_message):
         message = self.backend.message_to_python(raw_message)
+        if self.auto_ack:
+            message.ack()
         self.receive(message.decode(), message)
 
-    def fetch(self):
+    def fetch(self, no_ack=None, auto_ack=None):
         """Receive the next message waiting on the queue.
 
         :returns: A :class:`carrot.backends.base.BaseMessage` instance,
             or ``None`` if there's no messages to be received.
 
         """
-        return self.backend.get(self.queue)
+        no_ack = no_ack or self.no_ack
+        auto_ack = auto_ack or self.auto_ack
+        message = self.backend.get(self.queue, no_ack=no_ack)
+        if auto_ack and message:
+            message.ack()
+        return message
 
     def receive(self, message_data, message):
         """This method is called when a new message is received by
@@ -272,20 +302,11 @@ class Consumer(object):
         """
         self.callbacks.append(callback)
 
-    def process_next(self, ack=True):
+    def process_next(self):
         """Processes the next pending message on the queue.
 
         This function tries to fetch a message from the queue, and
         if successful passes the message on to :meth:`receive`.
-
-        :keyword ack: By default, an ack is sent to the server
-            signifying that the message has been accepted. This means
-            that the :meth:`carrot.backends.base.BaseMessage.ack` and
-            :meth:`carrot.backends.base.BaseMessage.reject` methods
-            on the message object are no longer valid.
-            If the ack argument is set to ``False``, this behaviour is
-            disabled and the receiver is required to manually handle
-            acknowledgment.
 
         :returns: The resulting :class:`carrot.backends.base.BaseMessage`
             object.
@@ -294,8 +315,6 @@ class Consumer(object):
         message = self.fetch()
         if message:
             self._receive_callback(message)
-            if ack:
-                message.ack()
         return message
 
     def discard_all(self, filter=None):
@@ -335,12 +354,6 @@ class Consumer(object):
                 message.ack()
                 discarded_count = discarded_count + 1
 
-    def _generate_consumer_tag(self):
-        return "%s.%s-%s" % (
-                self.__class__.__module__,
-                self.__class__.__name__,
-                uuid.uuid4())
-
     def wait(self):
         """Go into consume mode.
 
@@ -358,11 +371,16 @@ class Consumer(object):
     def iterqueue(self, limit=None, infinite=False):
         """Infinite iterator yielding pending messages.
 
-        Obviously you shouldn't consume the whole iterator at
-        once, without using a ``limit``.
-
         :keyword limit: If set, the iterator stops when it has processed
             this number of messages in total.
+        
+        :keyword infinite: Don't raise :exc:`StopIteration` if there is no
+            messages waiting, but return ``None`` instead. If infinite you
+            obviously shouldn't consume the whole iterator at once without
+            using a ``limit``.
+
+        :raises StopIteration: If there is no messages waiting, and the
+            iterator is not infinite.
         """
         for items_since_start in itertools.count():
             item = self.process_next()

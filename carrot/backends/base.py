@@ -3,12 +3,14 @@ from carrot.serialization import serialize, deserialize
 
 class BaseMessage(object):
     """Base class for received messages."""
+    _state = None
 
     def __init__(self, backend, **kwargs):
         self.backend = backend
         self.body = kwargs.get("body")
         self.delivery_tag = kwargs.get("delivery_tag")
         self.decoder = kwargs.get("decoder", deserialize)
+        self._state = "RECEIVED"
 
     def decode(self):
         """Deserialize the message body, returning the original
@@ -19,7 +21,8 @@ class BaseMessage(object):
         """Acknowledge this message as being processed.,
 
         This will remove the message from the queue."""
-        return self.backend.ack(self.delivery_tag)
+        self.backend.ack(self.delivery_tag)
+        self._state = "ACK"
 
     def reject(self):
         """Reject this message.
@@ -27,7 +30,8 @@ class BaseMessage(object):
         The message will be discarded by the server.
 
         """
-        return self.backend.reject(self.delivery_tag)
+        self.backend.reject(self.delivery_tag)
+        self._state = "REJECTED"
 
     def requeue(self):
         """Reject this message and put it back on the queue.
@@ -36,7 +40,8 @@ class BaseMessage(object):
         to process.
 
         """
-        return self.backend.requeue(self.delivery_tag)
+        self.backend.requeue(self.delivery_tag)
+        self._state = "REQUEUED"
 
 
 class BaseBackend(object):
