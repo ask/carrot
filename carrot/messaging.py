@@ -144,7 +144,7 @@ class Consumer(object):
         useful if you've recently changed the :attr:`routing_key` attribute
         or other settings.
 
-    .. attribute:: auto_ack 
+    .. attribute:: auto_ack
 
         Acknowledgement is handled automatically once messages are received.
         This means that the :meth:`carrot.backends.base.BaseMessage.ack` and
@@ -160,7 +160,7 @@ class Consumer(object):
         This functionality increases performance but at the cost of
         reliability. Messages can get lost if a client dies before it can
         deliver them to the application.
-    
+
 
     :raises `amqplib.client_0_8.channel.AMQPChannelException`: if the queue is
         exclusive and the queue already exists and is owned by another
@@ -406,14 +406,14 @@ class Consumer(object):
     def iterqueue(self, limit=None, infinite=False):
         """Infinite iterator yielding pending messages, by using
         synchronous direct access to the queue (``basic_get``).
-        
+
         :meth:`iterqueue` is used where synchronous functionality is more
         important than performance. If you can, use :meth:`iterconsume`
         instead.
 
         :keyword limit: If set, the iterator stops when it has processed
             this number of messages in total.
-        
+
         :keyword infinite: Don't raise :exc:`StopIteration` if there is no
             messages waiting, but return ``None`` instead. If infinite you
             obviously shouldn't consume the whole iterator at once without
@@ -591,7 +591,7 @@ class Messaging(object):
         self.consumer.register_callback(self.receive)
         self.callbacks = []
         self._closed = False
-    
+
     def __enter__(self):
         return self
 

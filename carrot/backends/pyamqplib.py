@@ -9,6 +9,7 @@ from amqplib import client_0_8 as amqp
 from amqplib.client_0_8.exceptions import AMQPChannelException
 from carrot.backends.base import BaseMessage, BaseBackend
 from carrot.serialization import serialize, deserialize
+import itertools
 import warnings
 
 

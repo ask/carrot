@@ -118,7 +118,7 @@ class DummyConnection(object):
 
     def __init__(self, *args, **kwargs):
         self._closed = False
-    
+
     def __enter__(self):
         return self
 
