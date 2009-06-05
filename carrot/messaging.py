@@ -345,7 +345,7 @@ class Consumer(object):
                              callback=self._receive_callback,
                              consumer_tag=consumer_tag)
 
-    def iterqueue(self, limit=None):
+    def iterqueue(self, limit=None, infinite=False):
         """Infinite iterator yielding pending messages.
 
         Obviously you shouldn't consume the whole iterator at
@@ -356,7 +356,8 @@ class Consumer(object):
         """
         for items_since_start in itertools.count():
             item = self.process_next()
-            if item is None or (limit and items_since_start > limit):
+            if (not infinite and item is None) or \
+                    (limit and items_since_start > limit):
                 raise StopIteration
             yield item
 
