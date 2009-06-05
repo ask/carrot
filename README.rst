@@ -167,9 +167,7 @@ message is received it passes the message to all registered callbacks.
     >>> consumer = Consumer(connection=amqpconn, queue="feed",
     ...                     exchange="feed", routing_key="importer")
     >>> def import_feed_callback(message_data, message)
-    ...     feed_url = message_data.get("import_feed")
-    ...     if not feed_url:
-    ...         message.reject()
+    ...     feed_url = message_data["import_feed"]
     ...     print("Got feed import message for: %s" % feed_url)
     ...     # something importing this feed url
     ...     # import_feed(feed_url)
