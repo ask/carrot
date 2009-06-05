@@ -266,9 +266,10 @@ class TestMessaging(unittest.TestCase):
         consumer.close()
         publisher.close()
 
-    def publisher_message_priority(self):
+    def test_publisher_message_priority(self):
         consumer = self.create_consumer()
         publisher = self.create_publisher()
+        consumer.discard_all()
 
         m = publisher.create_message("foo", priority=9)
         self.assertEquals(m.priority, 9)
@@ -279,9 +280,10 @@ class TestMessaging(unittest.TestCase):
         consumer.close()
         publisher.close()
 
-    def consumer_test_auto_ack(self):
+    def test_consumer_test_auto_ack(self):
         consumer = self.create_consumer(auto_ack=True)
         publisher = self.create_publisher()
+        consumer.discard_all()
 
         publisher.send({"foo": "Baz"})
         message = fetch_next_message(consumer)
@@ -296,22 +298,55 @@ class TestMessaging(unittest.TestCase):
         consumer.close()
         publisher.close()
 
-    def consumer_consume(self):
+    def test_consumer_consume(self):
         consumer = self.create_consumer(auto_ack=True)
         publisher = self.create_publisher()
+        consumer.discard_all()
 
-        publisher.send({"foo": "Baz"})
-        it = consumer.consume()
-        self.assertRaises(NotImplementedError, it.next)
+        data = {"foo": "Baz"}
+        publisher.send(data)
+        try:
+            data2 = {"company": "Vandelay Industries"}
+            publisher.send(data2)
+            scratchpad = {}
 
-        data2 = {"company": "Vandelay Industries"}
-        publisher.send(data2)
-        scratchpad = {}
+            def callback(message_data, message):
+                scratchpad["data"] = message_data
+            consumer.register_callback(callback)
 
-        def callback(message_data, message):
-            scratchpad["data"] = message_data
-        consumer.register_callback(callback)
-        it.next()
-        self.assertEquals(scratchpad.get("data"), data2)
-        consumer.close()
-        publisher.close()
+            it = consumer.iterconsume()
+            it.next()
+            self.assertEquals(scratchpad.get("data"), data)
+            it.next()
+            self.assertEquals(scratchpad.get("data"), data2)
+
+            # Cancel consumer/close and restart.
+            consumer.close()
+            consumer = self.create_consumer(auto_ack=True)
+            consumer.register_callback(callback)
+            consumer.discard_all()
+            scratchpad = {}
+
+
+            # Test limits
+            it = consumer.iterconsume(limit=4)
+            publisher.send(data)
+            publisher.send(data2)
+            publisher.send(data)
+            publisher.send(data2)
+            publisher.send(data)
+
+            it.next()
+            self.assertEquals(scratchpad.get("data"), data)
+            it.next()
+            self.assertEquals(scratchpad.get("data"), data2)
+            it.next()
+            self.assertEquals(scratchpad.get("data"), data)
+            it.next()
+            self.assertEquals(scratchpad.get("data"), data2)
+            self.assertRaises(StopIteration, it.next)
+
+
+        finally:
+            consumer.close()
+            publisher.close()
