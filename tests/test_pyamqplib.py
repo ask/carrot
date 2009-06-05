@@ -8,7 +8,7 @@ sys.path.append(os.getcwd())
 
 from tests.utils import establish_test_connection
 from carrot.connection import AMQPConnection
-from carrot.messaging import Consumer, Publisher
+from carrot.messaging import Consumer, Publisher, ConsumerSet
 from carrot.backends.pyamqplib import Backend as AMQPLibBackend
 from carrot.backends.pyamqplib import Message as AMQPLibMessage
 
@@ -208,7 +208,7 @@ class TestMessaging(unittest.TestCase):
                             "last_name": "Kramer"}})
 
         while True:
-            message = consumer.process_next()
+            message = consumer.fetch(enable_callbacks=True)
             if message:
                 break
 
