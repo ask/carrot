@@ -40,6 +40,11 @@ class TestMessaging(unittest.TestCase):
                         queue=TEST_QUEUE, exchange=TEST_EXCHANGE,
                         routing_key=TEST_ROUTING_KEY, **options)
 
+    def create_consumerset(self, routing_keys, **options):
+        return ConsumerSet(connection=self.conn, backend_cls=AMQPLibBackend,
+                           queue=TEST_QUEUE, exchange=TEST_EXCHANGE,
+                           routing_keys=routing_keys, **options)
+
     def create_publisher(self, **options):
         return Publisher(connection=self.conn, backend_cls=AMQPLibBackend,
                         exchange=TEST_EXCHANGE, routing_key=TEST_ROUTING_KEY,
@@ -349,4 +354,82 @@ class TestMessaging(unittest.TestCase):
 
         finally:
             consumer.close()
+            publisher.close()
+
+    def test_consumerset_iterqueue(self):
+        consumers = self.create_consumerset(
+                ["foo.bar", "foo.baz", "xuzzy.stock", "block.bip"])
+        publisher = self.create_publisher()
+        consumers.discard_all()
+
+        try:
+            #publisher.send({"rkey": "xuzzy.stock"}, routing_key="xuzzy.stock")
+            it = consumers.iterqueue()
+            #m = it.next()
+            #self.assertTrue(m.decode(), {"rkey": "xuzzy.stock"})
+
+
+            # Is in routing_key order, not message order
+            publisher.send({"rkey": "xyzzy.stock"}, routing_key="xyzzy.stock")
+            publisher.send({"rkey": "block.bip"}, routing_key="block.bip")
+            publisher.send({"rkey": "foo.bar"}, routing_key="foo.bar")
+            publisher.send({"rkey": "foo.baz"}, routing_key="foo.baz")
+
+            m = it.next()
+            self.assertTrue(m.decode(), {"rkey": "foo.bar"})
+            m = it.next()
+            self.assertTrue(m.decode(), {"rkey": "foo.baz"})
+            #for C in consumers.queues.values():
+            #    sys.stderr.write("QQQQQQQ: %s" % C.fetch())
+            m = it.next()
+            self.assertTrue(m.decode(), {"rkey": "xyzzy.stock"})
+            
+            publisher.send({"rkey": "foo.baz"}, routing_key="foo.baz")
+            publisher.send({"rkey": "foo.baz"}, routing_key="foo.baz")
+            publisher.close()
+
+            m = it.next()
+            self.assertTrue(m.decode(), {"rkey": "block.bip"})
+            m = it.next()
+            self.assertTrue(m.decode(), {"rkey": "block.bip"})
+            m = it.next()
+
+        finally:
+            consumers.close()
+            publisher.close()
+    
+    def x_consumerset_iterconsume(self):
+        consumers = self.create_consumerset(
+                ["foo.bar", "foo.baz", "xuzzy.stock"])
+        publisher = self.create_publisher()
+        consumers.discard_all()
+
+        scratchpad = {}
+        def callback(message_data, message):
+            scratchpad["data"] = message_data
+
+        def assertDataIs(what):
+            self.assertEquals(scratchpad.get("data"), what)
+
+        try:
+            publisher.send({"rkey": "xuzzy.stock"}, routing_key="xuzzy.stock")
+            it = consumers.iterconsume()
+            consumers.register_callback(callback)
+            it.next()
+            assertDataIs({"rkey": "xuzzy.stock"})
+
+            # Is in routing_key order, not message order
+            publisher.send({"rkey": "xyzzy.stock"}, routing_key="xyzzy.stock")
+            publisher.send({"rkey": "foo.bar"}, routing_key="foo.bar")
+            publisher.send({"rkey": "foo.baz"}, routing_key="foo.baz")
+
+            it.next()
+            assertDataIs({"rkey": "foo.bar"})
+            it.next()
+            assertDataIs({"rkey": "foo.baz"})
+            #it.next()
+            #assertDataIs({"rkey": "xyzzy.stock"})
+
+        finally:
+            consumers.close()
             publisher.close()
