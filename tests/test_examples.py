@@ -1,10 +1,8 @@
 import os
 import sys
 import unittest
-import uuid
 sys.path.insert(0, os.pardir)
 sys.path.append(os.getcwd())
-import threading
 
 from tests.utils import establish_test_connection
 from carrot.connection import AMQPConnection
