@@ -5,6 +5,10 @@
 0.4.0 :date:`xxxx-xx-xx xx:xx x.x CET` :author:askh@opera.com
 ------------------------------------------------------------------
 
+*WARNING* ``Consumer.process_next`` has been deprecated in favor of
+``Consumer.fetch(enable_callbacks=True)`` and emits a ``DeprecationWarning``
+if used.
+
 *IMPORTANT* Please don't use ``Consumer.wait`` in production. Use either
 of ``Consumer.iterconsume`` or ``Consumer.iterqueue``.
 
