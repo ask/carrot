@@ -6,64 +6,6 @@ import warnings
 import uuid
 
 
-def cycleiterators(iterables, limit=None):
-    """Cycle between iterators.
-
-    :param iterables: List of iterators to cycle between.
-
-    :keyword limit: An optional maximum number of cycles.
-
-    :raises StopIteration: When there are no values left in any
-        of the iterators, or if limit is set and the limit has been reached.
-
-    It's probably best explained by three simple examples:
-
-        >>> it = cycleiterators([iter([1, 2, 3]),
-        ...                      iter([4, 5, 6]),
-        ...                      iter([7, 8, 9])])
-        >>> list(it)
-        [1, 4, 7, 2, 5, 8, 3, 6, 9]
-
-        >>> it = cycleiterators([iter([1, 2, 3]),
-        ...                      iter([4, 5]),
-        ...                      iter([7, 8, 9])])
-        >>> list(it)
-        [1, 5, 7, 2, 5, 8, 3, 9]
-
-        >>> it = cycleiterators([iter([1, 2, 3]),
-        ...                      iter([4, 5, 6]),
-        ...                      iter([7, 8, 9])], limit=6)
-        >>> list(it)
-        [1, 4, 7, 2, 5, 8]
-
-    """
-
-    def maybe_it(it):
-        if hasattr(it, "next"):
-            return it
-        return iter(it)
-                values_so_far += 1
-
-    iterators = map(maybe_it, iterables)
-
-    values_so_far = 0
-    for iterations_so_far in itertools.count():
-        got_value = False
-        for it in iterators:
-            try:
-                value = it.next()
-            except StopIteration:
-                pass
-            else:
-                got_value = True
-                if limit and values_so_far >= limit:
-                    raise StopIteration
-                values_so_far += 1
-                yield value
-        if not got_value:
-            raise StopIteration
-
-
 class Consumer(object):
     """Message consumer.
 
@@ -318,19 +260,38 @@ class Consumer(object):
             message.ack()
         self.receive(message.decode(), message)
 
-    def fetch(self, no_ack=None, auto_ack=None):
+    def fetch(self, no_ack=None, auto_ack=None, enable_callbacks=False):
         """Receive the next message waiting on the queue.
 
         :returns: A :class:`carrot.backends.base.BaseMessage` instance,
             or ``None`` if there's no messages to be received.
 
+        :keyword enable_callbacks: Enable callbacks. The message will be
+            processed with all registered callbacks. Default is disabled.
+        :keyword auto_ack: Override the default :attr:`auto_ack` setting.
+        :keyword no_ack: Override the default :attr:`no_ack` setting.
+
         """
         no_ack = no_ack or self.no_ack
         auto_ack = auto_ack or self.auto_ack
         message = self.backend.get(self.queue, no_ack=no_ack)
-        if auto_ack and message:
-            message.ack()
+        if message:
+            if auto_ack:
+                message.ack()
+            if enable_callbacks:
+                self._receive_callback(message)
         return message
+
+    def process_next(self):
+        """**DEPRECATED** Use :meth:`fetch` like this instead:
+
+            >>> message = self.fetch(enable_callbacks=True)
+
+        """
+        warnings.warn(DeprecationWarning(
+            "Consumer.process_next has been deprecated in favor of \
+            Consumer.fetch(enable_callbacks=True)"))
+        return self.fetch(enable_callbacks=True)
 
     def receive(self, message_data, message):
         """This method is called when a new message is received by
@@ -366,21 +327,6 @@ class Consumer(object):
                 The :class:`carrot.backends.base.BaseMessage` instance.
         """
         self.callbacks.append(callback)
-
-    def process_next(self):
-        """Processes the next pending message on the queue.
-
-        This function tries to fetch a message from the queue, and
-        if successful passes the message on to :meth:`receive`.
-
-        :returns: The resulting :class:`carrot.backends.base.BaseMessage`
-            object.
-
-        """
-        message = self.fetch()
-        if message:
-            self._receive_callback(message)
-        return message
 
     def discard_all(self, filter=None):
         """Discard all waiting messages.
@@ -482,7 +428,9 @@ class Consumer(object):
 
         """
         for items_since_start in itertools.count():
-            item = self.process_next()
+            import sys
+            sys.stderr.write("TRYING TO FETCH FROM %s\n" % self.queue)
+            item = self.fetch()
             if (not infinite and item is None) or \
                     (limit and items_since_start >= limit):
                 raise StopIteration
@@ -491,7 +439,10 @@ class Consumer(object):
     def close(self):
         """Close the channel to the queue."""
         if self.channel_open:
-            self.backend.cancel(self.consumer_tag)
+            try:
+                self.backend.cancel(self.consumer_tag)
+            except KeyError:
+                pass
         self.backend.close()
         self._closed = True
 
@@ -670,14 +621,8 @@ class Messaging(object):
     def send(self, message_data, delivery_mode=None):
         self.publisher.send(message_data, delivery_mode=delivery_mode)
 
-    def fetch(self):
-        return self.consumer.fetch()
-
-    def next(self):
-        return self.consumer.next()
-
-    def fetch(self):
-        return self.consumer.fetch()
+    def fetch(self, **kwargs):
+        return self.consumer.fetch(**kwargs)
 
     def close(self):
         self.consumer.close()
