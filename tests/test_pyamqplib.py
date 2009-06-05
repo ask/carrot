@@ -65,7 +65,7 @@ class TestMessaging(unittest.TestCase):
                 "exclusive": True,
                 "auto_delete": True,
                 "exchange_type": "topic",
-        } 
+        }
         consumer = Consumer(connection=self.conn, **opposite_defaults)
         for opt_name, opt_value in opposite_defaults.items():
             self.assertEquals(getattr(consumer, opt_name), opt_value)
@@ -77,12 +77,11 @@ class TestMessaging(unittest.TestCase):
         self.assertTrue(consumer.backend.connection is self.conn)
         self.assertTrue(consumer.backend.decoder is consumer.decoder)
         consumer.close()
-    
+
     def test_consumer_queue_declared(self):
         consumer = self.create_consumer()
         self.assertTrue(consumer.backend.queue_exists(consumer.queue))
         consumer.close()
-
 
     def test_consumer_callbacks(self):
         consumer = self.create_consumer()
@@ -92,10 +91,12 @@ class TestMessaging(unittest.TestCase):
         self.assertRaises(NotImplementedError, consumer.receive, {}, {})
 
         callback1_scratchpad = {}
+
         def callback1(message_data, message):
             callback1_scratchpad["message_data"] = message_data
-       
+
         callback2_scratchpad = {}
+
         def callback2(message_data, message):
             callback2_scratchpad.update({"delivery_tag": message.delivery_tag,
                                          "message_body": message.body})
@@ -137,7 +138,7 @@ class TestMessaging(unittest.TestCase):
         consumer = self.create_consumer(decoder=pickle.loads)
         publisher = self.create_publisher(encoder=pickle.dumps)
         consumer.discard_all()
-        
+
         data = {"string": "The quick brown fox jumps over the lazy dog",
                 "int": 10,
                 "float": 3.14159265,
@@ -191,12 +192,14 @@ class TestMessaging(unittest.TestCase):
         consumer.close()
         publisher.close()
 
+
     def test_consumer_process_next(self):
         consumer = self.create_consumer()
         publisher = self.create_publisher()
         consumer.discard_all()
 
         scratchpad = {}
+
         def callback(message_data, message):
             scratchpad["delivery_tag"] = message.delivery_tag
         consumer.register_callback(callback)
@@ -204,7 +207,7 @@ class TestMessaging(unittest.TestCase):
         publisher.send({"name_discovered": {
                             "first_name": "Cosmo",
                             "last_name": "Kramer"}})
-       
+
         while True:
             message = consumer.process_next()
             if message:
@@ -224,7 +227,7 @@ class TestMessaging(unittest.TestCase):
         for i in xrange(100):
             publisher.send({"foo": "bar"})
         time.sleep(0.5)
-        
+
         self.assertEquals(consumer.discard_all(), 100)
 
         consumer.close()
@@ -241,7 +244,7 @@ class TestMessaging(unittest.TestCase):
         for i in xrange(100):
             publisher.send({"foo%d" % i: "bar%d" % i})
         time.sleep(0.5)
-       
+
         for i in xrange(100):
             try:
                 message = it.next()
@@ -260,7 +263,7 @@ class TestMessaging(unittest.TestCase):
         it = consumer.iterqueue(infinite=True)
         self.assertTrue(it.next() is None,
                 "returns None if no messages and inifite=True")
-        
+
         consumer.close()
         publisher.close()
 
@@ -277,3 +280,39 @@ class TestMessaging(unittest.TestCase):
         consumer.close()
         publisher.close()
 
+    def consumer_test_auto_ack(self):
+        consumer = self.create_consumer(auto_ack=True)
+        publisher = self.create_publisher()
+
+        publisher.send({"foo": "Baz"})
+        message = fetch_next_message(consumer)
+        self.assertEquals(message._state, "ACK")
+
+        consumer.close()
+        consumer = self.create_consumer(auto_ack=False)
+        publisher.send({"foo": "Baz"})
+        message = fetch_next_message(consumer)
+        self.assertEquals(message._state, "RECEIVED")
+
+        consumer.close()
+        publisher.close()
+
+    def consumer_consume(self):
+        consumer = self.create_consumer(auto_ack=True)
+        publisher = self.create_publisher()
+
+        publisher.send({"foo": "Baz"})
+        it = consumer.consume()
+        self.assertRaises(NotImplementedError, it.next)
+
+        data2 = {"company": "Vandelay Industries"}
+        publisher.send(data2)
+        scratchpad = {}
+
+        def callback(message_data, message):
+            scratchpad["data"] = message_data
+        consumer.register_callback(callback)
+        it.next()
+        self.assertEquals(scratchpad.get("data"), data2)
+        consumer.close()
+        publisher.close()
