@@ -2,7 +2,7 @@
  Change history
 ================
 
-0.4.0 :date:`xxxx-xx-xx xx:xx x.x CET` :author:askh@opera.com
+0.4.0 :date:`2008-06-06 01:39 P.M CET` :author:askh@opera.com
 ------------------------------------------------------------------
 
 *WARNING* ``Consumer.process_next`` has been deprecated in favor of
