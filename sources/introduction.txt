@@ -2,7 +2,7 @@
  carrot - AMQP Messaging Framework for Python
 ##############################################
 
-:Version: 0.4.0-pre7
+:Version: 0.4.0
 
 Introduction
 ------------
@@ -12,7 +12,7 @@ Queuing Protocol, an open standard protocol for message orientation, queuing,
 routing, reliability and security.
 
 The aim of `carrot` is to make messaging in Python as easy as possible by
-providing a high-level interface form producing and consuming messages. At the
+providing a high-level interface for producing and consuming messages. At the
 same time it is a goal to re-use what is already available as much as possible.
 
 `carrot` supprots pluggable messaging back-ends, so it is possible to support
@@ -36,6 +36,13 @@ refer to the `Wikipedia article about AMQP`_.
 .. _`Rabbits and warrens`: http://blogs.digitar.com/jjww/2009/01/rabbits-and-warrens/
 .. _`py-amqplib`: http://barryp.org/software/py-amqplib/
 .. _`Wikipedia article about AMQP`: http://en.wikipedia.org/wiki/AMQP
+
+Documentation
+=============
+
+Carrot is using Sphinx, and the latest documentation is available at GitHub:
+
+    http://github.com/ask/carrot/
 
 Installation
 ============
@@ -167,9 +174,7 @@ message is received it passes the message to all registered callbacks.
     >>> consumer = Consumer(connection=amqpconn, queue="feed",
     ...                     exchange="feed", routing_key="importer")
     >>> def import_feed_callback(message_data, message)
-    ...     feed_url = message_data.get("import_feed")
-    ...     if not feed_url:
-    ...         message.reject()
+    ...     feed_url = message_data["import_feed"]
     ...     print("Got feed import message for: %s" % feed_url)
     ...     # something importing this feed url
     ...     # import_feed(feed_url)

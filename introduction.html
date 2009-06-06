@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.4.0-pre7 documentation</title>
+    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.4.0 documentation</title>
     <link rel="stylesheet" href="static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
       URL_ROOT:    '',
-      VERSION:     '0.4.0-pre7',
+      VERSION:     '0.4.0',
       COLLAPSE_MODINDEX: false,
       FILE_SUFFIX: '.html',
       HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.4.0-pre7 documentation" href="index.html" />
+    <link rel="top" title="Carrot v0.4.0 documentation" href="index.html" />
     <link rel="next" title="API Reference" href="reference/index.html" />
     <link rel="prev" title="Carrot Documentation" href="index.html" /> 
   </head>
@@ -27,7 +27,7 @@
 
     <div class="header-wrapper">
       <div class="header">
-	<h1><a href="index.html">Carrot v0.4.0-pre7 documentation</a></h1>
+	<h1><a href="index.html">Carrot v0.4.0 documentation</a></h1>
 	<div class="rel">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a> |
@@ -54,7 +54,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.4.0-pre7</td>
+<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.4.0</td>
 </tr>
 </tbody>
 </table>
@@ -64,7 +64,7 @@
 Queuing Protocol, an open standard protocol for message orientation, queuing,
 routing, reliability and security.</p>
 <p>The aim of <cite>carrot</cite> is to make messaging in Python as easy as possible by
-providing a high-level interface form producing and consuming messages. At the
+providing a high-level interface for producing and consuming messages. At the
 same time it is a goal to re-use what is already available as much as possible.</p>
 <p><cite>carrot</cite> supprots pluggable messaging back-ends, so it is possible to support
 several messaging systems. At the time of release, the <a class="reference external" href="http://barryp.org/software/py-amqplib/">py-amqplib</a> based
@@ -76,6 +76,12 @@ personally we&#8217;ve been using <a class="reference external" href="http://www
 AMQP, and you could start with the excellent article about using RabbitMQ
 under Python, <a class="reference external" href="http://blogs.digitar.com/jjww/2009/01/rabbits-and-warrens/">Rabbits and warrens</a>. For more detailed information, you can
 refer to the <a class="reference external" href="http://en.wikipedia.org/wiki/AMQP">Wikipedia article about AMQP</a>.</p>
+<div class="section" id="documentation">
+<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h3>
+<p>Carrot is using Sphinx, and the latest documentation is available at GitHub:</p>
+<blockquote>
+<a class="reference external" href="http://github.com/ask/carrot/">http://github.com/ask/carrot/</a></blockquote>
+</div>
 <div class="section" id="installation">
 <h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
 <p>You can install <tt class="docutils literal"><span class="pre">carrot</span></tt> either via the Python Package Index (PyPI)
@@ -208,9 +214,7 @@ message is received it passes the message to all registered callbacks.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span>
 <span class="gp">... </span>                    <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">import_feed_callback</span><span class="p">(</span><span class="n">message_data</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">feed_url</span> <span class="o">=</span> <span class="n">message_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;import_feed&quot;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">feed_url</span><span class="p">:</span>
-<span class="gp">... </span>        <span class="n">message</span><span class="o">.</span><span class="n">reject</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">feed_url</span> <span class="o">=</span> <span class="n">message_data</span><span class="p">[</span><span class="s">&quot;import_feed&quot;</span><span class="p">]</span>
 <span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Got feed import message for: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">feed_url</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="c"># something importing this feed url</span>
 <span class="gp">... </span>    <span class="c"># import_feed(feed_url)</span>
