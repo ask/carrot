@@ -12,13 +12,6 @@ def roundrobin(iterables):
 
     :param iterables: List of iterators to cycle between.
 
-
-    :keyword skip_none: Skip ``None`` values.
-
-    :keyword infinite: Will respect the iterators :exc:`StopIteration`, but
-        will cycle around them again if all of them return ``None`` in
-        a single pass.
-
     :raises StopIteration: When there are no values left in any
         of the iterators, or if limit is set and the limit has been reached.
 
