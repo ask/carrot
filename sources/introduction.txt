@@ -38,7 +38,7 @@ refer to the `Wikipedia article about AMQP`_.
 .. _`Wikipedia article about AMQP`: http://en.wikipedia.org/wiki/AMQP
 
 Documentation
-=============
+-------------
 
 Carrot is using Sphinx, and the latest documentation is available at GitHub:
 
