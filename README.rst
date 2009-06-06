@@ -37,6 +37,13 @@ refer to the `Wikipedia article about AMQP`_.
 .. _`py-amqplib`: http://barryp.org/software/py-amqplib/
 .. _`Wikipedia article about AMQP`: http://en.wikipedia.org/wiki/AMQP
 
+Documentation
+=============
+
+Carrot is using Sphinx, and the latest documentation is available at GitHub:
+
+    http://github.com/ask/carrot/
+
 Installation
 ============
 
