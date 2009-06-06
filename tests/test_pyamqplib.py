@@ -8,7 +8,7 @@ sys.path.append(os.getcwd())
 
 from tests.utils import establish_test_connection
 from carrot.connection import AMQPConnection
-from carrot.messaging import Consumer, Publisher, ConsumerSet
+from carrot.messaging import Consumer, Publisher
 from carrot.backends.pyamqplib import Backend as AMQPLibBackend
 from carrot.backends.pyamqplib import Message as AMQPLibMessage
 
