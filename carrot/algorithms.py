@@ -1,12 +1,17 @@
-import itertools
+from itertools import count
 
 
-def cycle(iterables, limit=None, skip_none=False, infinite=False):
+def maybe_it(it):
+    if hasattr(it, "next"):
+        return it
+    return iter(it)
+
+
+def roundrobin(iterables):
     """Cycle between iterators.
 
     :param iterables: List of iterators to cycle between.
 
-    :keyword limit: An optional maximum number of cycles.
 
     :keyword skip_none: Skip ``None`` values.
 
@@ -19,68 +24,40 @@ def cycle(iterables, limit=None, skip_none=False, infinite=False):
 
     It's probably best explained by example:
 
-        >>> it = cycleiterators([iter([1, 2, 3]),
-        ...                      iter([4, 5, 6]),
-        ...                      iter([7, 8, 9])])
+        >>> it = roundrobin([iter([1, 2, 3]),
+        ...                  iter([4, 5, 6]),
+        ...                  iter([7, 8, 9])])
         >>> list(it)
         [1, 4, 7, 2, 5, 8, 3, 6, 9]
 
-        >>> it = cycleiterators([iter([1, 2, 3]),
-        ...                      iter([4, 5]),
-        ...                      iter([7, 8, 9])])
+        >>> it = roundrobin([iter([1, 2, 3]),
+        ...                  iter([4, 5]),
+        ...                  iter([7, 8, 9])])
         >>> list(it)
         [1, 5, 7, 2, 5, 8, 3, 9]
 
-        >>> it = cycleiterators([iter([1, 2, 3]),
-        ...                      iter([4, 5, 6]),
-        ...                      iter([7, 8, 9])], limit=6)
+        >>> it = roundrobin([iter([1, 2, 3]),
+        ...                  iter([4, 5, 6]),
+        ...                  iter([7, 8, 9])], limit=6)
         >>> list(it)
         [1, 4, 7, 2, 5, 8]
         
-        >>> it = cycleiterators([iter([1, 2, 3]),
-        ...                      iter([4, 5, None, 6]),
-        ...                      iter([7, 8, 9])], skip_none=True)
+        >>> it = roundrobin([iter([1, 2, 3]),
+        ...                  iter([4, 5, None, 6]),
+        ...                  iter([7, 8, 9])], skip_none=True)
         >>> list(it)
         [1, 4, 7, 2, 5, 8, 3, 6, 9]
 
     """
-
-    def W(t):
-        import sys
-        sys.stderr.write(t+"\n")
-
-    def maybe_it(it):
-        if hasattr(it, "next"):
-            return it
-        return iter(it)
-
-    iterators = map(maybe_it, iterables)
-
-    values_so_far = 0
-    for iterations_so_far in itertools.count():
-        W("Iteration: %d" % iterations_so_far)
+    for iterations_so_far in count():
         got_value = False
-        for it in iterators:
+        for it in iterables:
             try:
-                W("GETTING VALUE")
                 value = it.next()
-                if value:
-                    W("GOT VALUE: %s" % value.body)
-                else:
-                    W("GOT VALUE: %s" % value)
-            except StopIteration, e:
-                if infinite:
-                    raise e
+            except StopIteration:
+                pass
             else:
-                if value is None and skip_none:
-                    pass
-                else:
-                    got_value = True
-                    if limit and values_so_far >= limit:
-                        raise StopIteration
-                    values_so_far += 1
-                    yield value
-        if not got_value and not infinite:
+                yield value
+                got_value = True
+        if not got_value:
             raise StopIteration
-        import time
-        time.sleep(0.5)

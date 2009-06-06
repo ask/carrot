@@ -1,8 +1,8 @@
 """carrot.messaging"""
 from carrot.backends import DefaultBackend
 from carrot.serialization import serialize, deserialize
-from carrot.algorithms import cycle
-import itertools
+from carrot.algorithms import roundrobin
+from itertools import count, ifilter, islice
 import warnings
 import uuid
 
@@ -429,7 +429,7 @@ class Consumer(object):
             iterator is not infinite.
 
         """
-        for items_since_start in itertools.count():
+        for items_since_start in count():
             import sys
             sys.stderr.write("TRYING TO FETCH FROM %s\n" % self.queue)
             item = self.fetch()
@@ -650,7 +650,7 @@ class ConsumerSet(object):
         self.options = options
         self.queues = {}
         self.callbacks = []
-        self.algorithm = options.get("algorithm", cycle)
+        self.algorithm = options.get("algorithm", roundrobin)
         [self.add_queue(routing_key)
                 for routing_key in self.routing_keys]
 
@@ -683,19 +683,17 @@ class ConsumerSet(object):
             of messages has been exceeded.
 
         """
+        def turbo_button(it): # XXX obviously remove after debug.
+            import time
+            for val in it:
+                yield val
+                time.sleep(1)
         algorithm = algorithm or self.algorithm
         its = [consumer.iterqueue(infinite=True)
                 for consumer in self.queues.values()]
-        return self.algorithm(its, limit=limit,
-                              skip_none=True, infinite=True)
+        selector = self.algorithm(its)
+        return islice(ifilter(None, turbo_button(selector)), limit)
 
-        """for items_since_start in itertools.count():
-            for consumer in self.queues.values():
-                if limit and items_since_start >= limit:
-                    raise StopIteration
-                item = consumer.fetch()
-                if item:
-                    yield item"""
 
     def iterconsume(self, limit=None, algorithm=None):
         """Cycle between all consumers in consume mode.
@@ -705,7 +703,8 @@ class ConsumerSet(object):
         algorithm = algorithm or self.algorithm
         its = [consumer.iterconsume()
                 for consumer in self.queues.values()]
-        return self.algorithm(its, limit=limit)
+        selector = self.algorithm(its)
+        return islice(selector, limit)
 
     def discard_all(self):
         return sum([consumer.discard_all()
