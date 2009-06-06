@@ -7,7 +7,6 @@ import warnings
 import uuid
 
 
-
 class Consumer(object):
     """Message consumer.
 
