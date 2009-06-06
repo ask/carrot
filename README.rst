@@ -12,7 +12,7 @@ Queuing Protocol, an open standard protocol for message orientation, queuing,
 routing, reliability and security.
 
 The aim of `carrot` is to make messaging in Python as easy as possible by
-providing a high-level interface form producing and consuming messages. At the
+providing a high-level interface for producing and consuming messages. At the
 same time it is a goal to re-use what is already available as much as possible.
 
 `carrot` supprots pluggable messaging back-ends, so it is possible to support
