@@ -15,7 +15,7 @@ of ``Consumer.iterconsume`` or ``Consumer.iterqueue``.
 *IMPORTANT* The ``ack`` argument to ``Consumer.process_next`` has been
 removed, use the instance-wide ``auto_ack`` argument/attribute instead.
 
-*IMPORANT* ``Consumer.message_to_python`` has been removed, use
+*IMPORTANT* ``Consumer.message_to_python`` has been removed, use
 ``message.decode()`` on the returned message object instead.
 
 *IMPORTANT* Consumer/Publisher/Messaging now no longer takes a backend
