@@ -15,7 +15,7 @@ The aim of `carrot` is to make messaging in Python as easy as possible by
 providing a high-level interface for producing and consuming messages. At the
 same time it is a goal to re-use what is already available as much as possible.
 
-`carrot` supprots pluggable messaging back-ends, so it is possible to support
+`carrot` has pluggable messaging back-ends, so it is possible to support
 several messaging systems. At the time of release, the `py-amqplib`_ based
 backend is considered suitable for production use.
 
