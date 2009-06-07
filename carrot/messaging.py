@@ -232,6 +232,10 @@ class Consumer(object):
             raise e_type(e_value)
         self.close()
 
+    def __iter__(self):
+        """iter(Consumer) -> Consumer.iterqueue(infinite=True)"""
+        return self.iterqueue(infinite=True)
+
     def _generate_consumer_tag(self):
         return "%s.%s-%s" % (
                 self.__class__.__module__,
