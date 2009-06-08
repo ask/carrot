@@ -1,8 +1,12 @@
 include AUTHORS
-include Changelog
-include LICENSE
-include README
+include CHANGELOG
+include FAQ
+include INSTALL
+include LICENCE
 include MANIFEST.in
+include README
+include THANKS
+include TODO
 recursive-include docs *
 recursive-include carrot *
 recursive-include tests *
