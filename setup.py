@@ -22,7 +22,9 @@ if root_dir != '':
     os.chdir(root_dir)
 src_dir = "carrot"
 
+
 def osx_install_data(install_data):
+
     def finalize_options(self):
         self.set_undefined_options("install", ("install_lib", "install_dir"))
         install_data.finalize_options(self)
@@ -48,6 +50,8 @@ for scheme in INSTALL_SCHEMES.values():
     scheme['data'] = scheme['purelib']
 
 SKIP_EXTENSIONS = [".pyc", ".pyo", ".swp", ".swo"]
+
+
 def is_unwanted_file(filename):
     return any([filename.endswith(skip_ext) for skip_ext in SKIP_EXTENSIONS])
 
@@ -55,7 +59,8 @@ def is_unwanted_file(filename):
 for dirpath, dirnames, filenames in os.walk(src_dir):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):
-        if dirname.startswith("."): del dirnames[i]
+        if dirname.startswith("."):
+            del dirnames[i]
     for filename in filenames:
         if filename.endswith(".py"):
             packages.append('.'.join(fullsplit(dirpath)))
@@ -91,5 +96,5 @@ setup(
         "Topic :: System :: Distributed Computing",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    long_description=codecs.open('README.rst', "r", "utf-8").read(),
+    long_description=codecs.open('README', "r", "utf-8").read(),
 )
