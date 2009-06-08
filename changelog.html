@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Change history &mdash; Carrot v0.4.0 documentation</title>
+    <link rel="stylesheet" href="static/agogo.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+      URL_ROOT:    '',
+      VERSION:     '0.4.0',
+      COLLAPSE_MODINDEX: false,
+      FILE_SUFFIX: '.html',
+      HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Carrot v0.4.0 documentation" href="index.html" />
+    <link rel="prev" title="carrot.serialization" href="reference/carrot.serialization.html" /> 
+  </head>
+  <body>
+
+    <div class="header-wrapper">
+      <div class="header">
+	<h1><a href="index.html">Carrot v0.4.0 documentation</a></h1>
+	<div class="rel">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a> |
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |
+          <a href="reference/carrot.serialization.html" title="carrot.serialization"
+             accesskey="P">previous</a>
+	</div>
+      </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+	<div class="document">
+	  <div class="documentwrapper">
+	    <div class="bodywrapper">
+	      <div class="body">
+		
+  <div class="section" id="change-history">
+<h1>Change history<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="p-m-cet-askh-opera-com">
+<h2>0.4.0 [2008-06-06 01:39 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#p-m-cet-askh-opera-com" title="Permalink to this headline">¶</a></h2>
+<p><em>WARNING</em> <tt class="docutils literal"><span class="pre">Consumer.process_next</span></tt> has been deprecated in favor of
+<tt class="docutils literal"><span class="pre">Consumer.fetch(enable_callbacks=True)</span></tt> and emits a <tt class="docutils literal"><span class="pre">DeprecationWarning</span></tt>
+if used.</p>
+<p><em>IMPORTANT</em> Please don&#8217;t use <tt class="docutils literal"><span class="pre">Consumer.wait</span></tt> in production. Use either
+of <tt class="docutils literal"><span class="pre">Consumer.iterconsume</span></tt> or <tt class="docutils literal"><span class="pre">Consumer.iterqueue</span></tt>.</p>
+<p><em>IMPORTANT</em> The <tt class="docutils literal"><span class="pre">ack</span></tt> argument to <tt class="docutils literal"><span class="pre">Consumer.process_next</span></tt> has been
+removed, use the instance-wide <tt class="docutils literal"><span class="pre">auto_ack</span></tt> argument/attribute instead.</p>
+<p><em>IMPORTANT</em> <tt class="docutils literal"><span class="pre">Consumer.message_to_python</span></tt> has been removed, use
+<tt class="docutils literal"><span class="pre">message.decode()</span></tt> on the returned message object instead.</p>
+<p><em>IMPORTANT</em> Consumer/Publisher/Messaging now no longer takes a backend
+instance, but a backend class, so the <tt class="docutils literal"><span class="pre">backend</span></tt> argument is renamed to
+<tt class="docutils literal"><span class="pre">backend_cls</span></tt>.</p>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">Consumer.iterconsume</span></tt>: New sane way to use basic_consume instead of <tt class="docutils literal"><span class="pre">Consumer.wait</span></tt>:</dt>
+<dd><p class="first last">(Consmer.wait now uses this behind the scenes, just wrapped around
+a highly unsafe infinite loop.)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Consumer: New options: <tt class="docutils literal"><span class="pre">auto_ack</span></tt> and <tt class="docutils literal"><span class="pre">no_ack</span></tt>. Auto ack means the</dt>
+<dd><p class="first last">consumer will automatically acknowledge new messages, and No-Ack
+means it will disable acknowledgement on the server alltogether
+(probably not what you want)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">Consumer.iterqueue</span></tt>: Now supports infinite argument, which means the</dt>
+<dd><p class="first last">iterator doesn&#8217;t raise <tt class="docutils literal"><span class="pre">StopIteration</span></tt> if there&#8217;s no messages,
+but instead yields <tt class="xref docutils literal"><span class="pre">None</span></tt> (thus never ends)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>message argument to consumer callbacks is now a</dt>
+<dd><p class="first last"><tt class="docutils literal"><span class="pre">carrot.backends.pyamqplib.Message</span></tt> instance. See <a class="reference external" href="http://github.com/ask/carrot/issues/closed/#issue/4">[GH #4]</a>.
+Thanks gregoirecachet!</p>
+</dd>
+</dl>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>AMQPConnection, Consumer, Publisher and Messaging now supports</dt>
+<dd><p class="first last">the with statement. They automatically close when the with-statement
+block exists.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Consumer tags are now automatically generated for each class instance,</dt>
+<dd><p class="first last">so you should never get the &#8220;consumer tag already open&#8221; error anymore.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">Loads of new unit tests.</p>
+</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="pre7-2009-06-03-05-08-p-m-cet-askh-opera-com">
+<h2>0.4.0-pre7 [2009-06-03 05:08 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#pre7-2009-06-03-05-08-p-m-cet-askh-opera-com" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul class="simple">
+<li>Conform to pep8.py trying to raise our pypants score.</li>
+<li>Documentation cleanup (thanks Rune Halvorsen)</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="pre6-2009-06-03-04-55-p-m-cet-askh-opera-com">
+<h2>0.4.0-pre6 [2009-06-03 04:55 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#pre6-2009-06-03-04-55-p-m-cet-askh-opera-com" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>exclusive implies auto_delete, not durable. Closes #2.</dt>
+<dd><p class="first last">Thanks gregoirecachet</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Consumer tags are now automatically generated by the class module,</dt>
+<dd><p class="first last">name and a UUID.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>New attribute <tt class="docutils literal"><span class="pre">Consumer.warn_if_exists:</span></tt></dt>
+<dd><p class="first last">If True, emits a warning if the queue has already been declared.
+If a queue already exists, and you try to redeclare the queue
+with new settings, the new settings will be silently ignored,
+so this can be useful if you&#8217;ve recently changed the
+<cite>routing_key</cite> attribute or other settings.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="pre3-2009-05-29-02-27-p-m-cet-askh-opera-com">
+<h2>0.4.0-pre3 [2009-05-29 02:27 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#pre3-2009-05-29-02-27-p-m-cet-askh-opera-com" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>Publisher.send: Now supports message priorities (a number between <tt class="docutils literal"><span class="pre">0</span></tt></dt>
+<dd><p class="first last">and <tt class="docutils literal"><span class="pre">9</span></tt>)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Publihser.send: Added <tt class="docutils literal"><span class="pre">routing_key</span></tt> keyword argument. Can override</dt>
+<dd><p class="first last">the routing key for a single message.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">Publisher.send: Support for the <tt class="docutils literal"><span class="pre">immediate</span></tt> and <tt class="docutils literal"><span class="pre">mandatory</span></tt> flags.</p>
+</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="pre2-2009-05-29-02-27-p-m-cet-askh-opera-com">
+<h2>0.4.0-pre2 [2009-05-29 02:27 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#pre2-2009-05-29-02-27-p-m-cet-askh-opera-com" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>AMQPConnection: Added <tt class="docutils literal"><span class="pre">connect_timeout</span></tt> timeout option, which is</dt>
+<dd><p class="first last">the timeout in seconds before we exhaust trying to establish a
+connection to the AMQP server.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="pre1-2009-05-27-04-27-p-m-cet-askh-opera-com">
+<h2>0.4.0-pre1 [2009-05-27 04:27 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#pre1-2009-05-27-04-27-p-m-cet-askh-opera-com" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>This version introduces backends. The consumers and publishers</dt>
+<dd><p class="first last">all have an associated backend. Currently there are two backends
+available; <tt class="docutils literal"><span class="pre">pyamqlib</span></tt> and <tt class="docutils literal"><span class="pre">pyqueue</span></tt>. The <tt class="docutils literal"><span class="pre">amqplib</span></tt> backend
+is for production use, while the <tt class="docutils literal"><span class="pre">Queue</span></tt> backend is for use while
+unit testing.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">Consumer/Publisher operations no longer re-establishes the connection
+if the connection has been closed.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">Consumer.next</span></tt> has been deprecated for a while, and has now been
+removed.</p>
+</li>
+<li><p class="first">Message objects now have a <tt class="docutils literal"><span class="pre">decode</span></tt> method, to deserialize the
+message body.</p>
+</li>
+<li><p class="first">You can now use the Consumer class standalone, without subclassing,
+by registering callbacks by using <tt class="docutils literal"><span class="pre">Consumer.register_callback</span></tt>.</p>
+</li>
+<li><p class="first">Ability to filter messages in <tt class="docutils literal"><span class="pre">Consumer.discard_all</span></tt>.</p>
+</li>
+<li><dl class="first docutils">
+<dt>carrot now includes a basic unit test suite, which hopefully will</dt>
+<dd><p class="first last">be more complete in later releases.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">carrot now uses the Sphinx documentation system.</p>
+</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id1">
+<h2>0.3.9 [2009-05-18 04:49 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul class="simple">
+<li>Consumer.wait() now works properly again. Thanks Alexander Solovyov!</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id2">
+<h2>0.3.8 [2009-05-11 02:14 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>Rearranged json module import order.</dt>
+<dd><p class="first last">New order is cjson &gt; simplejson &gt; json &gt; django.util.somplejson</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>_Backwards incompatible <a href="#id5"><span class="problematic" id="id6">change_</span></a>:</dt>
+<dd><p class="first">Have to instantiate AMQPConnection object before passing
+it to consumers/publishers. e.g before when you did</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">DjangoAMQPConnection</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+<p>you now have to do</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">DjangoAMQPConnection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>or sometimes you might even want to share the same connection with
+publisher/consumer.</p>
+</blockquote>
+</div>
+<div class="section" id="id3">
+<h2>0.2.1 [2009-03-24 05:48 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fix typo &#8220;package&#8221; -&gt; &#8220;packages&#8221; in setup.py</li>
+</ul>
+</div>
+<div class="section" id="p-m-askh-opera-com">
+<h2>0.2.0 [2009-03-24 05:23 P.M ]` <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#p-m-askh-opera-com" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>hasty bugfix release, fixed syntax errors.</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h2>0.1.0 [2009-03-24 05:16 P.M ]` <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Initial release</li>
+</ul>
+</div>
+</div>
+
+
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<div class="sidebar">
+	  <h3>Contents</h3>
+	  <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="introduction.html">carrot - AMQP Messaging Framework for Python</a></li>
+<li class="toctree-l1"><a class="reference external" href="reference/index.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference external" href="">Change history</a><ul>
+<li class="toctree-l2"><a class="reference external" href="#p-m-cet-askh-opera-com">0.4.0 [2008-06-06 01:39 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#pre7-2009-06-03-05-08-p-m-cet-askh-opera-com">0.4.0-pre7 [2009-06-03 05:08 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#pre6-2009-06-03-04-55-p-m-cet-askh-opera-com">0.4.0-pre6 [2009-06-03 04:55 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#pre3-2009-05-29-02-27-p-m-cet-askh-opera-com">0.4.0-pre3 [2009-05-29 02:27 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#pre2-2009-05-29-02-27-p-m-cet-askh-opera-com">0.4.0-pre2 [2009-05-29 02:27 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#pre1-2009-05-27-04-27-p-m-cet-askh-opera-com">0.4.0-pre1 [2009-05-27 04:27 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#id1">0.3.9 [2009-05-18 04:49 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#id2">0.3.8 [2009-05-11 02:14 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#id3">0.2.1 [2009-03-24 05:48 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#p-m-askh-opera-com">0.2.0 [2009-03-24 05:23 P.M ]` askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#id4">0.1.0 [2009-03-24 05:16 P.M ]` askh&#64;opera.com</a></li>
+</ul>
+</li>
+</ul>
+
+	  <h3 style="margin-top: 1.5em;">Search</h3>
+	  <form class="search" action="search.html" method="get">
+            <input type="text" name="q" size="18" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+	</div>
+	<div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+	<div class="left">
+          <a href="genindex.html" title="General Index"
+             >index</a> |
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |
+          <a href="reference/carrot.serialization.html" title="carrot.serialization"
+             >previous</a>
+            <br/>
+            <a href="sources/changelog.txt"
+               rel="nofollow">Show Source</a>
+	</div>
+
+	<div class="right">
+	  &copy; Copyright 2009, Ask Solem.<br/>
+	  Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.1.
+	</div>
+	<div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>
