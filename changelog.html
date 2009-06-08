@@ -49,18 +49,18 @@
 <h1>Change history<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="p-m-cet-askh-opera-com">
 <h2>0.4.0 [2008-06-06 01:39 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#p-m-cet-askh-opera-com" title="Permalink to this headline">¶</a></h2>
+<p><strong>IMPORTANT</strong> Please don&#8217;t use <tt class="docutils literal"><span class="pre">Consumer.wait</span></tt> in production. Use either
+of <tt class="docutils literal"><span class="pre">Consumer.iterconsume</span></tt> or <tt class="docutils literal"><span class="pre">Consumer.iterqueue</span></tt>.</p>
+<p><strong>IMPORTANT</strong> The <tt class="docutils literal"><span class="pre">ack</span></tt> argument to <tt class="docutils literal"><span class="pre">Consumer.process_next</span></tt> has been
+removed, use the instance-wide <tt class="docutils literal"><span class="pre">auto_ack</span></tt> argument/attribute instead.</p>
+<p><strong>IMPORTANT</strong> <tt class="docutils literal"><span class="pre">Consumer.message_to_python</span></tt> has been removed, use
+<tt class="docutils literal"><span class="pre">message.decode()</span></tt> on the returned message object instead.</p>
+<p><strong>IMPORTANT</strong> Consumer/Publisher/Messaging now no longer takes a backend
+instance, but a backend class, so the <tt class="docutils literal"><span class="pre">backend</span></tt> argument is renamed to
+<tt class="docutils literal"><span class="pre">backend_cls</span></tt>.</p>
 <p><em>WARNING</em> <tt class="docutils literal"><span class="pre">Consumer.process_next</span></tt> has been deprecated in favor of
 <tt class="docutils literal"><span class="pre">Consumer.fetch(enable_callbacks=True)</span></tt> and emits a <tt class="docutils literal"><span class="pre">DeprecationWarning</span></tt>
 if used.</p>
-<p><em>IMPORTANT</em> Please don&#8217;t use <tt class="docutils literal"><span class="pre">Consumer.wait</span></tt> in production. Use either
-of <tt class="docutils literal"><span class="pre">Consumer.iterconsume</span></tt> or <tt class="docutils literal"><span class="pre">Consumer.iterqueue</span></tt>.</p>
-<p><em>IMPORTANT</em> The <tt class="docutils literal"><span class="pre">ack</span></tt> argument to <tt class="docutils literal"><span class="pre">Consumer.process_next</span></tt> has been
-removed, use the instance-wide <tt class="docutils literal"><span class="pre">auto_ack</span></tt> argument/attribute instead.</p>
-<p><em>IMPORTANT</em> <tt class="docutils literal"><span class="pre">Consumer.message_to_python</span></tt> has been removed, use
-<tt class="docutils literal"><span class="pre">message.decode()</span></tt> on the returned message object instead.</p>
-<p><em>IMPORTANT</em> Consumer/Publisher/Messaging now no longer takes a backend
-instance, but a backend class, so the <tt class="docutils literal"><span class="pre">backend</span></tt> argument is renamed to
-<tt class="docutils literal"><span class="pre">backend_cls</span></tt>.</p>
 <blockquote>
 <ul>
 <li><dl class="first docutils">
