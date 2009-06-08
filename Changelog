@@ -5,22 +5,23 @@
 0.4.0 [2008-06-06 01:39 P.M CET] askh@opera.com
 ------------------------------------------------------------------
 
+
+**IMPORTANT** Please don't use ``Consumer.wait`` in production. Use either
+of ``Consumer.iterconsume`` or ``Consumer.iterqueue``.
+
+**IMPORTANT** The ``ack`` argument to ``Consumer.process_next`` has been
+removed, use the instance-wide ``auto_ack`` argument/attribute instead.
+
+**IMPORTANT** ``Consumer.message_to_python`` has been removed, use
+``message.decode()`` on the returned message object instead.
+
+**IMPORTANT** Consumer/Publisher/Messaging now no longer takes a backend
+instance, but a backend class, so the ``backend`` argument is renamed to
+``backend_cls``.
+
 *WARNING* ``Consumer.process_next`` has been deprecated in favor of
 ``Consumer.fetch(enable_callbacks=True)`` and emits a ``DeprecationWarning``
 if used.
-
-*IMPORTANT* Please don't use ``Consumer.wait`` in production. Use either
-of ``Consumer.iterconsume`` or ``Consumer.iterqueue``.
-
-*IMPORTANT* The ``ack`` argument to ``Consumer.process_next`` has been
-removed, use the instance-wide ``auto_ack`` argument/attribute instead.
-
-*IMPORTANT* ``Consumer.message_to_python`` has been removed, use
-``message.decode()`` on the returned message object instead.
-
-*IMPORTANT* Consumer/Publisher/Messaging now no longer takes a backend
-instance, but a backend class, so the ``backend`` argument is renamed to
-``backend_cls``.
 
 	* ``Consumer.iterconsume``: New sane way to use basic_consume instead of ``Consumer.wait``:
 		(Consmer.wait now uses this behind the scenes, just wrapped around
