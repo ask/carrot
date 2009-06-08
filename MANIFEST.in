@@ -1,7 +1,7 @@
 include AUTHORS
 include Changelog
 include LICENSE
-include README.rst
+include README
 include MANIFEST.in
 recursive-include docs *
 recursive-include carrot *
