@@ -106,6 +106,11 @@ class Backend(BaseBackend):
         self.decoder = kwargs.get("decoder", deserialize)
 
     def queue_exists(self, queue):
+        """Check if a queue has been declared.
+
+        :rtype bool:
+
+        """
         try:
             self.channel.queue_declare(queue=queue, passive=True)
         except AMQPChannelException, e:
@@ -139,6 +144,7 @@ class Backend(BaseBackend):
                                 routing_key=routing_key)
 
     def message_to_python(self, raw_message):
+        """Convert encoded message body back to a Python value."""
         return Message(backend=self, amqp_message=raw_message,
                 decoder=self.decoder)
 
@@ -156,6 +162,7 @@ class Backend(BaseBackend):
         return self.message_to_python(raw_message)
 
     def declare_consume(self, queue, no_ack, callback, consumer_tag):
+        """Declare a consumer."""
         self.channel.basic_consume(queue=queue, no_ack=no_ack,
                                    callback=callback,
                                    consumer_tag=consumer_tag)

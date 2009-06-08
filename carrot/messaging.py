@@ -1,4 +1,8 @@
-"""carrot.messaging"""
+"""
+
+Sending/Receiving Messages.
+
+"""
 from carrot.backends import DefaultBackend
 from carrot.serialization import serialize, deserialize
 import itertools
@@ -242,12 +246,18 @@ class Consumer(object):
         return self.iterqueue(infinite=True)
 
     def _generate_consumer_tag(self):
+        """Generate a unique consumer tag.
+       
+        :rtype string:
+
+        """
         return "%s.%s-%s" % (
                 self.__class__.__module__,
                 self.__class__.__name__,
                 str(uuid.uuid4()))
 
     def _declare_channel(self, queue_name, routing_key):
+        """Declare the AMQP channel."""
         if self.queue:
             self.backend.queue_declare(queue=queue_name, durable=self.durable,
                                        exclusive=self.exclusive,
@@ -264,6 +274,7 @@ class Consumer(object):
         self._closed = False
 
     def _receive_callback(self, raw_message):
+        """Internal method used when a message is received in consume mode."""
         message = self.backend.message_to_python(raw_message)
         if self.auto_ack:
             message.ack()
@@ -337,10 +348,10 @@ class Consumer(object):
         """
         self.callbacks.append(callback)
 
-    def discard_all(self, filter=None):
+    def discard_all(self, filterfunc=None):
         """Discard all waiting messages.
 
-        :param filter: A filter function to only discard the messages this
+        :param filterfunc: A filter function to only discard the messages this
             filter returns.
 
         :returns: the number of messages discarded.
@@ -367,7 +378,7 @@ class Consumer(object):
                 return discarded_count
 
             discard_message = True
-            if filter and not filter(message):
+            if filterfunc and not filterfunc(message):
                 discard_message = False
 
             if discard_message:
@@ -541,11 +552,12 @@ class Publisher(object):
             raise e_type(e_value)
         self.close()
 
-    def create_message(self, message_data, priority=None):
+    def create_message(self, message_data, delivery_mode=None, priority=None):
         """With any data, serialize it and encapsulate it in a AMQP
         message with the proper headers set."""
+        delivery_mode = delivery_mode or self.delivery_mode
         message_data = self.encoder(message_data)
-        return self.backend.prepare_message(message_data, self.delivery_mode,
+        return self.backend.prepare_message(message_data, delivery_mode,
                                             priority=priority)
 
     def send(self, message_data, routing_key=None, delivery_mode=None,
@@ -577,7 +589,8 @@ class Publisher(object):
         """
         if not routing_key:
             routing_key = self.routing_key
-        message = self.create_message(message_data, priority=priority)
+        message = self.create_message(message_data, priority=priority,
+                                      delivery_mode=delivery_mode)
         self.backend.publish(message,
                              exchange=self.exchange, routing_key=routing_key,
                              mandatory=mandatory, immediate=immediate)
@@ -622,29 +635,36 @@ class Messaging(object):
         self.close()
 
     def register_callback(self, callback):
+        """See :meth:`Consumer.register_callback`"""
         self.callbacks.append(callback)
 
     def receive(self, message_data, message):
+        """See :meth:`Consumer.receive`"""
         if not self.callbacks:
             raise NotImplementedError("No consumer callbacks registered")
         for callback in self.callbacks:
             callback(message_data, message)
 
     def send(self, message_data, delivery_mode=None):
+        """See :meth:`Publisher.send`"""
         self.publisher.send(message_data, delivery_mode=delivery_mode)
 
     def fetch(self, **kwargs):
+        """See :meth:`Consumer.fetch`"""
         return self.consumer.fetch(**kwargs)
 
     def close(self):
+        """Close any open channels."""
         self.consumer.close()
         self.publisher.close()
         self._closed = True
 
     @property
     def encoder(self):
+        """The encoder used."""
         return self.publisher.encoder
 
     @property
     def decoder(self):
+        """The decoder used."""
         return self.consumer.decoder

@@ -1,3 +1,8 @@
+"""
+
+Getting a connection to the AMQP server.
+
+"""
 from amqplib import client_0_8 as amqp
 
 DEFAULT_CONNECT_TIMEOUT = 5 # seconds
@@ -68,6 +73,7 @@ class AMQPConnection(object):
 
     @property
     def host(self):
+        """The host as a hostname/port pair separated by colon."""
         return ":".join([self.hostname, str(self.port)])
 
     def __init__(self, hostname, userid, password,
@@ -128,13 +134,16 @@ class DummyConnection(object):
         self.close()
 
     def connect(self):
+        """Doesn't do anything. Just for API compatibility."""
         pass
 
     def close(self):
+        """Doesn't do anything. Just for API compatibility."""
         self._closed = True
 
     @property
     def host(self):
+        """Always empty string."""
         return ""
 
 

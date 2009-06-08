@@ -1,3 +1,8 @@
+"""
+
+    Backend for unit-tests, using the Python :mod:`Queue` module.
+
+"""
 from Queue import Queue
 from carrot.backends.base import BaseMessage, BaseBackend
 import time
@@ -45,6 +50,7 @@ class Backend(BaseBackend):
                 time.sleep(0.1)
 
     def prepare_message(self, message_data, delivery_mode, **kwargs):
+        """Prepare message for sending."""
         return message_data
 
     def publish(self, message, exchange, routing_key, **kwargs):
