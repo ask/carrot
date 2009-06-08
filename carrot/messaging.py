@@ -247,7 +247,7 @@ class Consumer(object):
 
     def _generate_consumer_tag(self):
         """Generate a unique consumer tag.
-       
+
         :rtype string:
 
         """
