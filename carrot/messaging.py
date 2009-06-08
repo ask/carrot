@@ -523,7 +523,7 @@ class Publisher(object):
         if "encoder" in kwargs:
             self.encoder = kwargs["encoder"]
         else:
-            if not self.encoder
+            if not self.encoder:
                 self.encoder = serialize
         self.backend_cls = kwargs.get("backend_cls", self.backend_cls)
         self.backend = self.backend_cls(connection=connection,
