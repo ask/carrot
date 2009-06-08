@@ -3,10 +3,12 @@
 # Carrot documentation build configuration file, created by
 # sphinx-quickstart on Mon May 18 21:37:44 2009.
 #
-# This file is execfile()d with the current directory set to its containing dir.
+# This file is execfile()d with the current directory set to its
+#containing dir.
 #
 # The contents of this file are pickled, so don't put values in the namespace
-# that aren't pickleable (module imports are okay, they're removed automatically).
+# that aren't pickleable (module imports are okay, they're removed
+#automatically).
 #
 # All configuration values have a default; values that are commented out
 # serve to show the default.
@@ -27,7 +29,8 @@ if not settings.configured:
 # General configuration
 # ---------------------
 
-# Add any Sphinx extension module names here, as strings. They can be extensions
+# Add any Sphinx extension module names here, as strings.
+# They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc']
 
@@ -73,7 +76,8 @@ release = carrot.__version__
 # for source files.
 exclude_trees = ['.build']
 
-# The reST default role (used for this markup: `text`) to use for all documents.
+# The reST default role (used for this markup: `text`) to use for all
+# documents.
 #default_role = None
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
@@ -171,7 +175,8 @@ htmlhelp_basename = 'Carrotdoc'
 #latex_font_size = '10pt'
 
 # Grouping the document tree into LaTeX files. List of tuples
-# (source start file, target name, title, author, document class [howto/manual]).
+# (source start file, target name, title, author, document class
+# [howto/manual]).
 latex_documents = [
   ('index', 'Carrot.tex', ur'Carrot Documentation',
    ur'Ask Solem', 'manual'),
