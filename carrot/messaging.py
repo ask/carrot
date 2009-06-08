@@ -191,11 +191,16 @@ class Consumer(object):
     auto_ack = False
     no_ack = False
     _closed = True
+    decoder = None
 
     def __init__(self, connection, queue=None, exchange=None,
             routing_key=None, **kwargs):
         self.connection = connection
-        self.decoder = kwargs.get("decoder", deserialize)
+        if "decoder" in kwargs:
+            self.decoder = kwargs["decoder"]
+        else:
+            if not self.decoder:
+                self.decoder = deserialize
         self.backend_cls = kwargs.get("backend_cls", self.backend_cls)
         self.backend = self.backend_cls(connection=connection,
                                         decoder=self.decoder)
@@ -510,11 +515,16 @@ class Publisher(object):
     routing_key = ""
     delivery_mode = 2 # Persistent
     backend_cls = DefaultBackend
+    encoder = None
     _closed = True
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
         self.connection = connection
-        self.encoder = kwargs.get("encoder", serialize)
+        if "encoder" in kwargs:
+            self.encoder = kwargs["encoder"]
+        else:
+            if not self.encoder
+                self.encoder = serialize
         self.backend_cls = kwargs.get("backend_cls", self.backend_cls)
         self.backend = self.backend_cls(connection=connection,
                                         encoder=self.encoder)
