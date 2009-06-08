@@ -387,7 +387,7 @@ class Consumer(object):
         :keyword limit: Maximum number of messages to process.
 
         :raises StopIteration: if limit is set and the message limit has been
-        reached.
+            reached.
 
         """
         self.channel_open = True

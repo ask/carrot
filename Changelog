@@ -134,11 +134,11 @@ instance, but a backend class, so the ``backend`` argument is renamed to
 		Have to instantiate AMQPConnection object before passing
 		it to consumers/publishers. e.g before when you did
 
-		>>> consumer = Consumer(connection=DjangoAMQPConnection)
+			>>> consumer = Consumer(connection=DjangoAMQPConnection)
 
 	you now have to do
 
-		>>> consumer = Consumer(connection=DjangoAMQPConnection())
+			>>> consumer = Consumer(connection=DjangoAMQPConnection())
 
 	or sometimes you might even want to share the same connection with
 	publisher/consumer.
