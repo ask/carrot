@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Change history &mdash; Carrot v0.4.0 documentation</title>
+    <title>Change history &mdash; Carrot v0.4.1 documentation</title>
     <link rel="stylesheet" href="static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
       URL_ROOT:    '',
-      VERSION:     '0.4.0',
+      VERSION:     '0.4.1',
       COLLAPSE_MODINDEX: false,
       FILE_SUFFIX: '.html',
       HAS_SOURCE:  true
@@ -19,14 +19,14 @@
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.4.0 documentation" href="index.html" />
+    <link rel="top" title="Carrot v0.4.1 documentation" href="index.html" />
     <link rel="prev" title="carrot.serialization" href="reference/carrot.serialization.html" /> 
   </head>
   <body>
 
     <div class="header-wrapper">
       <div class="header">
-	<h1><a href="index.html">Carrot v0.4.0 documentation</a></h1>
+	<h1><a href="index.html">Carrot v0.4.1 documentation</a></h1>
 	<div class="rel">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a> |
@@ -48,7 +48,18 @@
   <div class="section" id="change-history">
 <h1>Change history<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="p-m-cet-askh-opera-com">
-<h2>0.4.0 [2008-06-06 01:39 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#p-m-cet-askh-opera-com" title="Permalink to this headline">¶</a></h2>
+<h2>0.4.1 [2008-06-08 04:21 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#p-m-cet-askh-opera-com" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>Consumer/Publisher now correctly sets the encoder/decoder if they</dt>
+<dd><p class="first last">have been overriden by setting the class attribute.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>0.4.0 [2008-06-06 01:39 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p><strong>IMPORTANT</strong> Please don&#8217;t use <tt class="docutils literal"><span class="pre">Consumer.wait</span></tt> in production. Use either
 of <tt class="docutils literal"><span class="pre">Consumer.iterconsume</span></tt> or <tt class="docutils literal"><span class="pre">Consumer.iterqueue</span></tt>.</p>
 <p><strong>IMPORTANT</strong> The <tt class="docutils literal"><span class="pre">ack</span></tt> argument to <tt class="docutils literal"><span class="pre">Consumer.process_next</span></tt> has been
@@ -225,16 +236,16 @@ by registering callbacks by using <tt class="docutils literal"><span class="pre"
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id1">
-<h2>0.3.9 [2009-05-18 04:49 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>0.3.9 [2009-05-18 04:49 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>Consumer.wait() now works properly again. Thanks Alexander Solovyov!</li>
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id2">
-<h2>0.3.8 [2009-05-11 02:14 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>0.3.8 [2009-05-11 02:14 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul>
 <li><dl class="first docutils">
@@ -244,7 +255,7 @@ by registering callbacks by using <tt class="docutils literal"><span class="pre"
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>_Backwards incompatible <a href="#id5"><span class="problematic" id="id6">change_</span></a>:</dt>
+<dt>_Backwards incompatible <a href="#id6"><span class="problematic" id="id7">change_</span></a>:</dt>
 <dd><p class="first">Have to instantiate AMQPConnection object before passing
 it to consumers/publishers. e.g before when you did</p>
 <div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">DjangoAMQPConnection</span><span class="p">)</span>
@@ -262,8 +273,8 @@ it to consumers/publishers. e.g before when you did</p>
 publisher/consumer.</p>
 </blockquote>
 </div>
-<div class="section" id="id3">
-<h2>0.2.1 [2009-03-24 05:48 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>0.2.1 [2009-03-24 05:48 P.M CET] <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Fix typo &#8220;package&#8221; -&gt; &#8220;packages&#8221; in setup.py</li>
 </ul>
@@ -274,8 +285,8 @@ publisher/consumer.</p>
 <li>hasty bugfix release, fixed syntax errors.</li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h2>0.1.0 [2009-03-24 05:16 P.M ]` <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>0.1.0 [2009-03-24 05:16 P.M ]` <a class="reference external" href="mailto:askh&#37;&#52;&#48;opera&#46;com">askh<span>&#64;</span>opera<span>&#46;</span>com</a><a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Initial release</li>
 </ul>
@@ -294,17 +305,18 @@ publisher/consumer.</p>
 <li class="toctree-l1"><a class="reference external" href="faq.html">Frequently Asked Questions</a></li>
 <li class="toctree-l1"><a class="reference external" href="reference/index.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="current reference external" href="">Change history</a><ul>
-<li class="toctree-l2"><a class="reference external" href="#p-m-cet-askh-opera-com">0.4.0 [2008-06-06 01:39 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#p-m-cet-askh-opera-com">0.4.1 [2008-06-08 04:21 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#id1">0.4.0 [2008-06-06 01:39 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="#pre7-2009-06-03-05-08-p-m-cet-askh-opera-com">0.4.0-pre7 [2009-06-03 05:08 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="#pre6-2009-06-03-04-55-p-m-cet-askh-opera-com">0.4.0-pre6 [2009-06-03 04:55 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="#pre3-2009-05-29-02-27-p-m-cet-askh-opera-com">0.4.0-pre3 [2009-05-29 02:27 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="#pre2-2009-05-29-02-27-p-m-cet-askh-opera-com">0.4.0-pre2 [2009-05-29 02:27 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="#pre1-2009-05-27-04-27-p-m-cet-askh-opera-com">0.4.0-pre1 [2009-05-27 04:27 P.M CET] askh&#64;opera.com</a></li>
-<li class="toctree-l2"><a class="reference external" href="#id1">0.3.9 [2009-05-18 04:49 P.M CET] askh&#64;opera.com</a></li>
-<li class="toctree-l2"><a class="reference external" href="#id2">0.3.8 [2009-05-11 02:14 P.M CET] askh&#64;opera.com</a></li>
-<li class="toctree-l2"><a class="reference external" href="#id3">0.2.1 [2009-03-24 05:48 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#id2">0.3.9 [2009-05-18 04:49 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#id3">0.3.8 [2009-05-11 02:14 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#id4">0.2.1 [2009-03-24 05:48 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="#p-m-askh-opera-com">0.2.0 [2009-03-24 05:23 P.M ]` askh&#64;opera.com</a></li>
-<li class="toctree-l2"><a class="reference external" href="#id4">0.1.0 [2009-03-24 05:16 P.M ]` askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="#id5">0.1.0 [2009-03-24 05:16 P.M ]` askh&#64;opera.com</a></li>
 </ul>
 </li>
 </ul>

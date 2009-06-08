@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.messaging &mdash; Carrot v0.4.0 documentation</title>
+    <title>carrot.messaging &mdash; Carrot v0.4.1 documentation</title>
     <link rel="stylesheet" href="../static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
       URL_ROOT:    '../',
-      VERSION:     '0.4.0',
+      VERSION:     '0.4.1',
       COLLAPSE_MODINDEX: false,
       FILE_SUFFIX: '.html',
       HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.4.0 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.4.1 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends" href="carrot.backends.html" />
     <link rel="prev" title="carrot.connection" href="carrot.connection.html" /> 
@@ -28,7 +28,7 @@
 
     <div class="header-wrapper">
       <div class="header">
-	<h1><a href="../index.html">Carrot v0.4.0 documentation</a></h1>
+	<h1><a href="../index.html">Carrot v0.4.1 documentation</a></h1>
 	<div class="rel">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a> |
@@ -53,7 +53,7 @@
 <h1>carrot.messaging<a class="headerlink" href="#module-carrot.messaging" title="Permalink to this headline">¶</a></h1>
 <p>The introduction to carrot that was here previously has been moved
 to the <a class="reference external" href="http://ask.github.com/carrot/introduction.html#examples">introduction</a> page.</p>
-<p>carrot.messaging</p>
+<p>Sending/Receiving Messages.</p>
 <dl class="class">
 <dt id="carrot.messaging.Consumer">
 <em class="property">
@@ -280,13 +280,13 @@ connection.</td>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.discard_all">
-<tt class="descname">discard_all</tt><big>(</big><em>filter=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.discard_all" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">discard_all</tt><big>(</big><em>filterfunc=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.discard_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Discard all waiting messages.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>filter</em> &#8211; A filter function to only discard the messages this
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>filterfunc</em> &#8211; A filter function to only discard the messages this
 filter returns.</td>
 </tr>
 <tr class="field"><th class="field-name">Returns:</th><td class="field-body">the number of messages discarded.</td>
@@ -466,15 +466,50 @@ callbacks.</p>
 <em class="property">
 class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">Messaging</tt><big>(</big><em>connection</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging" title="Permalink to this definition">¶</a></dt>
 <dd><p>A combined message publisher and consumer.</p>
+<dl class="method">
+<dt id="carrot.messaging.Messaging.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging.close" title="Permalink to this definition">¶</a></dt>
+<dd>Close any open channels.</dd></dl>
+
 <dl class="attribute">
 <dt id="carrot.messaging.Messaging.consumer_cls">
 <tt class="descname">consumer_cls</tt><a class="headerlink" href="#carrot.messaging.Messaging.consumer_cls" title="Permalink to this definition">¶</a></dt>
 <dd>alias of <a title="carrot.messaging.Consumer" class="reference internal" href="#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">Consumer</span></tt></a></dd></dl>
 
 <dl class="attribute">
+<dt id="carrot.messaging.Messaging.decoder">
+<tt class="descname">decoder</tt><a class="headerlink" href="#carrot.messaging.Messaging.decoder" title="Permalink to this definition">¶</a></dt>
+<dd>The decoder used.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.Messaging.encoder">
+<tt class="descname">encoder</tt><a class="headerlink" href="#carrot.messaging.Messaging.encoder" title="Permalink to this definition">¶</a></dt>
+<dd>The encoder used.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.Messaging.fetch">
+<tt class="descname">fetch</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging.fetch" title="Permalink to this definition">¶</a></dt>
+<dd>See <a title="carrot.messaging.Consumer.fetch" class="reference internal" href="#carrot.messaging.Consumer.fetch"><tt class="xref docutils literal"><span class="pre">Consumer.fetch()</span></tt></a></dd></dl>
+
+<dl class="attribute">
 <dt id="carrot.messaging.Messaging.publisher_cls">
 <tt class="descname">publisher_cls</tt><a class="headerlink" href="#carrot.messaging.Messaging.publisher_cls" title="Permalink to this definition">¶</a></dt>
 <dd>alias of <a title="carrot.messaging.Publisher" class="reference internal" href="#carrot.messaging.Publisher"><tt class="xref docutils literal"><span class="pre">Publisher</span></tt></a></dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.Messaging.receive">
+<tt class="descname">receive</tt><big>(</big><em>message_data</em>, <em>message</em><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging.receive" title="Permalink to this definition">¶</a></dt>
+<dd>See <a title="carrot.messaging.Consumer.receive" class="reference internal" href="#carrot.messaging.Consumer.receive"><tt class="xref docutils literal"><span class="pre">Consumer.receive()</span></tt></a></dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.Messaging.register_callback">
+<tt class="descname">register_callback</tt><big>(</big><em>callback</em><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging.register_callback" title="Permalink to this definition">¶</a></dt>
+<dd>See <a title="carrot.messaging.Consumer.register_callback" class="reference internal" href="#carrot.messaging.Consumer.register_callback"><tt class="xref docutils literal"><span class="pre">Consumer.register_callback()</span></tt></a></dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.Messaging.send">
+<tt class="descname">send</tt><big>(</big><em>message_data</em>, <em>delivery_mode=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging.send" title="Permalink to this definition">¶</a></dt>
+<dd>See <a title="carrot.messaging.Publisher.send" class="reference internal" href="#carrot.messaging.Publisher.send"><tt class="xref docutils literal"><span class="pre">Publisher.send()</span></tt></a></dd></dl>
 
 </dd></dl>
 
@@ -568,7 +603,7 @@ backend.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Publisher.create_message">
-<tt class="descname">create_message</tt><big>(</big><em>message_data</em>, <em>priority=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.create_message" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">create_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode=None</em>, <em>priority=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.create_message" title="Permalink to this definition">¶</a></dt>
 <dd>With any data, serialize it and encapsulate it in a AMQP
 message with the proper headers set.</dd></dl>
 

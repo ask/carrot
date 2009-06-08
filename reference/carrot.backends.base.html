@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.backends.base &mdash; Carrot v0.4.0 documentation</title>
+    <title>carrot.backends.base &mdash; Carrot v0.4.1 documentation</title>
     <link rel="stylesheet" href="../static/agogo.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
       URL_ROOT:    '../',
-      VERSION:     '0.4.0',
+      VERSION:     '0.4.1',
       COLLAPSE_MODINDEX: false,
       FILE_SUFFIX: '.html',
       HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.4.0 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.4.1 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends.pyamqplib" href="carrot.backends.pyamqplib.html" />
     <link rel="prev" title="carrot.backends" href="carrot.backends.html" /> 
@@ -28,7 +28,7 @@
 
     <div class="header-wrapper">
       <div class="header">
-	<h1><a href="../index.html">Carrot v0.4.0 documentation</a></h1>
+	<h1><a href="../index.html">Carrot v0.4.1 documentation</a></h1>
 	<div class="rel">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a> |
@@ -51,6 +51,95 @@
 		
   <div class="section" id="module-carrot.backends.base">
 <h1>carrot.backends.base<a class="headerlink" href="#module-carrot.backends.base" title="Permalink to this headline">¶</a></h1>
+<p>Backend base classes.</p>
+<dl class="class">
+<dt id="carrot.backends.base.BaseBackend">
+<em class="property">
+class </em><tt class="descclassname">carrot.backends.base.</tt><tt class="descname">BaseBackend</tt><big>(</big><em>connection</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for backends.</p>
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.ack">
+<tt class="descname">ack</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.ack" title="Permalink to this definition">¶</a></dt>
+<dd>Acknowledge the message.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.cancel">
+<tt class="descname">cancel</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.cancel" title="Permalink to this definition">¶</a></dt>
+<dd>Cancel the consumer.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.close" title="Permalink to this definition">¶</a></dt>
+<dd>Close the backend.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.consume">
+<tt class="descname">consume</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.consume" title="Permalink to this definition">¶</a></dt>
+<dd>Start a consumer and return a iterator that can iterate over new
+messages.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.decoder">
+<tt class="descname">decoder</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.decoder" title="Permalink to this definition">¶</a></dt>
+<dd>decode(string, all_unicode=False) -&gt; parse the JSON representation into
+python objects. The optional argument <a href="#id1"><span class="problematic" id="id2">`</span></a>all_unicode&#8217;, specifies how to
+convert the strings in the JSON representation into python objects.
+If it is False (default), it will return strings everywhere possible
+and unicode objects only where necessary, else it will return unicode
+objects everywhere (this is slower).</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.encoder">
+<tt class="descname">encoder</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.encoder" title="Permalink to this definition">¶</a></dt>
+<dd>encode(object) -&gt; generate the JSON representation for object.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.exchange_declare">
+<tt class="descname">exchange_declare</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.exchange_declare" title="Permalink to this definition">¶</a></dt>
+<dd>Declare an exchange by name.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.get">
+<tt class="descname">get</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.get" title="Permalink to this definition">¶</a></dt>
+<dd>Pop a message off the queue.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.message_to_python">
+<tt class="descname">message_to_python</tt><big>(</big><em>raw_message</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.message_to_python" title="Permalink to this definition">¶</a></dt>
+<dd>Convert received message body to a python datastructure.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.prepare_message">
+<tt class="descname">prepare_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.prepare_message" title="Permalink to this definition">¶</a></dt>
+<dd>Prepare message for sending.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.publish">
+<tt class="descname">publish</tt><big>(</big><em>message</em>, <em>exchange</em>, <em>routing_key</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.publish" title="Permalink to this definition">¶</a></dt>
+<dd>Publish a message.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.queue_bind">
+<tt class="descname">queue_bind</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.queue_bind" title="Permalink to this definition">¶</a></dt>
+<dd>Bind a queue to an exchange.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.queue_declare">
+<tt class="descname">queue_declare</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.queue_declare" title="Permalink to this definition">¶</a></dt>
+<dd>Declare a queue by name.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.reject">
+<tt class="descname">reject</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.reject" title="Permalink to this definition">¶</a></dt>
+<dd>Reject the message.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.base.BaseBackend.requeue">
+<tt class="descname">requeue</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.requeue" title="Permalink to this definition">¶</a></dt>
+<dd>Requeue the message.</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="carrot.backends.base.BaseMessage">
 <em class="property">

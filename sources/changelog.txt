@@ -2,9 +2,14 @@
  Change history
 ================
 
-0.4.0 [2008-06-06 01:39 P.M CET] askh@opera.com
+0.4.1 [2008-06-08 04:21 P.M CET] askh@opera.com
 ------------------------------------------------------------------
 
+* Consumer/Publisher now correctly sets the encoder/decoder if they
+	have been overriden by setting the class attribute.
+
+0.4.0 [2008-06-06 01:39 P.M CET] askh@opera.com
+------------------------------------------------------------------
 
 **IMPORTANT** Please don't use ``Consumer.wait`` in production. Use either
 of ``Consumer.iterconsume`` or ``Consumer.iterqueue``.
