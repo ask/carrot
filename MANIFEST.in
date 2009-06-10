@@ -2,7 +2,7 @@ include AUTHORS
 include CHANGELOG
 include FAQ
 include INSTALL
-include LICENCE
+include LICENSE
 include MANIFEST.in
 include README
 include THANKS
