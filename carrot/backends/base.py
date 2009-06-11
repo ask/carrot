@@ -94,6 +94,10 @@ class BaseBackend(object):
         """Requeue the message."""
         pass
 
+    def purge(self, queue, **kwargs):
+        """Discard all messages in the queue."""
+        pass
+
     def message_to_python(self, raw_message):
         """Convert received message body to a python datastructure."""
         return raw_message

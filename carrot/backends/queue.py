@@ -49,6 +49,10 @@ class Backend(BaseBackend):
             else:
                 time.sleep(0.1)
 
+    def purge(self, queue, **kwargs):
+        """Discard all messages in the queue."""
+        mqueue = Queue()
+
     def prepare_message(self, message_data, delivery_mode, **kwargs):
         """Prepare message for sending."""
         return message_data

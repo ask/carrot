@@ -371,19 +371,21 @@ class Consumer(object):
             ...     else:
             ...         return False
         """
+        if not filterfunc:
+            return self.backend.queue_purge(self.queue)
+
+        if self.no_ack or self.auto_ack:
+            raise Exception("discard_all: Can't use filter with auto/no-ack.")
+
         discarded_count = 0
         while True:
             message = self.fetch()
             if message is None:
                 return discarded_count
 
-            discard_message = True
-            if filterfunc and not filterfunc(message):
-                discard_message = False
-
-            if discard_message:
+            if filterfunc(message):
                 message.ack()
-                discarded_count = discarded_count + 1
+                discarded_count += 1
 
     def iterconsume(self, limit=None):
         """Iterator processing new messages as they arrive.

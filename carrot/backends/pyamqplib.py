@@ -120,6 +120,11 @@ class Backend(BaseBackend):
         else:
             return True
 
+    def queue_purge(self, queue, **kwargs):
+        """Discard all messages in the queue. This will delete the messages
+        and results in an empty queue,"""
+        return self.channel.queue_purge(queue=queue)
+
     def queue_declare(self, queue, durable, exclusive, auto_delete,
             warn_if_exists=False):
         """Declare a named queue."""
