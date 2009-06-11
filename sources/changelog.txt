@@ -136,7 +136,7 @@ if used.
 	* Rearranged json module import order.
 		New order is cjson > simplejson > json > django.util.somplejson
 
-	* _Backwards incompatible change_:
+	* _Backwards incompatible change:
 		Have to instantiate AMQPConnection object before passing
 		it to consumers/publishers. e.g before when you did
 
