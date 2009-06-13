@@ -73,7 +73,7 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
 if os.path.exists("README"):
     long_description = codecs.open('README', "r", "utf-8").read()
 else:
-    long_descripiton = "See http://pypi.python.org/pypi/carrot"
+    long_description = "See http://pypi.python.org/pypi/carrot"
 
 setup(
     name='carrot',
