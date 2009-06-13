@@ -101,5 +101,5 @@ setup(
         "Topic :: System :: Distributed Computing",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    long_description=codecs.open('README', "r", "utf-8").read(),
+    long_description=long_description,
 )
