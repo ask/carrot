@@ -175,6 +175,7 @@ class Consumer(object):
 
         >>> consumer = Consumer(connection=DjangoAMQPConnection(),
         ...               queue="foo", exchange="foo", routing_key="foo")
+        >>> consumer.declare()
         >>> def process_message(message_data, message):
         ...     print("Got message %s: %s" % (
         ...             message.delivery_tag, message_data))
@@ -231,7 +232,7 @@ class Consumer(object):
             self.auto_delete = True
 
         self.consumer_tag = self._generate_consumer_tag()
-        self._declare_channel(self.queue, self.routing_key)
+        self._declared = False
 
     def __enter__(self):
         return self
@@ -256,10 +257,13 @@ class Consumer(object):
                 self.__class__.__name__,
                 str(uuid.uuid4()))
 
-    def _declare_channel(self, queue_name, routing_key):
+    def declare(self):
         """Declare the AMQP channel."""
+        if self._declared:
+            return self
+
         if self.queue:
-            self.backend.queue_declare(queue=queue_name, durable=self.durable,
+            self.backend.queue_declare(queue=self.queue, durable=self.durable,
                                        exclusive=self.exclusive,
                                        auto_delete=self.auto_delete,
                                        warn_if_exists=self.warn_if_exists)
@@ -269,9 +273,11 @@ class Consumer(object):
                                           durable=self.durable,
                                           auto_delete=self.auto_delete)
         if self.queue:
-            self.backend.queue_bind(queue=queue_name, exchange=self.exchange,
-                                    routing_key=routing_key)
+            self.backend.queue_bind(queue=self.queue, exchange=self.exchange,
+                                    routing_key=self.routing_key)
         self._closed = False
+        self._declared = True
+        return self
 
     def _receive_callback(self, raw_message):
         """Internal method used when a message is received in consume mode."""
@@ -292,6 +298,7 @@ class Consumer(object):
         :keyword no_ack: Override the default :attr:`no_ack` setting.
 
         """
+        self.declare()
         no_ack = no_ack or self.no_ack
         auto_ack = auto_ack or self.auto_ack
         message = self.backend.get(self.queue, no_ack=no_ack)
@@ -371,6 +378,7 @@ class Consumer(object):
             ...     else:
             ...         return False
         """
+        self.declare()
         if not filterfunc:
             return self.backend.queue_purge(self.queue)
 
@@ -408,6 +416,7 @@ class Consumer(object):
             reached.
 
         """
+        self.declare()
         self.channel_open = True
         return self.backend.consume(queue=self.queue, no_ack=True,
                                     callback=self._receive_callback,
@@ -425,6 +434,7 @@ class Consumer(object):
         callbacks.
 
         """
+        self.declare()
         it = self.iterconsume(limit)
         while True:
             it.next()
@@ -449,6 +459,7 @@ class Consumer(object):
             iterator is not infinite.
 
         """
+        self.declare()
         for items_since_start in itertools.count():
             item = self.fetch()
             if (not infinite and item is None) or \
