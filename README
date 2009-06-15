@@ -266,6 +266,30 @@ can define the above publisher and consumer like so:
     >>> consumer = FeedConsumer(connection=amqpconn)
     >>> consumer.wait() # Go into the consumer loop.
 
+Getting Help
+============
+
+Mailing list
+------------
+
+Join the `carrot-users`_ mailing list.
+
+.. _`carrot-users`: http://groups.google.com/group/carrot-users/
+
+Bug tracker
+===========
+
+If you have any suggestions, bug reports or annoyances please report them
+to our issue tracker at http://github.com/ask/carrot/issues/
+
+Contributing
+============
+
+Development of ``carrot`` happens at Github: http://github.com/ask/carrot
+
+You are highly encouraged to participate in the development. If you don't
+like Github (for some reason) you're welcome to send regular patches.
+
 License
 =======
 
