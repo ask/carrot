@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.4.1 documentation</title>
+    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.4.3 documentation</title>
     <link rel="stylesheet" href="static/nature.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.4.1',
+        VERSION:     '0.4.3',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.4.1 documentation" href="index.html" />
+    <link rel="top" title="Carrot v0.4.3 documentation" href="index.html" />
     <link rel="next" title="Frequently Asked Questions" href="faq.html" />
     <link rel="prev" title="Carrot Documentation" href="index.html" /> 
   </head>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="index.html" title="Carrot Documentation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Carrot v0.4.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.4.3 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,7 +54,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.4.1</td>
+<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.4.3</td>
 </tr>
 </tbody>
 </table>
@@ -213,6 +213,7 @@ message is received it passes the message to all registered callbacks.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Consumer</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span>
 <span class="gp">... </span>                    <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span><span class="o">.</span><span class="n">declare</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">import_feed_callback</span><span class="p">(</span><span class="n">message_data</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">feed_url</span> <span class="o">=</span> <span class="n">message_data</span><span class="p">[</span><span class="s">&quot;import_feed&quot;</span><span class="p">]</span>
 <span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Got feed import message for: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">feed_url</span><span class="p">)</span>
@@ -305,6 +306,24 @@ can define the above publisher and consumer like so:</p>
 </pre></div>
 </div>
 </blockquote>
+<div class="section" id="getting-help">
+<h3>Getting Help<a class="headerlink" href="#getting-help" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="mailing-list">
+<h2>Mailing list<a class="headerlink" href="#mailing-list" title="Permalink to this headline">¶</a></h2>
+<p>Join the <a class="reference external" href="http://groups.google.com/group/carrot-users/">carrot-users</a> mailing list.</p>
+<div class="section" id="bug-tracker">
+<h3>Bug tracker<a class="headerlink" href="#bug-tracker" title="Permalink to this headline">¶</a></h3>
+<p>If you have any suggestions, bug reports or annoyances please report them
+to our issue tracker at <a class="reference external" href="http://github.com/ask/carrot/issues/">http://github.com/ask/carrot/issues/</a></p>
+</div>
+<div class="section" id="contributing">
+<h3>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h3>
+<p>Development of <tt class="docutils literal"><span class="pre">carrot</span></tt> happens at Github: <a class="reference external" href="http://github.com/ask/carrot">http://github.com/ask/carrot</a></p>
+<p>You are highly encouraged to participate in the development. If you don&#8217;t
+like Github (for some reason) you&#8217;re welcome to send regular patches.</p>
+</div>
 <div class="section" id="license">
 <h3>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h3>
 <p>This software is licensed under the <tt class="docutils literal"><span class="pre">New</span> <span class="pre">BSD</span> <span class="pre">License</span></tt>. See the <tt class="docutils literal"><span class="pre">LICENCE</span></tt>
@@ -334,6 +353,12 @@ file in the top distribution directory for the full license text.</p>
 <li><a class="reference external" href="#sending-messages-using-a-publisher">Sending messages using a Publisher</a></li>
 <li><a class="reference external" href="#receiving-messages-without-a-callback">Receiving messages without a callback</a></li>
 <li><a class="reference external" href="#sub-classing-the-messaging-classes">Sub-classing the messaging classes</a><ul>
+<li><a class="reference external" href="#getting-help">Getting Help</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#mailing-list">Mailing list</a><ul>
+<li><a class="reference external" href="#bug-tracker">Bug tracker</a></li>
+<li><a class="reference external" href="#contributing">Contributing</a></li>
 <li><a class="reference external" href="#license">License</a></li>
 </ul>
 </li>
@@ -384,7 +409,7 @@ file in the top distribution directory for the full license text.</p>
         <li class="right" >
           <a href="index.html" title="Carrot Documentation"
              >previous</a> |</li>
-        <li><a href="index.html">Carrot v0.4.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.4.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.messaging &mdash; Carrot v0.4.1 documentation</title>
+    <title>carrot.messaging &mdash; Carrot v0.4.3 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.4.1',
+        VERSION:     '0.4.3',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.4.1 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.4.3 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends" href="carrot.backends.html" />
     <link rel="prev" title="carrot.connection" href="carrot.connection.html" /> 
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="carrot.connection.html" title="carrot.connection"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.4.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.4.3 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -262,6 +262,7 @@ connection.</td>
 <p>Example Usage</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">DjangoAMQPConnection</span><span class="p">(),</span>
 <span class="gp">... </span>              <span class="n">queue</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span><span class="o">.</span><span class="n">declare</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">process_message</span><span class="p">(</span><span class="n">message_data</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Got message </span><span class="si">%s</span><span class="s">: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span>
 <span class="gp">... </span>            <span class="n">message</span><span class="o">.</span><span class="n">delivery_tag</span><span class="p">,</span> <span class="n">message_data</span><span class="p">))</span>
@@ -278,6 +279,11 @@ connection.</td>
 <dt id="carrot.messaging.Consumer.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.close" title="Permalink to this definition">¶</a></dt>
 <dd>Close the channel to the queue.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.Consumer.declare">
+<tt class="descname">declare</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.declare" title="Permalink to this definition">¶</a></dt>
+<dd>Declare the AMQP channel.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.discard_all">
@@ -693,7 +699,7 @@ but with no guarantee that the message will ever be consumed.</li>
         <li class="right" >
           <a href="carrot.connection.html" title="carrot.connection"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.4.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.4.3 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>

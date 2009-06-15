@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Carrot Documentation &mdash; Carrot v0.4.1 documentation</title>
+    <title>Carrot Documentation &mdash; Carrot v0.4.3 documentation</title>
     <link rel="stylesheet" href="static/nature.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.4.1',
+        VERSION:     '0.4.3',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.4.1 documentation" href="" />
+    <link rel="top" title="Carrot v0.4.3 documentation" href="" />
     <link rel="next" title="carrot - AMQP Messaging Framework for Python" href="introduction.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="introduction.html" title="carrot - AMQP Messaging Framework for Python"
              accesskey="N">next</a> |</li>
-        <li><a href="">Carrot v0.4.1 documentation</a> &raquo;</li> 
+        <li><a href="">Carrot v0.4.3 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -61,6 +61,12 @@
 <li class="toctree-l2"><a class="reference external" href="introduction.html#sending-messages-using-a-publisher">Sending messages using a Publisher</a></li>
 <li class="toctree-l2"><a class="reference external" href="introduction.html#receiving-messages-without-a-callback">Receiving messages without a callback</a></li>
 <li class="toctree-l2"><a class="reference external" href="introduction.html#sub-classing-the-messaging-classes">Sub-classing the messaging classes</a><ul>
+<li class="toctree-l3"><a class="reference external" href="introduction.html#getting-help">Getting Help</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference external" href="introduction.html#mailing-list">Mailing list</a><ul>
+<li class="toctree-l3"><a class="reference external" href="introduction.html#bug-tracker">Bug tracker</a></li>
+<li class="toctree-l3"><a class="reference external" href="introduction.html#contributing">Contributing</a></li>
 <li class="toctree-l3"><a class="reference external" href="introduction.html#license">License</a></li>
 </ul>
 </li>
@@ -85,18 +91,20 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference external" href="changelog.html">Change history</a><ul>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#p-m-cet-askh-opera-com">0.4.1 [2008-06-08 04:21 P.M CET] askh&#64;opera.com</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id1">0.4.0 [2008-06-06 01:39 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#p-m-cet-askh-opera-com">0.4.3 [2008-06-13 09:26 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#id1">0.4.2 [2008-06-13 08:30 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#id2">0.4.1 [2008-06-08 04:21 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#id3">0.4.0 [2008-06-06 01:39 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#pre7-2009-06-03-05-08-p-m-cet-askh-opera-com">0.4.0-pre7 [2009-06-03 05:08 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#pre6-2009-06-03-04-55-p-m-cet-askh-opera-com">0.4.0-pre6 [2009-06-03 04:55 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#pre3-2009-05-29-02-27-p-m-cet-askh-opera-com">0.4.0-pre3 [2009-05-29 02:27 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#pre2-2009-05-29-02-27-p-m-cet-askh-opera-com">0.4.0-pre2 [2009-05-29 02:27 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#pre1-2009-05-27-04-27-p-m-cet-askh-opera-com">0.4.0-pre1 [2009-05-27 04:27 P.M CET] askh&#64;opera.com</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id2">0.3.9 [2009-05-18 04:49 P.M CET] askh&#64;opera.com</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id3">0.3.8 [2009-05-11 02:14 P.M CET] askh&#64;opera.com</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id4">0.2.1 [2009-03-24 05:48 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#id4">0.3.9 [2009-05-18 04:49 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#id5">0.3.8 [2009-05-11 02:14 P.M CET] askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#id6">0.2.1 [2009-03-24 05:48 P.M CET] askh&#64;opera.com</a></li>
 <li class="toctree-l2"><a class="reference external" href="changelog.html#p-m-askh-opera-com">0.2.0 [2009-03-24 05:23 P.M ]` askh&#64;opera.com</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id5">0.1.0 [2009-03-24 05:16 P.M ]` askh&#64;opera.com</a></li>
+<li class="toctree-l2"><a class="reference external" href="changelog.html#id7">0.1.0 [2009-03-24 05:16 P.M ]` askh&#64;opera.com</a></li>
 </ul>
 </li>
 </ul>
@@ -161,7 +169,7 @@
         <li class="right" >
           <a href="introduction.html" title="carrot - AMQP Messaging Framework for Python"
              >next</a> |</li>
-        <li><a href="">Carrot v0.4.1 documentation</a> &raquo;</li> 
+        <li><a href="">Carrot v0.4.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

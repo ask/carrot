@@ -2,6 +2,20 @@
  Change history
 ================
 
+0.4.3 [2008-06-13 09:26 P.M CET] askh@opera.com
+------------------------------------------------------------------
+
+	* Fix typo with long_description in ``setup.py``.
+
+0.4.2 [2008-06-13 08:30 P.M CET] askh@opera.com
+------------------------------------------------------------------
+
+	* Make sure README exists before reading it for ``long_description``.
+		Thanks to jcater.
+
+	* ``discard_all``: Use ``AMQP.queue_purge`` if ``filterfunc`` is not
+		specified
+
 0.4.1 [2008-06-08 04:21 P.M CET] askh@opera.com
 ------------------------------------------------------------------
 

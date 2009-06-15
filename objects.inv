@@ -114,6 +114,7 @@ carrot.backends.pyamqplib.Backend.prepare_message method reference/carrot.backen
 carrot.messaging.Consumer.fetch method reference/carrot.messaging.html
 carrot.messaging.Consumer.no_ack attribute reference/carrot.messaging.html
 carrot.backends.pyamqplib.Message class reference/carrot.backends.pyamqplib.html
+carrot.messaging.Consumer.declare method reference/carrot.messaging.html
 carrot.connection.AMQPConnection.connect method reference/carrot.connection.html
 carrot.backends.DefaultBackend class reference/carrot.backends.html
 carrot.backends.queue.Backend class reference/carrot.backends.queue.html
