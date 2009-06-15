@@ -8,5 +8,5 @@ include README
 include THANKS
 include TODO
 recursive-include docs *
-recursive-include carrot *
+recursive-include carrot *.py
 recursive-include tests *

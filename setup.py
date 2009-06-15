@@ -15,6 +15,10 @@ from distutils.command.install import INSTALL_SCHEMES
 import sys
 
 import carrot
+# Don't package *.pyc
+#carrot__pyc = os.path.join("carrot", "__init__.pyc")
+#if os.path.exists(carrot__pyc):
+#    os.unlink(carrot__pyc)
 
 packages, data_files = [], []
 root_dir = os.path.dirname(__file__)
