@@ -388,7 +388,7 @@ class Consumer(object):
                 message.ack()
                 discarded_count += 1
 
-    def iterconsume(self, limit=None):
+    def iterconsume(self, limit=None, no_ack=None):
         """Iterator processing new messages as they arrive.
         Every new message will be passed to the callbacks, and the iterator
         returns ``True``. The iterator is infinite unless the ``limit``
@@ -410,7 +410,8 @@ class Consumer(object):
 
         """
         self.channel_open = True
-        return self.backend.consume(queue=self.queue, no_ack=True,
+        no_ack = no_ack or self.no_ack
+        return self.backend.consume(queue=self.queue, no_ack=no_ack,
                                     callback=self._receive_callback,
                                     consumer_tag=self.consumer_tag,
                                     limit=limit)
