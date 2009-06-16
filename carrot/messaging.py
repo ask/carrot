@@ -569,7 +569,7 @@ class Publisher(object):
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self._declare_exchange()
         self._closed = False
-        
+
     def _declare_exchange(self):
         if self.exchange:
             self.backend.exchange_declare(exchange=self.exchange,
