@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.messaging &mdash; Carrot v0.4.3 documentation</title>
+    <title>carrot.messaging &mdash; Carrot v0.4.5 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.4.3',
+        VERSION:     '0.4.5',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.4.3 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.4.5 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends" href="carrot.backends.html" />
     <link rel="prev" title="carrot.connection" href="carrot.connection.html" /> 
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="carrot.connection.html" title="carrot.connection"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.4.3 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.4.5 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -262,7 +262,6 @@ connection.</td>
 <p>Example Usage</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">DjangoAMQPConnection</span><span class="p">(),</span>
 <span class="gp">... </span>              <span class="n">queue</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span><span class="o">.</span><span class="n">declare</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">process_message</span><span class="p">(</span><span class="n">message_data</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Got message </span><span class="si">%s</span><span class="s">: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span>
 <span class="gp">... </span>            <span class="n">message</span><span class="o">.</span><span class="n">delivery_tag</span><span class="p">,</span> <span class="n">message_data</span><span class="p">))</span>
@@ -279,11 +278,6 @@ connection.</td>
 <dt id="carrot.messaging.Consumer.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.close" title="Permalink to this definition">¶</a></dt>
 <dd>Close the channel to the queue.</dd></dl>
-
-<dl class="method">
-<dt id="carrot.messaging.Consumer.declare">
-<tt class="descname">declare</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.declare" title="Permalink to this definition">¶</a></dt>
-<dd>Declare the AMQP channel.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.discard_all">
@@ -342,7 +336,7 @@ processed with all registered callbacks. Default is disabled.</li>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.iterconsume">
-<tt class="descname">iterconsume</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.iterconsume" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">iterconsume</tt><big>(</big><em>limit=None</em>, <em>no_ack=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.iterconsume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterator processing new messages as they arrive.
 Every new message will be passed to the callbacks, and the iterator
 returns <tt class="xref docutils literal"><span class="pre">True</span></tt>. The iterator is infinite unless the <tt class="docutils literal"><span class="pre">limit</span></tt>
@@ -535,6 +529,9 @@ class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">
 <li><em>routing_key</em> &#8211; see <a title="carrot.messaging.Publisher.routing_key" class="reference internal" href="#carrot.messaging.Publisher.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a>.</li>
 <li><em>encoder</em> &#8211; see <a title="carrot.messaging.Publisher.encoder" class="reference internal" href="#carrot.messaging.Publisher.encoder"><tt class="xref docutils literal"><span class="pre">encoder</span></tt></a>.</li>
 <li><em>backend_cls</em> &#8211; see <a title="carrot.messaging.Publisher.backend_cls" class="reference internal" href="#carrot.messaging.Publisher.backend_cls"><tt class="xref docutils literal"><span class="pre">backend_cls</span></tt></a>.</li>
+<li><em>exchange_type</em> &#8211; see <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">Consumer.exchange_type</span></tt></a>.</li>
+<li><em>durable</em> &#8211; see <a title="carrot.messaging.Consumer.durable" class="reference internal" href="#carrot.messaging.Consumer.durable"><tt class="xref docutils literal"><span class="pre">Consumer.durable</span></tt></a>.</li>
+<li><em>auto_delete</em> &#8211; see <a title="carrot.messaging.Consumer.auto_delete" class="reference internal" href="#carrot.messaging.Consumer.auto_delete"><tt class="xref docutils literal"><span class="pre">Consumer.auto_delete</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -591,6 +588,21 @@ preserved if the server dies or restarts.</p>
 <dd>The function responsible for encoding the message data passed
 to <a title="carrot.messaging.Publisher.send" class="reference internal" href="#carrot.messaging.Publisher.send"><tt class="xref docutils literal"><span class="pre">send()</span></tt></a>. Note that any consumer of the messages sent
 must have a decoder supporting the serialization scheme.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.Publisher.exchange_type">
+<tt class="descname">exchange_type</tt><a class="headerlink" href="#carrot.messaging.Publisher.exchange_type" title="Permalink to this definition">¶</a></dt>
+<dd>See <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">Consumer.exchange_type</span></tt></a>.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.Publisher.durable">
+<tt class="descname">durable</tt><a class="headerlink" href="#carrot.messaging.Publisher.durable" title="Permalink to this definition">¶</a></dt>
+<dd>See <a title="carrot.messaging.Consumer.durable" class="reference internal" href="#carrot.messaging.Consumer.durable"><tt class="xref docutils literal"><span class="pre">Consumer.durable</span></tt></a>.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.Publisher.auto_delete">
+<tt class="descname">auto_delete</tt><a class="headerlink" href="#carrot.messaging.Publisher.auto_delete" title="Permalink to this definition">¶</a></dt>
+<dd>See <a title="carrot.messaging.Consumer.auto_delete" class="reference internal" href="#carrot.messaging.Consumer.auto_delete"><tt class="xref docutils literal"><span class="pre">Consumer.auto_delete</span></tt></a>.</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.backend_cls">
@@ -699,7 +711,7 @@ but with no guarantee that the message will ever be consumed.</li>
         <li class="right" >
           <a href="carrot.connection.html" title="carrot.connection"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.4.3 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.4.5 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>

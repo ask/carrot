@@ -2,7 +2,13 @@
  carrot - AMQP Messaging Framework for Python
 ##############################################
 
-:Version: 0.4.3
+:Version: 0.4.5
+
+**NOTE** This release contains backward-incompatible changes and
+important bugfixes. Please read the `Changelog`_ for more information.
+
+.. _`Changelog`: http://ask.github.com/carrot/changelog.html
+
 
 Introduction
 ------------
@@ -173,7 +179,6 @@ message is received it passes the message to all registered callbacks.
     >>> from carrot.messaging import Consumer
     >>> consumer = Consumer(connection=amqpconn, queue="feed",
     ...                     exchange="feed", routing_key="importer")
-    >>> consumer.declare()
     >>> def import_feed_callback(message_data, message)
     ...     feed_url = message_data["import_feed"]
     ...     print("Got feed import message for: %s" % feed_url)

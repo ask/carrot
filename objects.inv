@@ -47,7 +47,9 @@ carrot.backends.base.BaseBackend.purge method reference/carrot.backends.base.htm
 carrot.backends.pyamqplib.Backend class reference/carrot.backends.pyamqplib.html
 carrot.backends.pyamqplib.Message.amqp_message attribute reference/carrot.backends.pyamqplib.html
 carrot.backends.pyamqplib.Backend.decoder attribute reference/carrot.backends.pyamqplib.html
+carrot.messaging.Publisher.exchange_type attribute reference/carrot.messaging.html
 carrot.connection.AMQPConnection.connect_timeout attribute reference/carrot.connection.html
+carrot.messaging.Publisher.auto_delete attribute reference/carrot.messaging.html
 carrot.backends.base.BaseMessage.requeue method reference/carrot.backends.base.html
 carrot.messaging.Consumer.exchange_type attribute reference/carrot.messaging.html
 carrot.messaging.Publisher.routing_key attribute reference/carrot.messaging.html
@@ -114,11 +116,11 @@ carrot.backends.pyamqplib.Backend.prepare_message method reference/carrot.backen
 carrot.messaging.Consumer.fetch method reference/carrot.messaging.html
 carrot.messaging.Consumer.no_ack attribute reference/carrot.messaging.html
 carrot.backends.pyamqplib.Message class reference/carrot.backends.pyamqplib.html
-carrot.messaging.Consumer.declare method reference/carrot.messaging.html
 carrot.connection.AMQPConnection.connect method reference/carrot.connection.html
 carrot.backends.DefaultBackend class reference/carrot.backends.html
 carrot.backends.queue.Backend class reference/carrot.backends.queue.html
 carrot.messaging.Messaging.encoder attribute reference/carrot.messaging.html
+carrot.messaging.Publisher.durable attribute reference/carrot.messaging.html
 carrot.backends.base.BaseBackend.get method reference/carrot.backends.base.html
 carrot.connection.AMQPConnection.userid attribute reference/carrot.connection.html
 carrot.messaging.Consumer.routing_key attribute reference/carrot.messaging.html
