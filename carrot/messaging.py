@@ -757,7 +757,7 @@ class ConsumerSet(object):
         its = [consumer.iterqueue(infinite=True)
                 for consumer in self.queues.values()]
         selector = self.algorithm(its)
-        return islice(ifilter(None, turbo_button(selector)), limit)
+        return islice(ifilter(None, selector), limit)
 
 
     def iterconsume(self, limit=None, algorithm=None):

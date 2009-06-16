@@ -8,7 +8,7 @@ sys.path.append(os.getcwd())
 
 from tests.utils import establish_test_connection
 from carrot.connection import AMQPConnection
-from carrot.messaging import Consumer, Publisher
+from carrot.messaging import Consumer, Publisher, ConsumerSet
 from carrot.backends.pyamqplib import Backend as AMQPLibBackend
 from carrot.backends.pyamqplib import Message as AMQPLibMessage
 
@@ -358,41 +358,34 @@ class TestMessaging(unittest.TestCase):
 
     def test_consumerset_iterqueue(self):
         consumers = self.create_consumerset(
-                ["foo.bar", "foo.baz", "xuzzy.stock", "block.bip"])
+                ["AAAA.AAAA", "BBBB.BBBB", "CCCC.CCCC", "DDDD.DDDD"])
         publisher = self.create_publisher()
         consumers.discard_all()
 
         try:
-            #publisher.send({"rkey": "xuzzy.stock"}, routing_key="xuzzy.stock")
             it = consumers.iterqueue()
-            #m = it.next()
-            #self.assertTrue(m.decode(), {"rkey": "xuzzy.stock"})
 
-
-            # Is in routing_key order, not message order
-            publisher.send({"rkey": "xyzzy.stock"}, routing_key="xyzzy.stock")
-            publisher.send({"rkey": "block.bip"}, routing_key="block.bip")
-            publisher.send({"rkey": "foo.bar"}, routing_key="foo.bar")
-            publisher.send({"rkey": "foo.baz"}, routing_key="foo.baz")
-
+            publisher.send({"rkey": "AAAA.AAAA"}, routing_key="AAAA.AAAA")
             m = it.next()
-            self.assertTrue(m.decode(), {"rkey": "foo.bar"})
+            self.assertEquals(m.decode(), {"rkey": "AAAA.AAAA"})
+            publisher.send({"rkey": "BBBB.BBBB"}, routing_key="BBBB.BBBB")
             m = it.next()
-            self.assertTrue(m.decode(), {"rkey": "foo.baz"})
-            #for C in consumers.queues.values():
-            #    sys.stderr.write("QQQQQQQ: %s" % C.fetch())
+            self.assertEquals(m.decode(), {"rkey": "BBBB.BBBB"})
+            publisher.send({"rkey": "CCCC.CCCC"}, routing_key="CCCC.CCCC")
             m = it.next()
-            self.assertTrue(m.decode(), {"rkey": "xyzzy.stock"})
+            self.assertTrue(m.decode(), {"rkey": "CCCC.CCCC"})
+            publisher.send({"rkey": "DDDD.DDDD"}, routing_key="DDDD.DDDD")
+            m = it.next()
+            self.assertTrue(m.decode(), {"rkey": "DDDD.DDDD"})
             
-            publisher.send({"rkey": "foo.baz"}, routing_key="foo.baz")
-            publisher.send({"rkey": "foo.baz"}, routing_key="foo.baz")
+            publisher.send({"rkey": "BBBB.BBBB"}, routing_key="BBBB.BBBB")
+            publisher.send({"rkey": "DDDD.DDDD"}, routing_key="DDDD.DDDD")
             publisher.close()
 
             m = it.next()
-            self.assertTrue(m.decode(), {"rkey": "block.bip"})
+            self.assertTrue(m.decode(), {"rkey": "DDDD.DDDD"})
             m = it.next()
-            self.assertTrue(m.decode(), {"rkey": "block.bip"})
-            m = it.next()
+            self.assertTrue(m.decode(), {"rkey": "BBBB.BBBB"})
 
         finally:
             consumers.close()
