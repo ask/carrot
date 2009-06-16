@@ -391,7 +391,7 @@ class TestMessaging(unittest.TestCase):
             consumers.close()
             publisher.close()
     
-    def x_consumerset_iterconsume(self):
+    def test_consumerset_iterconsume(self):
         consumers = self.create_consumerset(
                 ["foo.bar", "foo.baz", "xuzzy.stock"])
         publisher = self.create_publisher()
@@ -420,8 +420,8 @@ class TestMessaging(unittest.TestCase):
             assertDataIs({"rkey": "foo.bar"})
             it.next()
             assertDataIs({"rkey": "foo.baz"})
-            #it.next()
-            #assertDataIs({"rkey": "xyzzy.stock"})
+            it.next()
+            assertDataIs({"rkey": "xyzzy.stock"})
 
         finally:
             consumers.close()

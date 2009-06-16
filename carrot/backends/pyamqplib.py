@@ -170,7 +170,8 @@ class Backend(BaseBackend):
         """Declare a consumer."""
         self.channel.basic_consume(queue=queue, no_ack=no_ack,
                                    callback=callback,
-                                   consumer_tag=consumer_tag)
+                                   consumer_tag=consumer_tag,
+                                   nowait=True)
 
     def consume(self, queue, no_ack, callback, consumer_tag, limit=None):
         """Returns an iterator that waits for one message at a time,
