@@ -1,7 +1,12 @@
 include AUTHORS
-include README.rst
-include MANIFEST.in
-include LICENSE
 include Changelog
-recursive-include carrot *
+include FAQ
+include INSTALL
+include LICENSE
+include MANIFEST.in
+include README
+include THANKS
+include TODO
+recursive-include docs *
+recursive-include carrot *.py
 recursive-include tests *

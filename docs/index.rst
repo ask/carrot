@@ -11,7 +11,9 @@ Contents:
     :maxdepth: 3
 
     introduction
+    faq
     reference/index
+    changelog
 
 
 Indices and tables

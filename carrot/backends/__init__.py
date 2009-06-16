@@ -1,4 +1,8 @@
-"""carrot.backends"""
+"""
+
+Working with Backends.
+
+"""
 import sys
 from functools import partial
 

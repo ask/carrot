@@ -1,5 +1,11 @@
 """
 
+Get the best JSON encoder/decoder available on this system.
+
+"""
+
+"""
+
 .. function:: serialize(obj)
 
     Serialize the object to JSON.
