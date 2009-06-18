@@ -59,3 +59,7 @@ class TestDjangoSpecific(unittest.TestCase):
 
         for val_name, val_value in expected_values.items():
             self.assertEquals(getattr(conn, val_name, None), val_value)
+
+
+if __name__ == '__main__':
+    unittest.main()

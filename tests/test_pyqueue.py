@@ -73,3 +73,7 @@ class TestMessaging(unittest.TestCase):
         next_msg_data = next_msg.decode()
         self.assertEquals(next_msg_data, mdata)
         self.assertEquals(m.fetch(), None)
+
+
+if __name__ == '__main__':
+    unittest.main()

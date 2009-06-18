@@ -157,3 +157,7 @@ class TestExamples(unittest.TestCase):
         emulate_wait(consumer)
 
         consumer.close()
+
+
+if __name__ == '__main__':
+    unittest.main()

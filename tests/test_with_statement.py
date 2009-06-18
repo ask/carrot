@@ -29,3 +29,7 @@ class TestTransactioned(unittest.TestCase):
                         self.assertFalse(consumer._closed)
         self.assertTrue(conn._closed)
         self.assertTrue(consumer._closed)
+
+
+if __name__ == '__main__':
+    unittest.main()

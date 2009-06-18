@@ -350,3 +350,7 @@ class TestMessaging(unittest.TestCase):
         finally:
             consumer.close()
             publisher.close()
+
+
+if __name__ == '__main__':
+    unittest.main()
