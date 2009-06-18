@@ -63,8 +63,9 @@ class Message(BaseMessage):
         kwargs.update({
             "body": amqp_message.body,
             "delivery_tag": amqp_message.delivery_tag, 
-            "content_type": amqp_message.content_type, 
-            "content_encoding": amqp_message.content_encoding})
+            "content_type": amqp_message.properties.get('content_type'), 
+            "content_encoding": 
+                            amqp_message.properties.get('content_encoding')})
 
         super(Message, self).__init__(backend, **kwargs)
 

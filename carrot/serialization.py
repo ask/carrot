@@ -19,8 +19,6 @@ Optionally installs support for HessianPy and YAML.
 
 import codecs
 
-utf8_encoder = codecs.getencoder('utf-8')
-
 class DecoderNotInstalled(StandardError):
     """Support for the requested serialization type is not installed"""
     
@@ -38,7 +36,7 @@ class SerializerRegistry(object):
     def __init__(self):
         self._encoders = {}
         self._decoders = {}
-        self._default_encoder = None
+        self._default_encode = None
         self._default_mimetype = None
         
     def register(self, name, encoder, decoder, mimetype):
@@ -47,56 +45,60 @@ class SerializerRegistry(object):
         if decoder:
             self._decoders[mimetype] = decoder
 
-    def set_default_encoder(self, name):
+    def set_default_serializer(self, name):
         try:
-            self._default_encoder, self._default_mimetype = self._encoders[name]
+            self._default_mimetype, self._default_encode = self._encoders[name]
         except KeyError: 
             raise DecoderNotInstalled(
                 "No decoder installed for %s" % name)
 
-    def encode(self, message, encoding=None):
-        content_encoding = 'UTF-8'
+    def encode(self, message, serializer=None):
+        content_encoding = 'utf-8'
 
-        if isinstance(message, string) and not encoding:
+        # If a raw string was sent, assume binary encoding 
+        # (it's likely either ASCII or a raw binary file, but 'binary' 
+        # charset will encompass both, even if not ideal.
+        if isinstance(message, str) and not serializer:
             # In Python 3+, this would be "bytes"; allow binary data to be 
             # sent as a message without getting encoder errors
             content_type = 'application/data'
             content_encoding = 'binary'
             payload = message
-        elif isinstance(message, unicode) and not encoding: 
+        # For unicode objects, force it into 
+        elif isinstance(message, unicode) and not serializer: 
             content_type = 'text/plain'
-            payload = message      
-        elif encoding == 'raw': 
+            payload = message.encode(content_encoding)
+        elif serializer == 'raw': 
             content_type = 'application/data'
             payload = message
             if isinstance(payload, unicode): 
-                payload = utf8_encoder(payload)
+                payload = payload.encode('utf-8')
             else:
                 content_encoding = 'binary'
         else:
-            if encoding: 
+            if serializer: 
                 mimetype, encoder = self._encoders[encoding]
             else:
-                encoder = self._default_encoder
+                encoder = self._default_encode
                 content_type = self._default_mimetype
+            payload = encoder(message)
 
         return (content_type, content_encoding, payload)
 
-    def decode(message, content_type, content_encoding):
+    def decode(self, message, content_type, content_encoding):
         content_type = content_type or 'application/data'
         content_encoding = (content_encoding or 'utf-8').lower()
-
-        try:
-            decoder = self._decoders[content_type]
-        except KeyError: 
-            raise DecoderNotInstalled(
-                'No decoder installed for content-type: %s' % content_type)
 
         # Don't decode 8-bit strings
         if content_encoding not in ('binary','ascii-8bit'):
             message = codecs.decode(message, content_encoding)
 
-        return decoder()
+        try:
+            decoder = self._decoders[content_type]
+        except KeyError: 
+            return message
+            
+        return decoder(message)
 
 
 registry = SerializerRegistry()
@@ -168,7 +170,7 @@ register_pickle()
 
 # For backwards compatability
 register_json()
-registry.set_default_encoder('json')
+registry.set_default_serializer('json')
 
 # Register optional encoders, if possible
 for optional in (register_hessian, register_yaml): 
