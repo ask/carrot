@@ -16,6 +16,23 @@ TEST_QUEUE = "carrot.unittest"
 TEST_EXCHANGE = "carrot.unittest"
 TEST_ROUTING_KEY = "carrot.unittest"
 
+TEST_QUEUE_TWO = "carrot.unittest.two"
+TEST_EXCHANGE_TWO = "carrot.unittest.two"
+TEST_ROUTING_KEY_TWO = "carrot.unittest.two"
+
+TEST_CELERY_QUEUE = {
+            TEST_QUEUE : {
+                "exchange": TEST_EXCHANGE,
+                "exchange_type": "direct",
+                "routing_key": TEST_ROUTING_KEY,
+            },
+            TEST_QUEUE_TWO : {
+                "exchange": TEST_EXCHANGE_TWO,
+                "exchange_type": "direct",
+                "routing_key": TEST_ROUTING_KEY_TWO,
+            },
+        }
+
 
 class AdvancedDataType(object):
 
@@ -40,16 +57,16 @@ class TestMessaging(unittest.TestCase):
                         queue=TEST_QUEUE, exchange=TEST_EXCHANGE,
                         routing_key=TEST_ROUTING_KEY, **options)
 
-    def create_consumerset(self, routing_keys, **options):
+    def create_consumerset(self, queues={}, consumers=[], **options):
         return ConsumerSet(connection=self.conn, backend_cls=AMQPLibBackend,
-                           queue=TEST_QUEUE, exchange=TEST_EXCHANGE,
-                           routing_keys=routing_keys, **options)
+                           queues=queues, consumers=consumers, **options)
 
-    def create_publisher(self, **options):
+    def create_publisher(self, exchange=TEST_EXCHANGE, 
+                         routing_key=TEST_ROUTING_KEY, **options):
         return Publisher(connection=self.conn, backend_cls=AMQPLibBackend,
-                        exchange=TEST_EXCHANGE, routing_key=TEST_ROUTING_KEY,
+                        exchange=exchange, routing_key=routing_key,
                         **options)
-
+    
     def test_regression_implied_auto_delete(self):
         consumer = self.create_consumer(exclusive=True)
         self.assertTrue(consumer.auto_delete, "exclusive implies auto_delete")
@@ -152,8 +169,8 @@ class TestMessaging(unittest.TestCase):
                 "set": set(["george", "jerry", "elaine", "cosmo"]),
                 "exception": Exception("There was an error"),
         }
-
-        publisher.send(data)
+        
+        publisher.send(data)            
         message = fetch_next_message(consumer)
         self.assertTrue(isinstance(message, AMQPLibMessage))
 
@@ -357,45 +374,54 @@ class TestMessaging(unittest.TestCase):
             publisher.close()
 
     def test_consumerset_iterqueue(self):
-        consumers = self.create_consumerset(
-                ["AAAA.AAAA", "BBBB.BBBB", "CCCC.CCCC", "DDDD.DDDD"])
-        publisher = self.create_publisher()
-        consumers.discard_all()
+        
+        consumerset = self.create_consumerset(queues=TEST_CELERY_QUEUE)
 
+        one_publisher = self.create_publisher()
+        two_publisher = self.create_publisher(exchange=TEST_EXCHANGE_TWO,
+                                              routing_key=TEST_ROUTING_KEY_TWO)
+        consumerset.discard_all()
+       
         try:
-            it = consumers.iterqueue()
+            it = consumerset.iterqueue()
 
-            publisher.send({"rkey": "AAAA.AAAA"}, routing_key="AAAA.AAAA")
+            one_publisher.send({"rkey": "AAAA.AAAA"})
             m = it.next()
+
             self.assertEquals(m.decode(), {"rkey": "AAAA.AAAA"})
-            publisher.send({"rkey": "BBBB.BBBB"}, routing_key="BBBB.BBBB")
+            two_publisher.send({"rkey": "BBBB.BBBB"})
             m = it.next()
+
             self.assertEquals(m.decode(), {"rkey": "BBBB.BBBB"})
-            publisher.send({"rkey": "CCCC.CCCC"}, routing_key="CCCC.CCCC")
+            one_publisher.send({"rkey": "CCCC.CCCC"})
             m = it.next()
             self.assertTrue(m.decode(), {"rkey": "CCCC.CCCC"})
-            publisher.send({"rkey": "DDDD.DDDD"}, routing_key="DDDD.DDDD")
+            two_publisher.send({"rkey": "DDDD.DDDD"})
             m = it.next()
             self.assertTrue(m.decode(), {"rkey": "DDDD.DDDD"})
             
-            publisher.send({"rkey": "BBBB.BBBB"}, routing_key="BBBB.BBBB")
-            publisher.send({"rkey": "DDDD.DDDD"}, routing_key="DDDD.DDDD")
-            publisher.close()
-
+            one_publisher.send({"rkey": "BBBB.BBBB"})
+            two_publisher.send({"rkey": "DDDD.DDDD"})
+            one_publisher.close()
+            two_publisher.close()
+            
             m = it.next()
             self.assertTrue(m.decode(), {"rkey": "DDDD.DDDD"})
             m = it.next()
             self.assertTrue(m.decode(), {"rkey": "BBBB.BBBB"})
 
         finally:
-            consumers.close()
-            publisher.close()
+            consumerset.close()
+            one_publisher.close()
+            two_publisher.close()
     
-    def test_consumerset_iterconsume(self):
-        consumers = self.create_consumerset(
-                ["foo.bar", "foo.baz", "xuzzy.stock"])
-        publisher = self.create_publisher()
-        consumers.discard_all()
+    def test_consumerset_iterconsume(self):        
+        
+        consumerset = self.create_consumerset(queues=TEST_CELERY_QUEUE)
+        one_publisher = self.create_publisher()
+        two_publisher = self.create_publisher(exchange=TEST_EXCHANGE_TWO,
+                                              routing_key=TEST_ROUTING_KEY_TWO)
+        consumerset.discard_all()
 
         scratchpad = {}
         def callback(message_data, message):
@@ -405,24 +431,30 @@ class TestMessaging(unittest.TestCase):
             self.assertEquals(scratchpad.get("data"), what)
 
         try:
-            publisher.send({"rkey": "xuzzy.stock"}, routing_key="xuzzy.stock")
-            it = consumers.iterconsume()
-            consumers.register_callback(callback)
+            one_publisher.send({"rkey": "xuzzy.stock"})
+            it = consumerset.iterconsume()
+            consumerset.register_callback(callback)
             it.next()
             assertDataIs({"rkey": "xuzzy.stock"})
 
-            # Is in routing_key order, not message order
-            publisher.send({"rkey": "xyzzy.stock"}, routing_key="xyzzy.stock")
-            publisher.send({"rkey": "foo.bar"}, routing_key="foo.bar")
-            publisher.send({"rkey": "foo.baz"}, routing_key="foo.baz")
-
+            one_publisher.send({"rkey": "xyzzy.stock"})
+            two_publisher.send({"rkey": "foo.bar"})
+            one_publisher.send({"rkey": "foo.baz"})
+            two_publisher.send({"rkey": "foo.bam"})
+            
+            it.next()
+            assertDataIs({"rkey": "xyzzy.stock"})
             it.next()
             assertDataIs({"rkey": "foo.bar"})
             it.next()
             assertDataIs({"rkey": "foo.baz"})
             it.next()
-            assertDataIs({"rkey": "xyzzy.stock"})
-
+            assertDataIs({"rkey": "foo.bam"})
+             
         finally:
-            consumers.close()
-            publisher.close()
+            consumerset.close()
+            one_publisher.close()
+            two_publisher.close()
+
+if __name__ == '__main__':
+    unittest.main()

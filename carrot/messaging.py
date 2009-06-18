@@ -706,19 +706,84 @@ class Messaging(object):
 
 
 class ConsumerSet(object):
+    """Message ConsumerSet.
 
-    def __init__(self, connection, queue, exchange, routing_keys, **options):
+    :param connection: see :attr:`connection`.
+    :param queues: see :attr:`queues`.
+    :param consumers: see :attr:`consumers`.
+
+    .. attribute:: connection
+
+        The AMQP connection. A :class:`carrot.connection.AMQPConnection`
+        instance.
+
+    .. attribute:: queues
+
+        Dictionary of queues::
+            CELERY_QUEUE = {
+                    "webshot": {
+                        "exchange": "link_exchange",
+                        "exchange_type": "topic",
+                        "binding_key": "links.webshot",
+                        "default_routing_key": "links.webshot",
+                    },
+                    "retrieve": {
+                        "exchange": "link_exchange",
+                        "exchange_type" = "topic",
+                        "binding_key": "links.*",
+                        "default_routing_key": "links.retrieve",
+                        "auto_delete": True,
+                       # ...
+                    }
+                }
+
+    .. attribute:: consumers
+
+        A list of consumers that will be parsed for attribute details
+        then one consumer will be created.
+
+    """
+    
+    backend_cls = DefaultBackend
+    decoder = deserialize
+    auto_ack = False
+    
+    
+    def __init__(self, connection, queues={}, consumers=[], **options):
         self.connection = connection
-        self.queue = queue
-        self.exchange = exchange
-        self.routing_keys = routing_keys
         self.options = options
-        self.queues = {}
-        self.callbacks = []
+        self.consumers = []
+        self.callbacks= []
+            
+        self.backend_cls = options.get("backend_cls", self.backend_cls)
+        self.backend = self.backend_cls(connection=connection,
+                                        decoder=self.decoder)
+        
+        self.decoder = options.get("decoder", self.decoder)
         self.algorithm = options.get("algorithm", roundrobin)
-        [self.add_queue(routing_key)
-                for routing_key in self.routing_keys]
-
+        self.auto_ack = options.get("auto_ack", self.auto_ack)
+        
+        for consumer in consumers:
+            self.add_consumer(consumer)
+        
+        for queue, options in queues.items():
+            self.add_queue(queue, **options)
+    
+    def _receive_callback(self, raw_message):
+        """Internal method used when a message is received in consume mode."""
+        message = self.backend.message_to_python(raw_message)
+        if self.auto_ack:
+            message.ack()
+        self.receive(message.decode(), message)
+    
+    
+    def add_queue(self, queue, **options):
+        consumer = Consumer(self.connection, queue=queue, **options)        
+        self.consumers.append(consumer)
+        
+    def add_consumer(self, consumer):
+        self.consumers.append(consumer)
+        
     def register_callback(self, callback):
         self.callbacks.append(callback)
 
@@ -727,16 +792,6 @@ class ConsumerSet(object):
             raise NotImplementedError("No consumer callbacks registered")
         for callback in self.callbacks:
             callback(message_data, message) 
-
-    def add_queue(self, routing_key):
-        """Add a queue to the consumer set."""
-        queue_name = "-".join([self.queue, routing_key])
-        consumer = Consumer(connection=self.connection, queue=queue_name,
-                            exchange=self.exchange,
-                            routing_key=routing_key,
-                            **self.options)
-        consumer.register_callback(self.receive)
-        self.queues[queue_name] = consumer
 
     def iterqueue(self, limit=None, algorithm=None):
         """Infinite iterator yielding pending messages synchronously.
@@ -748,14 +803,9 @@ class ConsumerSet(object):
             of messages has been exceeded.
 
         """
-        def turbo_button(it): # XXX obviously remove after debug.
-            import time
-            for val in it:
-                yield val
-                time.sleep(1)
-        algorithm = algorithm or self.algorithm
+
         its = [consumer.iterqueue(infinite=True)
-                for consumer in self.queues.values()]
+                for consumer in self.consumers]
         selector = self.algorithm(its)
         return islice(ifilter(None, selector), limit)
 
@@ -765,16 +815,30 @@ class ConsumerSet(object):
 
         See :meth:`Consumer.iterconsume`.
         """
-        algorithm = algorithm or self.algorithm
-        its = [consumer.iterconsume()
-                for consumer in self.queues.values()]
-        selector = self.algorithm(its)
-        return islice(selector, limit)
+        
+        for index, consumer in enumerate(self.consumers):
+            #If the consumer has a callback, honor it.
+            callback = self._receive_callback
+            if consumer.callbacks:
+                callback = consumer._receive_callback
+                
+            if index is len(self.consumers)-1:
+                break
+                        
+            self.backend.declare_consume(queue=consumer.queue,
+                                         no_ack=consumer.no_ack,
+                                         callback=callback,
+                                         consumer_tag=consumer.consumer_tag)
 
+        return self.backend.consume(queue=consumer.queue,
+                                 no_ack=consumer.no_ack,
+                                 callback=callback,
+                                 consumer_tag=consumer.consumer_tag)
+    
     def discard_all(self):
         return sum([consumer.discard_all()
-                        for consumer in self.queues.values()])
+                        for consumer in self.consumers])
 
     def close(self):
-        for consumer in self.queues.values():
+        for consumer in self.consumers:
             consumer.close()

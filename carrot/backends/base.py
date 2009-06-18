@@ -20,7 +20,14 @@ class BaseMessage(object):
     def decode(self):
         """Deserialize the message body, returning the original
         python structure sent by the publisher."""
-        return self.decoder(self.body)
+        try:
+            return self.decoder(self.body)
+        except (ValueError, TypeError):
+            # If the decode fails because it's not valid json
+            # We should still pass back the message
+            return {"body":self.body}
+            
+            
 
     def ack(self):
         """Acknowledge this message as being processed.,
