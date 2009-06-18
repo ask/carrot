@@ -38,22 +38,25 @@ class SerializerRegistry(object):
         self._decoders = {}
         self._default_encode = None
         self._default_content_type = None
+        self._default_content_encoding = None
         
-    def register(self, name, encoder, decoder, content_type):
+    def register(self, name, encoder, decoder, content_type, 
+                 content_encoding='utf-8'):
+                 
         if encoder: 
-            self._encoders[name] = (content_type, encoder)
+            self._encoders[name] = (content_type, content_encoding, encoder)
         if decoder:
             self._decoders[content_type] = decoder
 
     def set_default_serializer(self, name):
         try:
-            self._default_content_type, self._default_encode = self._encoders[name]
+            (self._default_content_type, self._default_content_encoding, 
+             self._default_encode) = self._encoders[name]
         except KeyError: 
             raise DecoderNotInstalled(
                 "No decoder installed for %s" % name)
 
     def encode(self, message, serializer=None):
-        content_encoding = 'utf-8'
 
         # If a raw string was sent, assume binary encoding 
         # (it's likely either ASCII or a raw binary file, but 'binary' 
@@ -67,20 +70,24 @@ class SerializerRegistry(object):
         # For unicode objects, force it into 
         elif isinstance(message, unicode) and not serializer: 
             content_type = 'text/plain'
+            content_encoding = 'utf-8'
             payload = message.encode(content_encoding)
         elif serializer == 'raw': 
             content_type = 'application/data'
             payload = message
             if isinstance(payload, unicode): 
-                payload = payload.encode('utf-8')
+                content_encoding = 'utf-8'
+                payload = payload.encode(content_encoding)
             else:
                 content_encoding = 'binary'
         else:
             if serializer: 
-                content_type, encoder = self._encoders[serializer]
+                (content_type, content_encoding, 
+                 encoder) = self._encoders[serializer]
             else:
                 encoder = self._default_encode
                 content_type = self._default_content_type
+                content_encoding = self._default_content_encoding
             payload = encoder(message)
 
         return (content_type, content_encoding, payload)
@@ -133,7 +140,8 @@ def register_json():
                 json_deserialize = simplejson.loads
 
     registry.register('json', json_serialize, json_deserialize, 
-                      'application/json')
+                      content_type='application/json', 
+                      content_encoding='utf-8')
 
 
 def register_hessian():
@@ -150,19 +158,22 @@ def register_hessian():
         decoded = hessian_read(payload)
         return decoded
 
-    registry.register('hessian', h_encode, h_decode, 'application/x-hessian')
+    registry.register('hessian', h_encode, h_decode, 
+                      content_type='application/x-hessian', 
+                      content_encoding='binary')
 
 
 def register_yaml():
     import yaml
     registry.register('yaml', yaml.safe_dump, yaml.safe_load, 
-                      'application/x-yaml')
-    
+                      content_type='application/x-yaml', 
+                      content_encoding='utf-8')
 
 def register_pickle():
     import cPickle
     registry.register('pickle', cPickle.dumps, cPickle.loads, 
-                      'application/x-python-serialize')
+                      content_type='application/x-python-serialize', 
+                      content_encoding='binary')
 
 
 # Basic support

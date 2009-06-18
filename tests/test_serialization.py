@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import cPickle
 import sys
 import os
 import unittest
@@ -32,7 +33,9 @@ json_data = ('{"int": 10, "float": 3.1415926500000002, '
              '"string": "The quick brown fox jumps over the lazy '
              'dog", "unicode": "Th\\u00e9 quick brown fox jumps over '
              'th\\u00e9 lazy dog"}')
-             
+
+# Pickle serialization tests
+pickle_data = cPickle.dumps(py_data)
 
 
 class TestSerialization(unittest.TestCase):
@@ -48,6 +51,19 @@ class TestSerialization(unittest.TestCase):
                             latin_string_as_latin1, 
                             content_type='application/data', 
                             content_encoding='latin-1'))
+
+    def test_content_type_binary(self):
+        content_type = 'plain/text'
+
+        self.assertTrue(unicode_string != registry.decode(
+                            unicode_string_as_utf8, 
+                            content_type='application/data', 
+                            content_encoding='binary'))
+
+        self.assertTrue(unicode_string_as_utf8 == registry.decode(
+                            unicode_string_as_utf8, 
+                            content_type='application/data', 
+                            content_encoding='binary'))
 
     def test_content_type_encoding(self):
         self.assertTrue(unicode_string_as_utf8 == registry.encode(
@@ -71,6 +87,15 @@ class TestSerialization(unittest.TestCase):
                             content_type='application/json', 
                             content_encoding='utf-8'))
 
+    def test_pickle_decode(self):
+        self.assertTrue(py_data == registry.decode(
+                            pickle_data, 
+                            content_type='application/x-python-serialize', 
+                            content_encoding='binary'))
+        
+    def test_pickle_encode(self):
+        self.assertTrue(pickle_data ==
+                registry.encode(py_data, serializer="pickle")[-1]) 
 
 if __name__ == '__main__':
     unittest.main()
