@@ -2,6 +2,21 @@
  Change history
 ================
 
+0.4.5 [2008-06-15 01:58 P.M CET] askh@opera.com
+------------------------------------------------------------------
+
+**BACKWARD-INCOMPATIBLE CHANGES**
+
+	* the exchange is now also declared in the ``Publisher``. This means
+		the following attributes (if used) must be set on *both
+		the ``Publisher`` and the ``Consumer``:
+			``exchange_type``, ``durable`` and ``auto_delete``.
+
+**IMPORTANT BUGS**
+
+	* No_ack was always set to ``True`` when using ``Consumer.iterconsume``.
+
+
 0.4.4 [2008-06-15 01:58 P.M CET] askh@opera.com
 ------------------------------------------------------------------
 
