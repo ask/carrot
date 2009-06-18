@@ -37,17 +37,17 @@ class SerializerRegistry(object):
         self._encoders = {}
         self._decoders = {}
         self._default_encode = None
-        self._default_mimetype = None
+        self._default_content_type = None
         
-    def register(self, name, encoder, decoder, mimetype):
+    def register(self, name, encoder, decoder, content_type):
         if encoder: 
-            self._encoders[name] = (mimetype, encoder)
+            self._encoders[name] = (content_type, encoder)
         if decoder:
-            self._decoders[mimetype] = decoder
+            self._decoders[content_type] = decoder
 
     def set_default_serializer(self, name):
         try:
-            self._default_mimetype, self._default_encode = self._encoders[name]
+            self._default_content_type, self._default_encode = self._encoders[name]
         except KeyError: 
             raise DecoderNotInstalled(
                 "No decoder installed for %s" % name)
@@ -77,10 +77,10 @@ class SerializerRegistry(object):
                 content_encoding = 'binary'
         else:
             if serializer: 
-                mimetype, encoder = self._encoders[encoding]
+                content_type, encoder = self._encoders[serializer]
             else:
                 encoder = self._default_encode
-                content_type = self._default_mimetype
+                content_type = self._default_content_type
             payload = encoder(message)
 
         return (content_type, content_encoding, payload)
