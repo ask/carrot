@@ -389,7 +389,7 @@ class Consumer(object):
                 message.ack()
                 discarded_count += 1
 
-    def iterconsume(self, limit=None, no_ack=None):
+    def iterconsume(self, limit=None):
         """Iterator processing new messages as they arrive.
         Every new message will be passed to the callbacks, and the iterator
         returns ``True``. The iterator is infinite unless the ``limit``
@@ -411,8 +411,7 @@ class Consumer(object):
 
         """
         self.channel_open = True
-        no_ack = no_ack or self.no_ack
-        return self.backend.consume(queue=self.queue, no_ack=no_ack,
+        return self.backend.consume(queue=self.queue, no_ack=True,
                                     callback=self._receive_callback,
                                     consumer_tag=self.consumer_tag,
                                     limit=limit)
@@ -572,7 +571,7 @@ class Publisher(object):
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self._declare_exchange()
         self._closed = False
-
+        
     def _declare_exchange(self):
         if self.exchange:
             self.backend.exchange_declare(exchange=self.exchange,
