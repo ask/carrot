@@ -3,7 +3,39 @@
 Backend base classes.
 
 """
-from carrot.serialization import serialize, deserialize
+from functools import update_wrapper 
+from carrot.serialization import registry as serializers
+
+
+def cached_property (func ,name =None ):
+    """cached_property(func, name=None) -> a descriptor
+    This decorator implements an object's property which is computed
+    the first time it is accessed, and which value is then stored in
+    the object's __dict__ for later use. If the attribute is deleted,
+    the value will be recomputed the next time it is accessed.
+      Usage:
+        class X(object):
+          @cached_property
+          def foo(self):
+            return computation()
+    """
+    if name is None :
+      name =func .__name__ 
+      
+    def _get (self ):
+      try :
+        return self .__dict__ [name ]
+      except KeyError :
+        value =func (self )
+        self .__dict__ [name ]=value 
+        return value 
+        
+    update_wrapper (_get ,func )
+    
+    def _del (self ):
+      self .__dict__ .pop (name ,None )
+      
+    return property (_get ,None ,_del )
 
 
 class BaseMessage(object):
@@ -14,18 +46,27 @@ class BaseMessage(object):
         self.backend = backend
         self.body = kwargs.get("body")
         self.delivery_tag = kwargs.get("delivery_tag")
-        self.decoder = kwargs.get("decoder", deserialize)
+        self.content_type = kwargs.get("content_type")
+        self.content_encoding = kwargs.get("content_encoding")
+        
         self._state = "RECEIVED"
 
     def decode(self):
         """Deserialize the message body, returning the original
         python structure sent by the publisher."""
-        return self.decoder(self.body)
+        return serializers.decode(self.body, self.content_type, 
+                                  self.content_encoding)
+                                  
+    @cached_property
+    def payload(self):
+        return self.decode()
 
     def ack(self):
         """Acknowledge this message as being processed.,
 
         This will remove the message from the queue."""
+        assert self._state == "RECEIVED", \
+            "Message has already been acknowledged or rejected."
         self.backend.ack(self.delivery_tag)
         self._state = "ACK"
 
@@ -35,6 +76,8 @@ class BaseMessage(object):
         The message will be discarded by the server.
 
         """
+        assert self._state == "RECEIVED", \
+            "Message has already been acknowledged or rejected."
         self.backend.reject(self.delivery_tag)
         self._state = "REJECTED"
 
@@ -45,14 +88,14 @@ class BaseMessage(object):
         to process.
 
         """
+        assert self._state == "RECEIVED", \
+            "Message has already been acknowledged or rejected."
         self.backend.requeue(self.delivery_tag)
         self._state = "REQUEUED"
 
 
 class BaseBackend(object):
     """Base class for backends."""
-    encoder = serialize
-    decoder = deserialize
 
     def __init__(self, connection, **kwargs):
         self.connection = connection

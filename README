@@ -208,12 +208,14 @@ where the following text has been printed to the screen::
 
 
 By default every message is encoded using `JSON`_, so sending
-Python data structures like dictionaries and lists works. If you want
-to support more complicated data, you might want to configure the publisher
-and consumer to use something like ``pickle``, by providing them with
-an ``encoder`` and ``decoder`` respectively.
+Python data structures like dictionaries and lists works. We also 
+support `Hessian`_, `YAML`_, and python's built-in pickle. All three
+support more complex data types. Note that the ``pickle`` method
+would limit you to a python-only environment as it is not cross-language. 
 
 .. _`JSON`: http://www.json.org/
+.. _`Hessian`: http://www.caucho.com/resin-3.0/protocols/hessian.xtp
+.. _`YAML`: http://yaml.org/
 
 
 Receiving messages without a callback
@@ -228,7 +230,7 @@ re-queue the message.
     ...                     exchange="feed", routing_key="importer")
     >>> message = consumer.fetch()
     >>> if message:
-    ...    message_data = message.decode()
+    ...    message_data = message.payload
     ...    message.ack()
     ... else:
     ...     # No messages waiting on the queue.

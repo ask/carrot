@@ -22,7 +22,6 @@ class Consumer(object):
     :keyword auto_delete: see :attr:`auto_delete`.
     :keyword exclusive: see :attr:`exclusive`.
     :keyword exchange_type: see :attr:`exchange_type`.
-    :keyword decoder: see :attr:`decoder`.
     :keyword backend_cls: see :attr:`backend_cls`.
     :keyword auto_ack: see :attr:`auto_ack`.
     :keyword no_ack: see :attr:`no_ack`.
@@ -126,10 +125,6 @@ class Consumer(object):
 
             .. _`AMQP in 10 minutes: Part 4`: http://bit.ly/amqp-exchange-types
 
-    .. attribute:: decoder
-
-        A function able to deserialize the message body.
-
     .. attribute:: backend_cls
 
         The messaging backend class used. Defaults to the ``pyamqplib``
@@ -195,19 +190,12 @@ class Consumer(object):
     auto_ack = False
     no_ack = False
     _closed = True
-    decoder = None
 
     def __init__(self, connection, queue=None, exchange=None,
             routing_key=None, **kwargs):
         self.connection = connection
-        if "decoder" in kwargs:
-            self.decoder = kwargs["decoder"]
-        else:
-            if not self.decoder:
-                self.decoder = deserialize
         self.backend_cls = kwargs.get("backend_cls", self.backend_cls)
-        self.backend = self.backend_cls(connection=connection,
-                                        decoder=self.decoder)
+        self.backend = self.backend_cls(connection=connection)
         self.queue = queue or self.queue
 
         # Binding.
@@ -476,11 +464,11 @@ class Publisher(object):
     :param exchange: see :attr:`exchange`.
     :param routing_key: see :attr:`routing_key`.
 
-    :keyword encoder: see :attr:`encoder`.
     :keyword backend_cls: see :attr:`backend_cls`.
     :keyword exchange_type: see :attr:`Consumer.exchange_type`.
     :keyword durable: see :attr:`Consumer.durable`.
     :keyword auto_delete: see :attr:`Consumer.auto_delete`.
+    :keyword serializer: see :attr:`serializer`.
 
 
     .. attribute:: connection
@@ -516,12 +504,6 @@ class Publisher(object):
 
         The default value is ``2`` (persistent).
 
-    .. attribute:: encoder
-
-        The function responsible for encoding the message data passed
-        to :meth:`send`. Note that any consumer of the messages sent
-        must have a decoder supporting the serialization scheme.
-
     .. attribute:: exchange_type
 
         See :attr:`Consumer.exchange_type`.
@@ -539,34 +521,36 @@ class Publisher(object):
         The messaging backend class used. Defaults to the ``pyamqplib``
         backend.
 
+    .. attribute:: serializer
+
+        A string identifying the default serialization method to use.
+        Defaults to ``json``. Can be ``json`` (default), ``raw``, 
+        ``pickle``, ``hessian``, ``yaml``, or any custom serialization 
+        methods that have been registered with 
+        ``carrot.serialization.registry``. 
     """
 
     exchange = ""
     routing_key = ""
     delivery_mode = 2 # Persistent
     backend_cls = DefaultBackend
-    encoder = None
     _closed = True
     exchange_type = "direct"
     durable = True
     auto_delete = False
+    serializer = None
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
         self.connection = connection
-        if "encoder" in kwargs:
-            self.encoder = kwargs["encoder"]
-        else:
-            if not self.encoder:
-                self.encoder = serialize
         self.backend_cls = kwargs.get("backend_cls", self.backend_cls)
-        self.backend = self.backend_cls(connection=connection,
-                                        encoder=self.encoder)
+        self.backend = self.backend_cls(connection=connection)
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
         self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
         self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
         self.durable = kwargs.get("durable", self.durable)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
+        self.serializer = kwargs.get("serializer", self.serializer)
         self._declare_exchange()
         self._closed = False
 
@@ -585,16 +569,28 @@ class Publisher(object):
             raise e_type(e_value)
         self.close()
 
-    def create_message(self, message_data, delivery_mode=None, priority=None):
+    def create_message(self, message_data, delivery_mode=None, priority=None,
+                       content_type=None, content_encoding=None, 
+                       serializer=None):
         """With any data, serialize it and encapsulate it in a AMQP
         message with the proper headers set."""
+        
         delivery_mode = delivery_mode or self.delivery_mode
-        message_data = self.encoder(message_data)
+        serializer = serializer or self.serializer
+        content_type, content_encoding, message_data = serializers.encode(
+                                message_data, 
+                                content_type=content_type, 
+                                content_encoding=content_encoding,
+                                self.serializer)
+                                
         return self.backend.prepare_message(message_data, delivery_mode,
-                                            priority=priority)
+                                            priority=priority, 
+                                            content_type=content_type, 
+                                            content_encoding=content_encoding)
 
     def send(self, message_data, routing_key=None, delivery_mode=None,
-            mandatory=False, immediate=False, priority=0):
+            mandatory=False, immediate=False, priority=0, content_type=None, 
+            content_encoding=None, serializer=None)):
         """Send a message.
 
         :param message_data: The message data to send. Can be a list,
@@ -618,12 +614,29 @@ class Publisher(object):
         :keyword delivery_mode: Override the default :attr:`delivery_mode`.
 
         :keyword priority: The message priority, ``0`` to ``9``.
+        
+        :keyword content_type: The messages content_type. If content_type 
+            is set, no serialization occurs as it is assumed this is either 
+            a binary object, or you've done your own serialization.
+            Leave blank if using built-in serialization as our library
+            properly sets content_type.
+
+        :keyword content_encoding: The character set in which this object
+            is encoded. Use "binary" if sending in raw binary objects. 
+            Leave blank if using built-in serialization as our library
+            properly sets content_encoding.
+
+        :keyword serializer: Override the default :attr:`serializer`.
+        
 
         """
         if not routing_key:
             routing_key = self.routing_key
         message = self.create_message(message_data, priority=priority,
-                                      delivery_mode=delivery_mode)
+                                      delivery_mode=delivery_mode, 
+                                      content_type=content_type, 
+                                      content_encoding=content_encoding,
+                                      serializer=serializer)
         self.backend.publish(message,
                              exchange=self.exchange, routing_key=routing_key,
                              mandatory=mandatory, immediate=immediate)
@@ -691,13 +704,3 @@ class Messaging(object):
         self.consumer.close()
         self.publisher.close()
         self._closed = True
-
-    @property
-    def encoder(self):
-        """The encoder used."""
-        return self.publisher.encoder
-
-    @property
-    def decoder(self):
-        """The decoder used."""
-        return self.consumer.decoder

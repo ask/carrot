@@ -8,7 +8,6 @@
 from amqplib import client_0_8 as amqp
 from amqplib.client_0_8.exceptions import AMQPChannelException
 from carrot.backends.base import BaseMessage, BaseBackend
-from carrot.serialization import serialize, deserialize
 import itertools
 import warnings
 
@@ -30,8 +29,6 @@ class Message(BaseMessage):
     :param amqp_message: see :attr:`amqp_message`.
 
     :param channel: see :attr:`channel`.
-
-    :param decoder: see :attr:`decoder`.
 
 
     .. attribute:: body
@@ -58,10 +55,6 @@ class Message(BaseMessage):
         The AMQP channel. A :class:`amqplib.client_0_8.channel.Channel`
         instance.
 
-    .. attribute:: decoder
-
-        A function able to deserialize the serialized message data.
-
     """
 
     def __init__(self, backend, amqp_message, **kwargs):
@@ -69,7 +62,9 @@ class Message(BaseMessage):
         self.backend = backend
         kwargs.update({
             "body": amqp_message.body,
-            "delivery_tag": amqp_message.delivery_tag})
+            "delivery_tag": amqp_message.delivery_tag, 
+            "content_type": amqp_message.content_type, 
+            "content_encoding": amqp_message.content_encoding})
 
         super(Message, self).__init__(backend, **kwargs)
 
@@ -78,8 +73,6 @@ class Backend(BaseBackend):
     """amqplib backend
 
     :param connection: see :attr:`connection`.
-    :param encoder: see :attr:`encoder`.
-    :param decoder: see :attr:`decoder`.
 
 
     .. attribute:: connection
@@ -87,23 +80,11 @@ class Backend(BaseBackend):
     A :class:`carrot.connection.AMQPConnection` instance. An established
     connection to the AMQP server.
 
-    .. attribute:: encoder
-
-    A function that serializes to the format used.
-    Defaults to :func:`carrot.serialization.serialize`.
-
-    .. attribute:: decoder
-
-    A function that decodes objects serialized in the serialization
-    format used. Defaults to :func:`carrot.serialization.deserialize`.
-
     """
 
     def __init__(self, connection, **kwargs):
         self.connection = connection
         self.channel = self.connection.connection.channel()
-        self.encoder = kwargs.get("encoder", serialize)
-        self.decoder = kwargs.get("decoder", deserialize)
 
     def queue_exists(self, queue):
         """Check if a queue has been declared.
@@ -150,8 +131,7 @@ class Backend(BaseBackend):
 
     def message_to_python(self, raw_message):
         """Convert encoded message body back to a Python value."""
-        return Message(backend=self, amqp_message=raw_message,
-                decoder=self.decoder)
+        return Message(backend=self, amqp_message=raw_message)
 
     def get(self, queue, no_ack=False):
         """Receive a message from a declared queue by name.
@@ -205,7 +185,9 @@ class Backend(BaseBackend):
         """Reject and requeue a message by delivery tag."""
         return self.channel.basic_reject(delivery_tag, requeue=True)
 
-    def prepare_message(self, message_data, delivery_mode, priority=None):
+    def prepare_message(self, message_data, delivery_mode, priority=None, 
+                        content_type=None, 
+                        content_encoding=None):
         """Encapsulate data into a AMQP message."""
         message = amqp.Message(message_data, priority=priority)
         message.properties["delivery_mode"] = delivery_mode
