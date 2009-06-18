@@ -31,10 +31,10 @@ class SerializerRegistry(object):
         """
         Make the registry a singleton.
         """
-         if not '_sr_instance' in type.__dict__:
-             type._sr_instance = object.__new__(type)
-         return type._sr_instance
-         
+        if not '_sr_instance' in type.__dict__:
+            type._sr_instance = object.__new__(type)
+        return type._sr_instance
+
     def __init__(self):
         self._encoders = {}
         self._decoders = {}
@@ -46,17 +46,17 @@ class SerializerRegistry(object):
             self._encoders[name] = (mimetype, encoder)
         if decoder:
             self._decoders[mimetype] = decoder
-        
+
     def set_default_encoder(self, name):
         try:
             self._default_encoder, self._default_mimetype = self._encoders[name]
         except KeyError: 
             raise DecoderNotInstalled(
                 "No decoder installed for %s" % name)
-        
+
     def encode(self, message, encoding=None):
         content_encoding = 'UTF-8'
-        
+
         if isinstance(message, string) and not encoding:
             # In Python 3+, this would be "bytes"; allow binary data to be 
             # sent as a message without getting encoder errors
@@ -66,7 +66,7 @@ class SerializerRegistry(object):
         elif isinstance(message, unicode) and not encoding: 
             content_type = 'text/plain'
             payload = message      
-        elif encoding = 'raw': 
+        elif encoding == 'raw': 
             content_type = 'application/data'
             payload = message
             if isinstance(payload, unicode): 
@@ -85,17 +85,17 @@ class SerializerRegistry(object):
     def decode(message, content_type, content_encoding):
         content_type = content_type or 'application/data'
         content_encoding = (content_encoding or 'utf-8').lower()
-        
+
         try:
             decoder = self._decoders[content_type]
         except KeyError: 
             raise DecoderNotInstalled(
                 'No decoder installed for content-type: %s' % content_type)
-        
+
         # Don't decode 8-bit strings
         if content_encoding not in ('binary','ascii-8bit'):
             message = codecs.decode(message, content_encoding)
-            
+
         return decoder()
 
 
@@ -130,7 +130,8 @@ def register_json():
                 json_serialize = simplejson.dumps
                 json_deserialize = simplejson.loads
 
-    registry.register('json', json_encode, json_decode, 'application/json')
+    registry.register('json', json_serialize, json_deserialize, 
+                      'application/json')
 
 
 def register_hessian():

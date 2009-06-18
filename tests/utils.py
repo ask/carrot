@@ -1,10 +1,13 @@
+import os
+
 from carrot.connection import AMQPConnection
 
-AMQP_HOST = "localhost"
-AMQP_PORT = 5672
-AMQP_VHOST = "/"
-AMQP_USER = "guest"
-AMQP_PASSWORD = "guest"
+
+AMQP_HOST = os.environ.get('AMQP_HOST', "localhost")
+AMQP_PORT = os.environ.get('AMQP_PORT', 5672)
+AMQP_VHOST = os.environ.get('AMQP_VHOST', "/")
+AMQP_USER = os.environ.get('AMQP_USER', "guest")
+AMQP_PASSWORD = os.environ.get('AMQP_PASSWORD', "guest")
 
 
 def test_connection_args():

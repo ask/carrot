@@ -3,11 +3,12 @@
 Sending/Receiving Messages.
 
 """
-from carrot.backends import DefaultBackend
-from carrot.serialization import serialize, deserialize
 import itertools
 import warnings
 import uuid
+
+from carrot.backends import DefaultBackend
+from carrot.serialization import registry as serializers
 
 
 class Consumer(object):
@@ -581,7 +582,7 @@ class Publisher(object):
                                 message_data, 
                                 content_type=content_type, 
                                 content_encoding=content_encoding,
-                                self.serializer)
+                                encoder=self.serializer)
                                 
         return self.backend.prepare_message(message_data, delivery_mode,
                                             priority=priority, 
@@ -590,7 +591,7 @@ class Publisher(object):
 
     def send(self, message_data, routing_key=None, delivery_mode=None,
             mandatory=False, immediate=False, priority=0, content_type=None, 
-            content_encoding=None, serializer=None)):
+            content_encoding=None, serializer=None):
         """Send a message.
 
         :param message_data: The message data to send. Can be a list,
