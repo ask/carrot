@@ -5,7 +5,6 @@ Sending/Receiving Messages.
 """
 from carrot.backends import DefaultBackend
 from carrot.serialization import serialize, deserialize
-from carrot.algorithms import roundrobin
 from itertools import count, ifilter, islice
 import warnings
 import uuid
@@ -453,7 +452,6 @@ class Consumer(object):
         """
         for items_since_start in count():
             import sys
-            sys.stderr.write("TRYING TO FETCH FROM %s\n" % self.queue)
             item = self.fetch()
             if (not infinite and item is None) or \
                     (limit and items_since_start >= limit):
@@ -571,7 +569,7 @@ class Publisher(object):
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self._declare_exchange()
         self._closed = False
-        
+
     def _declare_exchange(self):
         if self.exchange:
             self.backend.exchange_declare(exchange=self.exchange,
@@ -709,7 +707,7 @@ class ConsumerSet(object):
     """Message ConsumerSet.
 
     :param connection: see :attr:`connection`.
-    :param queues: see :attr:`queues`.
+    :param from_dict see :attr:`from_dict`.
     :param consumers: see :attr:`consumers`.
 
     .. attribute:: connection
@@ -717,114 +715,98 @@ class ConsumerSet(object):
         The AMQP connection. A :class:`carrot.connection.AMQPConnection`
         instance.
 
-    .. attribute:: queues
+    .. attribute:: from_dict
 
-        Dictionary of queues::
-            CELERY_QUEUE = {
-                    "webshot": {
-                        "exchange": "link_exchange",
-                        "exchange_type": "topic",
-                        "binding_key": "links.webshot",
-                        "default_routing_key": "links.webshot",
+        Add consumers from a dictionary configuration::
+
+            {
+                "webshot": {
+                            "exchange": "link_exchange",
+                            "exchange_type": "topic",
+                            "binding_key": "links.webshot",
+                            "default_routing_key": "links.webshot",
                     },
                     "retrieve": {
-                        "exchange": "link_exchange",
-                        "exchange_type" = "topic",
-                        "binding_key": "links.*",
-                        "default_routing_key": "links.retrieve",
-                        "auto_delete": True,
-                       # ...
-                    }
-                }
+                            "exchange": "link_exchange",
+                            "exchange_type" = "topic",
+                            "binding_key": "links.*",
+                            "default_routing_key": "links.retrieve",
+                            "auto_delete": True,
+                            # ...
+                    },
+            }
 
     .. attribute:: consumers
 
-        A list of consumers that will be parsed for attribute details
-        then one consumer will be created.
+        Add consumers from a list of :class:`Consumer` instances.
 
     """
-    
     backend_cls = DefaultBackend
     decoder = deserialize
     auto_ack = False
-    
-    
-    def __init__(self, connection, queues={}, consumers=[], **options):
+
+    def __init__(self, connection, from_dict=None, consumers=None,
+            callbacks=None, **options):
         self.connection = connection
         self.options = options
-        self.consumers = []
-        self.callbacks= []
-            
+        self.from_dict = from_dict or {}
+        self.consumers = consumers or []
+        self.callbacks = callbacks or []
+
         self.backend_cls = options.get("backend_cls", self.backend_cls)
         self.backend = self.backend_cls(connection=connection,
                                         decoder=self.decoder)
-        
+
         self.decoder = options.get("decoder", self.decoder)
-        self.algorithm = options.get("algorithm", roundrobin)
         self.auto_ack = options.get("auto_ack", self.auto_ack)
-        
-        for consumer in consumers:
-            self.add_consumer(consumer)
-        
-        for queue, options in queues.items():
-            self.add_queue(queue, **options)
-    
+
+        [self.add_consumer_from_dict(queue_name, **queue_options)
+                for queue_name, queue_options in self.from_dict.items()]
+
     def _receive_callback(self, raw_message):
         """Internal method used when a message is received in consume mode."""
         message = self.backend.message_to_python(raw_message)
         if self.auto_ack:
             message.ack()
         self.receive(message.decode(), message)
-    
-    
-    def add_queue(self, queue, **options):
-        consumer = Consumer(self.connection, queue=queue, **options)        
+
+    def add_consumer_from_dict(self, queue, **options):
+        """Add another consumer from dictionary configuration."""
+        consumer = Consumer(self.connection, queue=queue, **options)
         self.consumers.append(consumer)
-        
+
     def add_consumer(self, consumer):
+        """Add another consumer from a :class:`Consumer` instance."""
         self.consumers.append(consumer)
-        
+
     def register_callback(self, callback):
+        """Register new callback to be called when a message is received.
+        See :meth:`Consumer.register_callback`"""
         self.callbacks.append(callback)
 
     def receive(self, message_data, message):
+        """What to do when a message is received.
+        See :meth:`Consumer.receive`."""
         if not self.callbacks:
             raise NotImplementedError("No consumer callbacks registered")
         for callback in self.callbacks:
-            callback(message_data, message) 
+            callback(message_data, message)
 
-    def iterqueue(self, limit=None, algorithm=None):
-        """Infinite iterator yielding pending messages synchronously.
-
-        :keyword limit: If set, the iterator stops when it has processed
-            this number of messages in total.
-
-        :raises StopIteration: If there is a limit, and the maximum number
-            of messages has been exceeded.
-
-        """
-
-        its = [consumer.iterqueue(infinite=True)
-                for consumer in self.consumers]
-        selector = self.algorithm(its)
-        return islice(ifilter(None, selector), limit)
-
-
-    def iterconsume(self, limit=None, algorithm=None):
+    def iterconsume(self, limit=None):
         """Cycle between all consumers in consume mode.
 
         See :meth:`Consumer.iterconsume`.
         """
-        
+
         for index, consumer in enumerate(self.consumers):
             #If the consumer has a callback, honor it.
             callback = self._receive_callback
             if consumer.callbacks:
                 callback = consumer._receive_callback
-                
+
             if index is len(self.consumers)-1:
                 break
-                        
+
             self.backend.declare_consume(queue=consumer.queue,
                                          no_ack=consumer.no_ack,
                                          callback=callback,
@@ -834,11 +816,14 @@ class ConsumerSet(object):
                                  no_ack=consumer.no_ack,
                                  callback=callback,
                                  consumer_tag=consumer.consumer_tag)
-    
+
     def discard_all(self):
+        """Discard all messages. Does not support filtering.
+        See :meth:`Consumer.discard_all`."""
         return sum([consumer.discard_all()
                         for consumer in self.consumers])
 
     def close(self):
+        """Close all consumers."""
         for consumer in self.consumers:
             consumer.close()
