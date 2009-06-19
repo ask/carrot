@@ -277,7 +277,7 @@ class Consumer(object):
     def _receive_callback(self, raw_message):
         """Internal method used when a message is received in consume mode."""
         message = self.backend.message_to_python(raw_message)
-        if self.auto_ack:
+        if self.auto_ack and not message.acknowledged:
             message.ack()
         self.receive(message.decode(), message)
 
@@ -297,7 +297,7 @@ class Consumer(object):
         auto_ack = auto_ack or self.auto_ack
         message = self.backend.get(self.queue, no_ack=no_ack)
         if message:
-            if auto_ack:
+            if auto_ack and not message.acknowledged:
                 message.ack()
             if enable_callbacks:
                 self._receive_callback(message)
@@ -704,16 +704,23 @@ class Messaging(object):
 
 
 class ConsumerSet(object):
-    """Message ConsumerSet.
+    """Receive messages from multiple consumers.
 
     :param connection: see :attr:`connection`.
     :param from_dict see :attr:`from_dict`.
     :param consumers: see :attr:`consumers`.
+    :param callbacks: see :attr:`callbacks`.
+    :param backend_cls: see :attr:`backend_cls`.
 
     .. attribute:: connection
 
         The AMQP connection. A :class:`carrot.connection.AMQPConnection`
         instance.
+
+    .. attribute:: callbacks
+
+        A list of callbacks to be called when a message is received.
+        See :class:`Consumer.register_callback`.
 
     .. attribute:: from_dict
 
@@ -739,6 +746,19 @@ class ConsumerSet(object):
     .. attribute:: consumers
 
         Add consumers from a list of :class:`Consumer` instances.
+    
+    .. attribute:: backend_cls
+
+        The messaging backend class used. Defaults to the ``pyamqplib``
+        backend.
+    
+    .. attribute:: decoder
+
+        Default decoder. See :attr:`Consumer.decoder`.
+    
+    .. attribute:: auto_ack
+
+        Default value for the :attr:`Consumer.auto_ack` attribute.
 
     """
     backend_cls = DefaultBackend
@@ -766,7 +786,7 @@ class ConsumerSet(object):
     def _receive_callback(self, raw_message):
         """Internal method used when a message is received in consume mode."""
         message = self.backend.message_to_python(raw_message)
-        if self.auto_ack:
+        if self.auto_ack and not message.acknowledged:
             message.ack()
         self.receive(message.decode(), message)
 

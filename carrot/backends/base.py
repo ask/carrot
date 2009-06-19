@@ -6,6 +6,10 @@ Backend base classes.
 from carrot.serialization import serialize, deserialize
 
 
+class MessageStateError(Exception):
+    """The message has already been acknowledged."""
+
+
 class BaseMessage(object):
     """Base class for received messages."""
     _state = None
@@ -26,6 +30,9 @@ class BaseMessage(object):
         """Acknowledge this message as being processed.,
 
         This will remove the message from the queue."""
+        if self.acknowledged:
+            raise MessageStateError(
+                "Message already acknowledged with state: %s" % self._state)
         self.backend.ack(self.delivery_tag)
         self._state = "ACK"
 
@@ -35,6 +42,9 @@ class BaseMessage(object):
         The message will be discarded by the server.
 
         """
+        if self.acknowledged:
+            raise MessageStateError(
+                "Message already acknowledged with state: %s" % self._state)
         self.backend.reject(self.delivery_tag)
         self._state = "REJECTED"
 
@@ -45,8 +55,15 @@ class BaseMessage(object):
         to process.
 
         """
+        if self.acknowledged:
+            raise MessageStateError(
+                "Message already acknowledged with state: %s" % self._state)
         self.backend.requeue(self.delivery_tag)
         self._state = "REQUEUED"
+
+    @property
+    def acknowledged(self):
+        return self._state in ["ACK", "REJECTED", "REQUEUED"]
 
 
 class BaseBackend(object):
