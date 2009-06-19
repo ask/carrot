@@ -268,7 +268,7 @@ class Consumer(object):
         message = self.backend.message_to_python(raw_message)
         if self.auto_ack:
             message.ack()
-        self.receive(message.decode(), message)
+        self.receive(message.payload, message)
 
     def fetch(self, no_ack=None, auto_ack=None, enable_callbacks=False):
         """Receive the next message waiting on the queue.
@@ -583,7 +583,7 @@ class Publisher(object):
             serializer = serializer or self.serializer
             (content_type, content_encoding, 
              message_data) = serialization.encode(message_data, 
-                                                  serializer=self.serializer)
+                                                  serializer=self.serializer)                                    
         else:
             # If the programmer doesn't want us to serialize, 
             # make sure content_encoding is set.

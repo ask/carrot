@@ -60,12 +60,13 @@ class Message(BaseMessage):
     def __init__(self, backend, amqp_message, **kwargs):
         self.amqp_message = amqp_message
         self.backend = backend
+
         kwargs.update({
             "body": amqp_message.body,
             "delivery_tag": amqp_message.delivery_tag, 
-            "content_type": amqp_message.properties.get('content_type'), 
+            "content_type": amqp_message.content_type,
             "content_encoding": 
-                            amqp_message.properties.get('content_encoding')})
+                            amqp_message.content_encoding})
 
         super(Message, self).__init__(backend, **kwargs)
 
@@ -190,7 +191,9 @@ class Backend(BaseBackend):
                         content_type=None, 
                         content_encoding=None):
         """Encapsulate data into a AMQP message."""
-        message = amqp.Message(message_data, priority=priority)
+        message = amqp.Message(message_data, priority=priority, 
+                               content_type=content_type, 
+                               content_encoding=content_encoding)
         message.properties["delivery_mode"] = delivery_mode
         return message
 
