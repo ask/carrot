@@ -37,12 +37,15 @@ class Backend(BaseBackend):
         """
         if not mqueue.qsize():
             return None
-        return Message(backend=self, body=mqueue.get(), decoder=self.decoder)
+        message_data, content_type, content_encoding = mqueue.get()
+        return Message(backend=self, body=message_data, 
+                       content_type=content_type, 
+                       content_encoding=content_encoding)
 
     def consume(self, queue, no_ack, callback, consumer_tag):
         """Go into consume mode."""
         for total_message_count in itertools.count():
-            message = mqueue.get()
+            message = self.get()
             if message:
                 callback(message.decode(), message)
                 yield True
@@ -53,9 +56,10 @@ class Backend(BaseBackend):
         """Discard all messages in the queue."""
         mqueue = Queue()
 
-    def prepare_message(self, message_data, delivery_mode, **kwargs):
+    def prepare_message(self, message_data, delivery_mode, 
+                        content_type, content_encoding, **kwargs):
         """Prepare message for sending."""
-        return message_data
+        return (message_data, content_type, content_encoding)
 
     def publish(self, message, exchange, routing_key, **kwargs):
         """Publish a message to the queue."""

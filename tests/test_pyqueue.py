@@ -46,8 +46,11 @@ class TestPyQueueBackend(unittest.TestCase):
     def test_backend(self):
         b = create_backend()
         message_body = "Vandelay Industries"
-        b.publish(b.prepare_message(message_body, "direct"), exchange="test",
-                routing_key="test")
+        b.publish(b.prepare_message(message_body, "direct", 
+                                    content_type='text/plain', 
+                                    content_encoding="ascii"), 
+                  exchange="test",
+                  routing_key="test")
         m_in_q = b.get()
         self.assertTrue(isinstance(m_in_q, PyQueueMessage))
         self.assertEquals(m_in_q.body, message_body)
