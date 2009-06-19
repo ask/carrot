@@ -583,7 +583,7 @@ class Publisher(object):
             serializer = serializer or self.serializer
             (content_type, content_encoding, 
              message_data) = serialization.encode(message_data, 
-                                                  serializer=self.serializer)                                    
+                                                  serializer=serializer)
         else:
             # If the programmer doesn't want us to serialize, 
             # make sure content_encoding is set.

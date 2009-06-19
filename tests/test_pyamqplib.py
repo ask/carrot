@@ -11,6 +11,7 @@ from carrot.connection import AMQPConnection
 from carrot.messaging import Consumer, Publisher
 from carrot.backends.pyamqplib import Backend as AMQPLibBackend
 from carrot.backends.pyamqplib import Message as AMQPLibMessage
+from carrot import serialization
 
 TEST_QUEUE = "carrot.unittest"
 TEST_EXCHANGE = "carrot.unittest"
@@ -133,11 +134,13 @@ class TestMessaging(unittest.TestCase):
         consumer.close()
 
     def test_custom_serialization_scheme(self):
-        
-        raise StandardError("Need to rewrite this test!")
-        
-        consumer = self.create_consumer(decoder=pickle.loads)
-        publisher = self.create_publisher(encoder=pickle.dumps)
+        serialization.registry.register('custom_test', 
+                pickle.dumps, pickle.loads, 
+                content_type='application/x-custom-test',
+                content_encoding='binary')
+                
+        consumer = self.create_consumer()
+        publisher = self.create_publisher()
         consumer.discard_all()
 
         data = {"string": "The quick brown fox jumps over the lazy dog",
@@ -149,9 +152,11 @@ class TestMessaging(unittest.TestCase):
                 "exception": Exception("There was an error"),
         }
 
-        publisher.send(data)
+        publisher.send(data, serializer='custom_test')
         message = fetch_next_message(consumer)
         self.assertTrue(isinstance(message, AMQPLibMessage))
+        self.assertEquals(message.content_type, 'application/x-custom-test')
+        self.assertEquals(message.content_encoding, 'binary')
 
         decoded_data = message.decode()
 
