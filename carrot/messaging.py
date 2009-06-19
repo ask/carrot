@@ -762,7 +762,7 @@ class ConsumerSet(object):
 
     """
     backend_cls = DefaultBackend
-    decoder = deserialize
+    decoder = None
     auto_ack = False
 
     def __init__(self, connection, from_dict=None, consumers=None,
@@ -773,11 +773,15 @@ class ConsumerSet(object):
         self.consumers = consumers or []
         self.callbacks = callbacks or []
 
+        if "decoder" in kwargs:
+            self.decoder = kwargs["decoder"]
+        else:
+            if not self.decoder:
+                self.decoder = deserialize
         self.backend_cls = options.get("backend_cls", self.backend_cls)
         self.backend = self.backend_cls(connection=connection,
                                         decoder=self.decoder)
 
-        self.decoder = options.get("decoder", self.decoder)
         self.auto_ack = options.get("auto_ack", self.auto_ack)
 
         [self.add_consumer_from_dict(queue_name, **queue_options)
