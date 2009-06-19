@@ -2,7 +2,7 @@
  Change history
 ================
 
-0.4.5 [2008-06-15 01:58 P.M CET] askh@opera.com
+0.4.5 [2008-06-15 01:58 P.M CET] 
 ------------------------------------------------------------------
 
 **BACKWARD-INCOMPATIBLE CHANGES**
@@ -17,17 +17,17 @@
 	* No_ack was always set to ``True`` when using ``Consumer.iterconsume``.
 
 
-0.4.4 [2008-06-15 01:58 P.M CET] askh@opera.com
+0.4.4 [2008-06-15 01:58 P.M CET] 
 ------------------------------------------------------------------
 
 	* __init__.pyc was included in the distribution by error.
 
-0.4.3 [2008-06-13 09:26 P.M CET] askh@opera.com
+0.4.3 [2008-06-13 09:26 P.M CET] 
 ------------------------------------------------------------------
 
 	* Fix typo with long_description in ``setup.py``.
 
-0.4.2 [2008-06-13 08:30 P.M CET] askh@opera.com
+0.4.2 [2008-06-13 08:30 P.M CET] 
 ------------------------------------------------------------------
 
 	* Make sure README exists before reading it for ``long_description``.
@@ -36,13 +36,13 @@
 	* ``discard_all``: Use ``AMQP.queue_purge`` if ``filterfunc`` is not
 		specified
 
-0.4.1 [2008-06-08 04:21 P.M CET] askh@opera.com
+0.4.1 [2008-06-08 04:21 P.M CET] 
 ------------------------------------------------------------------
 
 * Consumer/Publisher now correctly sets the encoder/decoder if they
 	have been overriden by setting the class attribute.
 
-0.4.0 [2008-06-06 01:39 P.M CET] askh@opera.com
+0.4.0 [2008-06-06 01:39 P.M CET] 
 ------------------------------------------------------------------
 
 **IMPORTANT** Please don't use ``Consumer.wait`` in production. Use either
@@ -90,14 +90,14 @@ if used.
 
 	* Loads of new unit tests.
 
-0.4.0-pre7 [2009-06-03 05:08 P.M CET] askh@opera.com
+0.4.0-pre7 [2009-06-03 05:08 P.M CET] 
 ------------------------------------------------------------------
 
 	* Conform to pep8.py trying to raise our pypants score.
 
 	* Documentation cleanup (thanks Rune Halvorsen)
 
-0.4.0-pre6 [2009-06-03 04:55 P.M CET] askh@opera.com
+0.4.0-pre6 [2009-06-03 04:55 P.M CET] 
 ------------------------------------------------------------------
 
 	* exclusive implies auto_delete, not durable. Closes #2.
@@ -113,7 +113,7 @@ if used.
 		so this can be useful if you've recently changed the
 		`routing_key` attribute or other settings.
 
-0.4.0-pre3 [2009-05-29 02:27 P.M CET] askh@opera.com
+0.4.0-pre3 [2009-05-29 02:27 P.M CET] 
 ------------------------------------------------------------------
 
 	* Publisher.send: Now supports message priorities (a number between ``0``
@@ -124,14 +124,14 @@ if used.
 
 	* Publisher.send: Support for the ``immediate`` and ``mandatory`` flags.
 
-0.4.0-pre2 [2009-05-29 02:27 P.M CET] askh@opera.com
+0.4.0-pre2 [2009-05-29 02:27 P.M CET] 
 ------------------------------------------------------------------
 
 	* AMQPConnection: Added ``connect_timeout`` timeout option, which is
 		the timeout in seconds before we exhaust trying to establish a
 		connection to the AMQP server.
 
-0.4.0-pre1 [2009-05-27 04:27 P.M CET] askh@opera.com
+0.4.0-pre1 [2009-05-27 04:27 P.M CET] 
 ------------------------------------------------------------------
 
 	* This version introduces backends. The consumers and publishers
@@ -159,12 +159,12 @@ if used.
 
 	* carrot now uses the Sphinx documentation system.
 
-0.3.9 [2009-05-18 04:49 P.M CET] askh@opera.com
+0.3.9 [2009-05-18 04:49 P.M CET] 
 --------------------------------------------------------------
 
 	* Consumer.wait() now works properly again. Thanks Alexander Solovyov!
 
-0.3.8 [2009-05-11 02:14 P.M CET] askh@opera.com
+0.3.8 [2009-05-11 02:14 P.M CET] 
 --------------------------------------------------------------
 
 	* Rearranged json module import order.
@@ -184,17 +184,17 @@ if used.
 	publisher/consumer.
 
 
-0.2.1 [2009-03-24 05:48 P.M CET] askh@opera.com
+0.2.1 [2009-03-24 05:48 P.M CET] 
 --------------------------------------------------------------
 
 * Fix typo "package" -> "packages" in setup.py
 
-0.2.0 [2009-03-24 05:23 P.M ]` askh@opera.com
+0.2.0 [2009-03-24 05:23 P.M ]` 
 --------------------------------------------------------------
 
 * hasty bugfix release, fixed syntax errors.
 
-0.1.0 [2009-03-24 05:16 P.M ]` askh@opera.com
+0.1.0 [2009-03-24 05:16 P.M ]` 
 --------------------------------------------------------------
 
 * Initial release
