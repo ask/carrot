@@ -336,7 +336,7 @@ processed with all registered callbacks. Default is disabled.</li>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.iterconsume">
-<tt class="descname">iterconsume</tt><big>(</big><em>limit=None</em>, <em>no_ack=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.iterconsume" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">iterconsume</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.iterconsume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterator processing new messages as they arrive.
 Every new message will be passed to the callbacks, and the iterator
 returns <tt class="xref docutils literal"><span class="pre">True</span></tt>. The iterator is infinite unless the <tt class="docutils literal"><span class="pre">limit</span></tt>
@@ -459,6 +459,126 @@ want <a title="carrot.messaging.Consumer.iterconsume" class="reference internal"
 using <a title="carrot.messaging.Consumer.receive" class="reference internal" href="#carrot.messaging.Consumer.receive"><tt class="xref docutils literal"><span class="pre">receive()</span></tt></a> to apply the message to all registered
 callbacks.</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="carrot.messaging.ConsumerSet">
+<em class="property">
+class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">ConsumerSet</tt><big>(</big><em>connection</em>, <em>from_dict=None</em>, <em>consumers=None</em>, <em>callbacks=None</em>, <em>**options</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive messages from multiple consumers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>connection</em> &#8211; see <a title="carrot.messaging.ConsumerSet.connection" class="reference internal" href="#carrot.messaging.ConsumerSet.connection"><tt class="xref docutils literal"><span class="pre">connection</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+<p>:param from_dict see <a title="carrot.messaging.ConsumerSet.from_dict" class="reference internal" href="#carrot.messaging.ConsumerSet.from_dict"><tt class="xref docutils literal"><span class="pre">from_dict</span></tt></a>.
+:param consumers: see <a title="carrot.messaging.ConsumerSet.consumers" class="reference internal" href="#carrot.messaging.ConsumerSet.consumers"><tt class="xref docutils literal"><span class="pre">consumers</span></tt></a>.
+:param callbacks: see <a title="carrot.messaging.ConsumerSet.callbacks" class="reference internal" href="#carrot.messaging.ConsumerSet.callbacks"><tt class="xref docutils literal"><span class="pre">callbacks</span></tt></a>.
+:param backend_cls: see <a title="carrot.messaging.ConsumerSet.backend_cls" class="reference internal" href="#carrot.messaging.ConsumerSet.backend_cls"><tt class="xref docutils literal"><span class="pre">backend_cls</span></tt></a>.</p>
+<dl class="attribute">
+<dt id="carrot.messaging.ConsumerSet.connection">
+<tt class="descname">connection</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.connection" title="Permalink to this definition">¶</a></dt>
+<dd>The AMQP connection. A <a title="carrot.connection.AMQPConnection" class="reference external" href="carrot.connection.html#carrot.connection.AMQPConnection"><tt class="xref docutils literal"><span class="pre">carrot.connection.AMQPConnection</span></tt></a>
+instance.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.ConsumerSet.callbacks">
+<tt class="descname">callbacks</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.callbacks" title="Permalink to this definition">¶</a></dt>
+<dd>A list of callbacks to be called when a message is received.
+See <a title="carrot.messaging.Consumer.register_callback" class="reference internal" href="#carrot.messaging.Consumer.register_callback"><tt class="xref docutils literal"><span class="pre">Consumer.register_callback</span></tt></a>.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.ConsumerSet.from_dict">
+<tt class="descname">from_dict</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add consumers from a dictionary configuration:</p>
+<div class="highlight-python"><pre>{
+    "webshot": {
+                "exchange": "link_exchange",
+                "exchange_type": "topic",
+                "binding_key": "links.webshot",
+                "default_routing_key": "links.webshot",
+        },
+        "retrieve": {
+                "exchange": "link_exchange",
+                "exchange_type" = "topic",
+                "binding_key": "links.*",
+                "default_routing_key": "links.retrieve",
+                "auto_delete": True,
+                # ...
+        },
+}</pre>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.ConsumerSet.consumers">
+<tt class="descname">consumers</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.consumers" title="Permalink to this definition">¶</a></dt>
+<dd>Add consumers from a list of <a title="carrot.messaging.Consumer" class="reference internal" href="#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">Consumer</span></tt></a> instances.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.ConsumerSet.backend_cls">
+<tt class="descname">backend_cls</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.backend_cls" title="Permalink to this definition">¶</a></dt>
+<dd>The messaging backend class used. Defaults to the <tt class="docutils literal"><span class="pre">pyamqplib</span></tt>
+backend.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.ConsumerSet.decoder">
+<tt class="descname">decoder</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.decoder" title="Permalink to this definition">¶</a></dt>
+<dd>Default decoder. See <a title="carrot.messaging.Consumer.decoder" class="reference internal" href="#carrot.messaging.Consumer.decoder"><tt class="xref docutils literal"><span class="pre">Consumer.decoder</span></tt></a>.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.messaging.ConsumerSet.auto_ack">
+<tt class="descname">auto_ack</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.auto_ack" title="Permalink to this definition">¶</a></dt>
+<dd>Default value for the <a title="carrot.messaging.Consumer.auto_ack" class="reference internal" href="#carrot.messaging.Consumer.auto_ack"><tt class="xref docutils literal"><span class="pre">Consumer.auto_ack</span></tt></a> attribute.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.ConsumerSet.add_consumer">
+<tt class="descname">add_consumer</tt><big>(</big><em>consumer</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.add_consumer" title="Permalink to this definition">¶</a></dt>
+<dd>Add another consumer from a <a title="carrot.messaging.Consumer" class="reference internal" href="#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">Consumer</span></tt></a> instance.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.ConsumerSet.add_consumer_from_dict">
+<tt class="descname">add_consumer_from_dict</tt><big>(</big><em>queue</em>, <em>**options</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.add_consumer_from_dict" title="Permalink to this definition">¶</a></dt>
+<dd>Add another consumer from dictionary configuration.</dd></dl>
+
+<dl class="attribute">
+<dt>
+<tt class="descname">backend_cls</tt></dt>
+<dd>alias of <tt class="xref docutils literal"><span class="pre">Backend</span></tt></dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.ConsumerSet.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.close" title="Permalink to this definition">¶</a></dt>
+<dd>Close all consumers.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.ConsumerSet.discard_all">
+<tt class="descname">discard_all</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.discard_all" title="Permalink to this definition">¶</a></dt>
+<dd>Discard all messages. Does not support filtering.
+See <a title="carrot.messaging.Consumer.discard_all" class="reference internal" href="#carrot.messaging.Consumer.discard_all"><tt class="xref docutils literal"><span class="pre">Consumer.discard_all()</span></tt></a>.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.ConsumerSet.iterconsume">
+<tt class="descname">iterconsume</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.iterconsume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cycle between all consumers in consume mode.</p>
+<p>See <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">Consumer.iterconsume()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.ConsumerSet.receive">
+<tt class="descname">receive</tt><big>(</big><em>message_data</em>, <em>message</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.receive" title="Permalink to this definition">¶</a></dt>
+<dd>What to do when a message is received.
+See <a title="carrot.messaging.Consumer.receive" class="reference internal" href="#carrot.messaging.Consumer.receive"><tt class="xref docutils literal"><span class="pre">Consumer.receive()</span></tt></a>.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.ConsumerSet.register_callback">
+<tt class="descname">register_callback</tt><big>(</big><em>callback</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.register_callback" title="Permalink to this definition">¶</a></dt>
+<dd>Register new callback to be called when a message is received.
+See <a title="carrot.messaging.Consumer.register_callback" class="reference internal" href="#carrot.messaging.Consumer.register_callback"><tt class="xref docutils literal"><span class="pre">Consumer.register_callback()</span></tt></a></dd></dl>
 
 </dd></dl>
 

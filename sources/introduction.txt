@@ -246,7 +246,7 @@ can define the above publisher and consumer like so:
     ...     exchange = "feed"
     ...     routing_key = "importer"
     ...
-    ...     def feed_import(feed_url):
+    ...     def import_feed(self, feed_url):
     ...         return self.send({"action": "import_feed",
     ...                           "feed_url": feed_url})
 

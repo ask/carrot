@@ -154,8 +154,18 @@ class </em><tt class="descclassname">carrot.backends.base.</tt><tt class="descna
 <dl class="method">
 <dt id="carrot.backends.base.BaseMessage.ack">
 <tt class="descname">ack</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseMessage.ack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Acknowledge this message as being processed.,</p>
-<p>This will remove the message from the queue.</p>
+<dd><p>Acknowledge this message as being processed.,
+This will remove the message from the queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">Raises <a title="carrot.backends.base.MessageStateError" class="reference internal" href="#carrot.backends.base.MessageStateError">MessageStateError</a>:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">If the message has already been
+acknowledged/requeued/rejected.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -169,6 +179,16 @@ python structure sent by the publisher.</dd></dl>
 <tt class="descname">reject</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseMessage.reject" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reject this message.</p>
 <p>The message will be discarded by the server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">Raises <a title="carrot.backends.base.MessageStateError" class="reference internal" href="#carrot.backends.base.MessageStateError">MessageStateError</a>:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">If the message has already been
+acknowledged/requeued/rejected.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -177,9 +197,25 @@ python structure sent by the publisher.</dd></dl>
 <dd><p>Reject this message and put it back on the queue.</p>
 <p>You must not use this method as a means of selecting messages
 to process.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">Raises <a title="carrot.backends.base.MessageStateError" class="reference internal" href="#carrot.backends.base.MessageStateError">MessageStateError</a>:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">If the message has already been
+acknowledged/requeued/rejected.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
+
+<dl class="exception">
+<dt id="carrot.backends.base.MessageStateError">
+<em class="property">
+exception </em><tt class="descclassname">carrot.backends.base.</tt><tt class="descname">MessageStateError</tt><a class="headerlink" href="#carrot.backends.base.MessageStateError" title="Permalink to this definition">¶</a></dt>
+<dd>The message has already been acknowledged.</dd></dl>
 
 </div>
 

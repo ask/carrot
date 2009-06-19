@@ -277,7 +277,7 @@ can define the above publisher and consumer like so:</p>
 <span class="gp">... </span>    <span class="n">exchange</span> <span class="o">=</span> <span class="s">&quot;feed&quot;</span>
 <span class="gp">... </span>    <span class="n">routing_key</span> <span class="o">=</span> <span class="s">&quot;importer&quot;</span>
 <span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">feed_import</span><span class="p">(</span><span class="n">feed_url</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">import_feed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feed_url</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s">&quot;action&quot;</span><span class="p">:</span> <span class="s">&quot;import_feed&quot;</span><span class="p">,</span>
 <span class="gp">... </span>                          <span class="s">&quot;feed_url&quot;</span><span class="p">:</span> <span class="n">feed_url</span><span class="p">})</span>
 </pre></div>
