@@ -1,26 +1,43 @@
 """
+Centralized support for encoding/decoding of data structures. 
+Requires a json library (`cjson`_, `simplejson`_, or `Python 2.6+`_). 
 
-Support for encoding/decoding.  Requires a json library. 
-Optionally installs support for HessianPy and YAML.
+Optionally installs support for ``Hessian 1.0`` and ``YAML`` if the necessary
+libraries are installed (`HessianPy`_ and `PyYAML`_, respectively).
 
-.. function:: serialize(obj)
+.. _`cjson`: http://pypi.python.org/pypi/python-cjson/
+.. _`simplejson`: http://code.google.com/p/simplejson/
+.. _`Python 2.6+`: http://docs.python.org/library/json.html
+.. _`HessianPy`: http://hessianpy.sourceforge.net/
+.. _`PyYAML`: http://pyyaml.org/
 
-    Serialize the object to JSON.
+.. attribute:: registry
 
-.. function:: deserialize(obj)
+    A default instance of ``SerializerRegistry``
 
-    Deserialize JSON-encoded object to a Python object.
+.. method:: encode
+
+    The :attr:`SerializerRegistry.encode` method of the default
+    :attr:`registry`.
+
+.. method:: decode
+
+    The :attr:`SerializerRegistry.decode` method of the default 
+    :attr:`registry`.
 
 """
 
 import codecs
 from cStringIO import StringIO
 
-class DecoderNotInstalled(StandardError):
+__all__ = ['SerializerNotInstalled', 'registry']
+
+class SerializerNotInstalled(StandardError):
     """Support for the requested serialization type is not installed"""
     
 
 class SerializerRegistry(object):
+    """The registry keeps track of serialization methods."""
     
     def __new__(type):
         """
@@ -39,7 +56,14 @@ class SerializerRegistry(object):
         
     def register(self, name, encoder, decoder, content_type, 
                  content_encoding='utf-8'):
+        """
+        Register a new encoder/decoder. 
+        
+        Receive a message from a declared queue by name.
 
+
+
+        """
         if encoder: 
             self._encoders[name] = (content_type, content_encoding, encoder)
         if decoder:
@@ -50,31 +74,56 @@ class SerializerRegistry(object):
             (self._default_content_type, self._default_content_encoding, 
              self._default_encode) = self._encoders[name]
         except KeyError: 
-            raise DecoderNotInstalled(
-                "No decoder installed for %s" % name)
+            raise SerializerNotInstalled(
+                "No encoder installed for %s" % name)
 
-    def encode(self, message, serializer=None):
+    def encode(self, data, serializer=None):
+        """
+        Serialize a data structure into a string suitable for sending
+        as an AMQP message body. 
+        
+        :param data: The message data to send. Can be a list,
+            dictionary or a string.
 
+        :keyword serializer: An optional string representing
+            the serialization method you want the data marshalled 
+            into. (For example, ``json``, ``raw``, or ``pickle``).
+            
+            If ``None`` (default), then the serialization method
+            set by ``set_default_serializer`` will be used, unless 
+            ``data`` is a ``str`` or ``unicode`` object. In this 
+            latter case, no serialization occurs as it would be 
+            unnecessary.
+            
+            Note that if ``serializer`` is specified, then that
+            serialization method will be used even if a ``str``
+            or ``unicode`` object is passed in.
+        
+        :returns: A three-item tuple containing the content type 
+            (e.g., ``application/json``), content encoding, (e.g., 
+            ``utf-8``) and a string containing the serialized
+            data.
+        """
         # If a raw string was sent, assume binary encoding 
         # (it's likely either ASCII or a raw binary file, but 'binary' 
         # charset will encompass both, even if not ideal.
-        if isinstance(message, str) and not serializer:
+        if isinstance(data, str) and not serializer:
             # In Python 3+, this would be "bytes"; allow binary data to be 
             # sent as a message without getting encoder errors
             content_type = 'application/data'
             content_encoding = 'binary'
-            payload = message
+            payload = data
 
         # For unicode objects, force it into a string
-        elif isinstance(message, unicode) and not serializer: 
+        elif isinstance(data, unicode) and not serializer: 
             content_type = 'text/plain'
             content_encoding = 'utf-8'
-            payload = message.encode(content_encoding)
+            payload = data.encode(content_encoding)
 
         # Special case serializer
         elif serializer == 'raw': 
             content_type = 'application/data'
-            payload = message
+            payload = data
             if isinstance(payload, unicode): 
                 content_encoding = 'utf-8'
                 payload = payload.encode(content_encoding)
@@ -83,36 +132,58 @@ class SerializerRegistry(object):
                 
         else:
             if serializer: 
-                (content_type, content_encoding, 
-                 encoder) = self._encoders[serializer]
+                try:
+                    (content_type, content_encoding, 
+                     encoder) = self._encoders[serializer]
+                except KeyError: 
+                    raise SerializerNotInstalled(
+                        "No encoder installed for %s" % serializer)
             else:
                 encoder = self._default_encode
                 content_type = self._default_content_type
                 content_encoding = self._default_content_encoding
-            payload = encoder(message)
+            payload = encoder(data)
 
         return (content_type, content_encoding, payload)
 
-    def decode(self, message, content_type, content_encoding):
+    def decode(self, data, content_type, content_encoding):
+        """
+        Deserialize a data stream as serialized using ``encode`` 
+        based on :param:`content_type`. 
+        
+        :param data: The message data to deserialize. 
+
+        :param content_type: The content-type of the data.
+            (e.g., ``application/json``).
+            
+        :param content_encoding: The content-encoding of the data.
+            (e.g., ``utf-8``, ``binary``, or ``ascii``).
+
+        :returns: The unserialized data. 
+        
+        """
         content_type = content_type or 'application/data'
         content_encoding = (content_encoding or 'utf-8').lower()
 
         # Don't decode 8-bit strings
         if content_encoding not in ('binary','ascii-8bit'):
-            message = codecs.decode(message, content_encoding)
+            data = codecs.decode(data, content_encoding)
 
         try:
             decoder = self._decoders[content_type]
         except KeyError: 
-            return message
+            return data
             
-        return decoder(message)
+        return decoder(data)
 
 
 registry = SerializerRegistry()
-
+encode = registry.encode
+decode = registry.decode
 
 def register_json():
+    """Register a encoder/decoder for JSON serialization."""
+    
     # Try to import a module that provides json parsing and emitting, starting
     # with the fastest alternative and falling back to the slower ones.
     try:
@@ -146,49 +217,70 @@ def register_json():
 
 
 # def register_hessian():
-#     from hessian import hessian
+#     """Register a encoder/decoder for HessianPy-based serialization"""
+# 
+#     try:
+#         from hessian import hessian
 #     
-#     def h_encode(body):
-#         sio = StringIO()
-#         hessian.Reply().write(
-#                       hessian.WriteContext(sio),
-#                       ({}, '', body))
-#         return sio.getvalue()
+#         def h_encode(body):
+#             sio = StringIO()
+#             hessian.Reply().write(
+#                           hessian.WriteContext(sio),
+#                           ({}, '', body))
+#             return sio.getvalue()
 #         
-#     def h_decode(body):
-#         payload = StringIO(body)
-#         ctx = hessian.ParseContext(payload)
-#         (method, headers, params) = hessian.Call().read(ctx, ctx.read(1))
-#         print (method, headers, params)
-#         return params
+#         def h_decode(body):
+#             payload = StringIO(body)
+#             ctx = hessian.ParseContext(payload)
+#             (method, headers, params) = hessian.Call().read(ctx, ctx.read(1))
+#             print (method, headers, params)
+#             return params
 # 
-#     registry.register('hessian', h_encode, h_decode, 
-#                       content_type='application/x-hessian', 
-#                       content_encoding='binary')
-# 
+#         registry.register('hessian', h_encode, h_decode, 
+#                           content_type='application/x-hessian', 
+#                           content_encoding='binary')
+#     except ImportError: 
+#         def not_available(*args, **kwargs):
+#             raise SerializerNotInstalled(
+#                 "No decoder installed for Hessian. "
+#                 "Install the HessianPy library")
+#         registry.register('hessian', None, not_available, 
+#                           'application/x-hessian')
+
 
 def register_yaml():
-    import yaml
-    registry.register('yaml', yaml.safe_dump, yaml.safe_load, 
-                      content_type='application/x-yaml', 
-                      content_encoding='utf-8')
+    """Register a encoder/decoder for YAML serialization.
+    It is slower than JSON, but allows for more data types
+    to be serialized. Useful if you need to send data such as
+    dates"""
+    try:
+        import yaml
+        registry.register('yaml', yaml.safe_dump, yaml.safe_load, 
+                          content_type='application/x-yaml', 
+                          content_encoding='utf-8')
+    except ImportError:
+        def not_available(*args, **kwargs):
+            raise SerializerNotInstalled(
+                "No decoder installed for YAML. Install the PyYAML library")
+        registry.register('yaml', None, not_available, 'application/x-yaml')
+
 
 def register_pickle():
+    """The fastest serialization method, but restricts 
+    you to python clients."""
     import cPickle
     registry.register('pickle', cPickle.dumps, cPickle.loads, 
                       content_type='application/x-python-serialize', 
                       content_encoding='binary')
 
 
-# For backwards compatability
+# Register the base serialization methods.
 register_json()
+register_pickle()
+register_yaml()
+#register_hessian()
+
+# JSON is assumed to always be available, so is the default.
+# (this matches the historical use of carrot.)
 registry.set_default_serializer('json')
-
-# Register optional encoders, if possible
-for optional in (register_yaml, register_pickle): #register_hessian): 
-    try:
-        optional()
-    except ImportError: 
-        pass
-
 

@@ -4,20 +4,15 @@ Backend base classes.
 
 """
 from functools import update_wrapper 
-from carrot.serialization import registry as serializers
+from carrot import serialization
 
 
-def cached_property (func ,name =None ):
+def cached_property (func, name = None):
     """cached_property(func, name=None) -> a descriptor
     This decorator implements an object's property which is computed
     the first time it is accessed, and which value is then stored in
     the object's __dict__ for later use. If the attribute is deleted,
     the value will be recomputed the next time it is accessed.
-      Usage:
-        class X(object):
-          @cached_property
-          def foo(self):
-            return computation()
     """
     if name is None :
       name =func .__name__ 
@@ -54,7 +49,7 @@ class BaseMessage(object):
     def decode(self):
         """Deserialize the message body, returning the original
         python structure sent by the publisher."""
-        return serializers.decode(self.body, self.content_type, 
+        return serialization.decode(self.body, self.content_type, 
                                   self.content_encoding)
                                   
     @cached_property
