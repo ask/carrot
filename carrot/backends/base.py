@@ -28,8 +28,12 @@ class BaseMessage(object):
 
     def ack(self):
         """Acknowledge this message as being processed.,
+        This will remove the message from the queue.
 
-        This will remove the message from the queue."""
+        :raises MessageStateError: If the message has already been
+            acknowledged/requeued/rejected.
+
+        """
         if self.acknowledged:
             raise MessageStateError(
                 "Message already acknowledged with state: %s" % self._state)
@@ -40,6 +44,9 @@ class BaseMessage(object):
         """Reject this message.
 
         The message will be discarded by the server.
+
+        :raises MessageStateError: If the message has already been
+            acknowledged/requeued/rejected.
 
         """
         if self.acknowledged:
@@ -53,6 +60,9 @@ class BaseMessage(object):
 
         You must not use this method as a means of selecting messages
         to process.
+
+        :raises MessageStateError: If the message has already been
+            acknowledged/requeued/rejected.
 
         """
         if self.acknowledged:

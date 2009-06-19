@@ -746,16 +746,16 @@ class ConsumerSet(object):
     .. attribute:: consumers
 
         Add consumers from a list of :class:`Consumer` instances.
-    
+
     .. attribute:: backend_cls
 
         The messaging backend class used. Defaults to the ``pyamqplib``
         backend.
-    
+
     .. attribute:: decoder
 
         Default decoder. See :attr:`Consumer.decoder`.
-    
+
     .. attribute:: auto_ack
 
         Default value for the :attr:`Consumer.auto_ack` attribute.
