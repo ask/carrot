@@ -96,11 +96,6 @@ class TestExamples(unittest.TestCase):
         self.assertEquals(publisher.exchange, README_EXCHANGE)
         self.assertEquals(publisher.routing_key, README_ROUTING_KEY)
 
-        # Test encode/decode
-        struct_ = {"foo": "bar", "baz": 1, u"2": 1.21, "xuzzy": u"larry"}
-        self.assertEquals(self.consumer.decoder(publisher.encoder(struct_)),
-                struct_, "consumer.decoder(publisher.encoder(...))")
-
     def test_README_together(self):
         consumer = self.consumer
         tcallbacks = self.tcallbacks
@@ -115,7 +110,6 @@ class TestExamples(unittest.TestCase):
         self.assertEquals(tcallbacks.last_feed, feed_url)
         self.assertTrue(tcallbacks.last_delivery_tag)
         self.assertEquals(tcallbacks.last_status, "ACK")
-        self.assertEquals(tcallbacks.last_body, publisher.encoder(body))
 
         publisher = create_README_publisher(self.conn)
         body = {"foo": "FOO"}
@@ -126,7 +120,6 @@ class TestExamples(unittest.TestCase):
         self.assertFalse(tcallbacks.last_feed)
         self.assertTrue(tcallbacks.last_delivery_tag)
         self.assertEquals(tcallbacks.last_status, "REJECT")
-        self.assertEquals(tcallbacks.last_body, publisher.encoder(body))
 
     def test_subclassing(self):
         from carrot.messaging import Consumer, Publisher
