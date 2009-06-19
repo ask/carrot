@@ -773,8 +773,8 @@ class ConsumerSet(object):
         self.consumers = consumers or []
         self.callbacks = callbacks or []
 
-        if "decoder" in kwargs:
-            self.decoder = kwargs["decoder"]
+        if "decoder" in options:
+            self.decoder = options["decoder"]
         else:
             if not self.decoder:
                 self.decoder = deserialize
