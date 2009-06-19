@@ -3,10 +3,6 @@
 Support for encoding/decoding.  Requires a json library. 
 Optionally installs support for HessianPy and YAML.
 
-"""
-
-"""
-
 .. function:: serialize(obj)
 
     Serialize the object to JSON.
@@ -18,6 +14,7 @@ Optionally installs support for HessianPy and YAML.
 """
 
 import codecs
+from cStringIO import StringIO
 
 class DecoderNotInstalled(StandardError):
     """Support for the requested serialization type is not installed"""
@@ -42,7 +39,7 @@ class SerializerRegistry(object):
         
     def register(self, name, encoder, decoder, content_type, 
                  content_encoding='utf-8'):
-                 
+
         if encoder: 
             self._encoders[name] = (content_type, content_encoding, encoder)
         if decoder:
@@ -67,11 +64,14 @@ class SerializerRegistry(object):
             content_type = 'application/data'
             content_encoding = 'binary'
             payload = message
-        # For unicode objects, force it into 
+
+        # For unicode objects, force it into a string
         elif isinstance(message, unicode) and not serializer: 
             content_type = 'text/plain'
             content_encoding = 'utf-8'
             payload = message.encode(content_encoding)
+
+        # Special case serializer
         elif serializer == 'raw': 
             content_type = 'application/data'
             payload = message
@@ -80,6 +80,7 @@ class SerializerRegistry(object):
                 payload = payload.encode(content_encoding)
             else:
                 content_encoding = 'binary'
+                
         else:
             if serializer: 
                 (content_type, content_encoding, 
@@ -144,24 +145,27 @@ def register_json():
                       content_encoding='utf-8')
 
 
-def register_hessian():
-    from hessian.hessian import (writeObject as hessian_write, 
-                                 readObject as hessian_read)
-    def h_encode(body):
-        payload_s = StringIO()
-        hessian_write(payload_s, message)
-        payload = payload_s.getvalue()
-        return payload
-        
-    def h_decode(body):
-        payload = StringIO(body)
-        decoded = hessian_read(payload)
-        return decoded
-
-    registry.register('hessian', h_encode, h_decode, 
-                      content_type='application/x-hessian', 
-                      content_encoding='binary')
-
+# def register_hessian():
+#     from hessian import hessian
+#     
+#     def h_encode(body):
+#         sio = StringIO()
+#         hessian.Reply().write(
+#                       hessian.WriteContext(sio),
+#                       ({}, '', body))
+#         return sio.getvalue()
+#         
+#     def h_decode(body):
+#         payload = StringIO(body)
+#         ctx = hessian.ParseContext(payload)
+#         (method, headers, params) = hessian.Call().read(ctx, ctx.read(1))
+#         print (method, headers, params)
+#         return params
+# 
+#     registry.register('hessian', h_encode, h_decode, 
+#                       content_type='application/x-hessian', 
+#                       content_encoding='binary')
+# 
 
 def register_yaml():
     import yaml
@@ -176,15 +180,12 @@ def register_pickle():
                       content_encoding='binary')
 
 
-# Basic support
-register_pickle()
-
 # For backwards compatability
 register_json()
 registry.set_default_serializer('json')
 
 # Register optional encoders, if possible
-for optional in (register_hessian, register_yaml): 
+for optional in (register_yaml, register_pickle): #register_hessian): 
     try:
         optional()
     except ImportError: 

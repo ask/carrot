@@ -214,7 +214,7 @@ support more complex data types. Note that the ``pickle`` method
 would limit you to a python-only environment as it is not cross-language. 
 
 .. _`JSON`: http://www.json.org/
-.. _`Hessian`: http://www.caucho.com/resin-3.0/protocols/hessian.xtp
+.. _`Hessian`: http://hessian.caucho.com/
 .. _`YAML`: http://yaml.org/
 
 
