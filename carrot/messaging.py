@@ -774,6 +774,7 @@ class ConsumerSet(object):
         self.from_dict = from_dict or {}
         self.consumers = consumers or []
         self.callbacks = callbacks or []
+        self._open_channels = []
 
         if "decoder" in options:
             self.decoder = options["decoder"]
@@ -828,6 +829,7 @@ class ConsumerSet(object):
                                       nowait=nowait,
                                       callback=callback,
                                       consumer_tag=consumer.consumer_tag)
+        self._open_channels.append(consumer.consumer_tag)
 
     def iterconsume(self, limit=None):
         """Cycle between all consumers in consume mode.
@@ -848,7 +850,16 @@ class ConsumerSet(object):
         return sum([consumer.discard_all()
                         for consumer in self.consumers])
 
+    def cancel(self):
+        for consumer_tag in self._open_channels:
+            try:
+                self.backend.cancel(consumer_tag)
+            except KeyError:
+                pass
+        self._open_channels = []
+
     def close(self):
         """Close all consumers."""
+        self.cancel()
         for consumer in self.consumers:
             consumer.close()

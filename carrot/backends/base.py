@@ -106,8 +106,7 @@ class BaseBackend(object):
         pass
 
     def consume(self, *args, **kwargs):
-        """Start a consumer and return a iterator that can iterate over new
-        messages."""
+        """Iterate over the declared consumers."""
         pass
 
     def cancel(self, *args, **kwargs):
