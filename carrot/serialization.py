@@ -28,24 +28,23 @@ libraries are installed (`HessianPy`_ and `PyYAML`_, respectively).
 """
 
 import codecs
-from cStringIO import StringIO
 
 __all__ = ['SerializerNotInstalled', 'registry']
 
 class SerializerNotInstalled(StandardError):
     """Support for the requested serialization type is not installed"""
-    
+
 
 class SerializerRegistry(object):
     """The registry keeps track of serialization methods."""
     
-    def __new__(type):
+    def __new__(cls):
         """
         Make the registry a singleton.
         """
-        if not '_sr_instance' in type.__dict__:
-            type._sr_instance = object.__new__(type)
-        return type._sr_instance
+        if not '_sr_instance' in cls.__dict__:
+            cls._sr_instance = object.__new__(cls)
+        return cls._sr_instance
 
     def __init__(self):
         self._encoders = {}
@@ -53,15 +52,30 @@ class SerializerRegistry(object):
         self._default_encode = None
         self._default_content_type = None
         self._default_content_encoding = None
-        
+
     def register(self, name, encoder, decoder, content_type, 
                  content_encoding='utf-8'):
         """
         Register a new encoder/decoder. 
         
-        Receive a message from a declared queue by name.
-
-
+        :param name: A convenience name for the serialization method. 
+        
+        :param encoder: A method that will be passed a python data structure
+            and should return a string representing the serialized data. 
+            If ``None``, then only a decoder will be registered. Encoding
+            will not be possible.
+            
+        :param decoder: A method that will be passed a string representing
+            serialized data and should return a python data structure. 
+            If ``None``, then only an encoder will be registered. 
+            Decoding will not be possible. 
+            
+        :param content_type: The mime-type describing the serialized
+            structure. 
+            
+        :param content_encoding: The content encoding (character set) that
+            the :param:`decoder` method will be returning. Will usually be
+            ``utf-8``, ``us-ascii``, or ``binary``. 
 
         """
         if encoder: 
@@ -70,6 +84,16 @@ class SerializerRegistry(object):
             self._decoders[content_type] = decoder
 
     def set_default_serializer(self, name):
+        """
+        Set the default serialization method used by this library.
+         
+        :param name: The name of the registered serialization method. 
+            For example, ``json`` (default), ``pickle``, ``yaml``, 
+            or any custom methods registered using :meth:`register`.
+ 
+        :raises SerializerNotInstalled: If the serialization method
+            requested is not available.
+        """
         try:
             (self._default_content_type, self._default_content_encoding, 
              self._default_encode) = self._encoders[name]
@@ -103,6 +127,9 @@ class SerializerRegistry(object):
             (e.g., ``application/json``), content encoding, (e.g., 
             ``utf-8``) and a string containing the serialized
             data.
+
+        :raises SerializerNotInstalled: If the serialization method
+              requested is not available. 
         """
         # If a raw string was sent, assume binary encoding 
         # (it's likely either ASCII or a raw binary file, but 'binary' 
@@ -157,10 +184,9 @@ class SerializerRegistry(object):
             (e.g., ``application/json``).
             
         :param content_encoding: The content-encoding of the data.
-            (e.g., ``utf-8``, ``binary``, or ``ascii``).
+            (e.g., ``utf-8``, ``binary``, or ``us-ascii``).
 
         :returns: The unserialized data. 
-        
         """
         content_type = content_type or 'application/data'
         content_encoding = (content_encoding or 'utf-8').lower()
@@ -260,6 +286,10 @@ def register_yaml():
                           content_encoding='utf-8')
     except ImportError:
         def not_available(*args, **kwargs):
+            """
+            In case a client receives a yaml message, but yaml 
+            isn't installed.
+            """
             raise SerializerNotInstalled(
                 "No decoder installed for YAML. Install the PyYAML library")
         registry.register('yaml', None, not_available, 'application/x-yaml')
