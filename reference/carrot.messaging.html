@@ -275,6 +275,11 @@ connection.</td>
 <dd>alias of <tt class="xref docutils literal"><span class="pre">Backend</span></tt></dd></dl>
 
 <dl class="method">
+<dt id="carrot.messaging.Consumer.cancel">
+<tt class="descname">cancel</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.cancel" title="Permalink to this definition">¶</a></dt>
+<dd>Cancel a running <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a> session.</dd></dl>
+
+<dl class="method">
 <dt id="carrot.messaging.Consumer.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.close" title="Permalink to this definition">¶</a></dt>
 <dd>Close the channel to the queue.</dd></dl>
@@ -336,7 +341,7 @@ processed with all registered callbacks. Default is disabled.</li>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.iterconsume">
-<tt class="descname">iterconsume</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.iterconsume" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">iterconsume</tt><big>(</big><em>limit=None</em>, <em>no_ack=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.iterconsume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterator processing new messages as they arrive.
 Every new message will be passed to the callbacks, and the iterator
 returns <tt class="xref docutils literal"><span class="pre">True</span></tt>. The iterator is infinite unless the <tt class="docutils literal"><span class="pre">limit</span></tt>
@@ -549,6 +554,11 @@ backend.</dd></dl>
 <dt>
 <tt class="descname">backend_cls</tt></dt>
 <dd>alias of <tt class="xref docutils literal"><span class="pre">Backend</span></tt></dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.ConsumerSet.cancel">
+<tt class="descname">cancel</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.cancel" title="Permalink to this definition">¶</a></dt>
+<dd>Cancel a running <a title="carrot.messaging.ConsumerSet.iterconsume" class="reference internal" href="#carrot.messaging.ConsumerSet.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a> session.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.ConsumerSet.close">

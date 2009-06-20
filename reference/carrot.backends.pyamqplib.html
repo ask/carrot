@@ -109,13 +109,13 @@ format used. Defaults to <tt class="xref docutils literal"><span class="pre">car
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.consume">
-<tt class="descname">consume</tt><big>(</big><em>queue</em>, <em>no_ack</em>, <em>callback</em>, <em>consumer_tag</em>, <em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.consume" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">consume</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.consume" title="Permalink to this definition">¶</a></dt>
 <dd>Returns an iterator that waits for one message at a time,
 calling the callback when messages arrive.</dd></dl>
 
 <dl class="method">
-<dt id="carrot.backends.pyamqplib.Backend.declare_consume">
-<tt class="descname">declare_consume</tt><big>(</big><em>queue</em>, <em>no_ack</em>, <em>callback</em>, <em>consumer_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.declare_consume" title="Permalink to this definition">¶</a></dt>
+<dt id="carrot.backends.pyamqplib.Backend.declare_consumer">
+<tt class="descname">declare_consumer</tt><big>(</big><em>queue</em>, <em>no_ack</em>, <em>callback</em>, <em>consumer_tag</em>, <em>nowait=False</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.declare_consumer" title="Permalink to this definition">¶</a></dt>
 <dd>Declare a consumer.</dd></dl>
 
 <dl class="method">
