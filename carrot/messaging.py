@@ -3,7 +3,8 @@
 Sending/Receiving Messages.
 
 """
-import itertools
+from carrot.backends import DefaultBackend
+from itertools import count, ifilter, islice
 import warnings
 import uuid
 
@@ -220,7 +221,7 @@ class Consumer(object):
             self.auto_delete = True
 
         self.consumer_tag = self._generate_consumer_tag()
-        self._declare_consumer()
+        self._declare_queue()
 
     def __enter__(self):
         return self
@@ -245,7 +246,7 @@ class Consumer(object):
                 self.__class__.__name__,
                 str(uuid.uuid4()))
 
-    def _declare_consumer(self):
+    def _declare_queue(self):
         """Declare the AMQP channel."""
         if self.queue:
             self.backend.queue_declare(queue=self.queue, durable=self.durable,
@@ -266,7 +267,7 @@ class Consumer(object):
     def _receive_callback(self, raw_message):
         """Internal method used when a message is received in consume mode."""
         message = self.backend.message_to_python(raw_message)
-        if self.auto_ack:
+        if self.auto_ack and not message.acknowledged:
             message.ack()
         self.receive(message.payload, message)
 
@@ -286,7 +287,7 @@ class Consumer(object):
         auto_ack = auto_ack or self.auto_ack
         message = self.backend.get(self.queue, no_ack=no_ack)
         if message:
-            if auto_ack:
+            if auto_ack and not message.acknowledged:
                 message.ack()
             if enable_callbacks:
                 self._receive_callback(message)
@@ -398,12 +399,13 @@ class Consumer(object):
             reached.
 
         """
-        self.channel_open = True
         no_ack = no_ack or self.no_ack
-        return self.backend.consume(queue=self.queue, no_ack=no_ack,
-                                    callback=self._receive_callback,
-                                    consumer_tag=self.consumer_tag,
-                                    limit=limit)
+        self.backend.declare_consumer(queue=self.queue, no_ack=no_ack,
+                                      callback=self._receive_callback,
+                                      consumer_tag=self.consumer_tag,
+                                      nowait=True)
+        self.channel_open = True
+        return self.backend.consume(limit=limit)
 
     def wait(self, limit=None):
         """Go into consume mode.
@@ -440,20 +442,25 @@ class Consumer(object):
             iterator is not infinite.
 
         """
-        for items_since_start in itertools.count():
+        for items_since_start in count():
+            import sys
             item = self.fetch()
             if (not infinite and item is None) or \
                     (limit and items_since_start >= limit):
                 raise StopIteration
             yield item
 
-    def close(self):
-        """Close the channel to the queue."""
+    def cancel(self):
+        """Cancel a running :meth:`iterconsume` session."""
         if self.channel_open:
             try:
                 self.backend.cancel(self.consumer_tag)
             except KeyError:
                 pass
+
+    def close(self):
+        """Close the channel to the queue."""
+        self.cancel()
         self.backend.close()
         self._closed = True
 
@@ -718,3 +725,155 @@ class Messaging(object):
         self.consumer.close()
         self.publisher.close()
         self._closed = True
+
+
+class ConsumerSet(object):
+    """Receive messages from multiple consumers.
+
+    :param connection: see :attr:`connection`.
+    :param from_dict see :attr:`from_dict`.
+    :param consumers: see :attr:`consumers`.
+    :param callbacks: see :attr:`callbacks`.
+    :param backend_cls: see :attr:`backend_cls`.
+
+    .. attribute:: connection
+
+        The AMQP connection. A :class:`carrot.connection.AMQPConnection`
+        instance.
+
+    .. attribute:: callbacks
+
+        A list of callbacks to be called when a message is received.
+        See :class:`Consumer.register_callback`.
+
+    .. attribute:: from_dict
+
+        Add consumers from a dictionary configuration::
+
+            {
+                "webshot": {
+                            "exchange": "link_exchange",
+                            "exchange_type": "topic",
+                            "binding_key": "links.webshot",
+                            "default_routing_key": "links.webshot",
+                    },
+                    "retrieve": {
+                            "exchange": "link_exchange",
+                            "exchange_type" = "topic",
+                            "binding_key": "links.*",
+                            "default_routing_key": "links.retrieve",
+                            "auto_delete": True,
+                            # ...
+                    },
+            }
+
+    .. attribute:: consumers
+
+        Add consumers from a list of :class:`Consumer` instances.
+
+    .. attribute:: backend_cls
+
+        The messaging backend class used. Defaults to the ``pyamqplib``
+        backend.
+
+    .. attribute:: auto_ack
+
+        Default value for the :attr:`Consumer.auto_ack` attribute.
+
+    """
+    backend_cls = DefaultBackend
+    auto_ack = False
+
+    def __init__(self, connection, from_dict=None, consumers=None,
+            callbacks=None, **options):
+        self.connection = connection
+        self.options = options
+        self.from_dict = from_dict or {}
+        self.consumers = consumers or []
+        self.callbacks = callbacks or []
+        self._open_channels = []
+
+        self.backend_cls = options.get("backend_cls", self.backend_cls)
+        self.backend = self.backend_cls(connection=connection)
+
+        self.auto_ack = options.get("auto_ack", self.auto_ack)
+
+        [self.add_consumer_from_dict(queue_name, **queue_options)
+                for queue_name, queue_options in self.from_dict.items()]
+
+    def _receive_callback(self, raw_message):
+        """Internal method used when a message is received in consume mode."""
+        message = self.backend.message_to_python(raw_message)
+        if self.auto_ack and not message.acknowledged:
+            message.ack()
+        self.receive(message.decode(), message)
+
+    def add_consumer_from_dict(self, queue, **options):
+        """Add another consumer from dictionary configuration."""
+        consumer = Consumer(self.connection, queue=queue, **options)
+        self.consumers.append(consumer)
+
+    def add_consumer(self, consumer):
+        """Add another consumer from a :class:`Consumer` instance."""
+        self.consumers.append(consumer)
+
+    def register_callback(self, callback):
+        """Register new callback to be called when a message is received.
+        See :meth:`Consumer.register_callback`"""
+        self.callbacks.append(callback)
+
+    def receive(self, message_data, message):
+        """What to do when a message is received.
+        See :meth:`Consumer.receive`."""
+        if not self.callbacks:
+            raise NotImplementedError("No consumer callbacks registered")
+        for callback in self.callbacks:
+            callback(message_data, message)
+
+    def _declare_consumer(self, consumer, nowait=False):
+        """Declare consumer so messages can be received from it using
+        :meth:`iterconsume`."""
+        # Use the ConsumerSet's consumer by default, but if the
+        # child consumer has a callback, honor it.
+        callback = consumer.callbacks and \
+                consumer._receive_callback or self._receive_callback
+        self.backend.declare_consumer(queue=consumer.queue,
+                                      no_ack=consumer.no_ack,
+                                      nowait=nowait,
+                                      callback=callback,
+                                      consumer_tag=consumer.consumer_tag)
+        self._open_channels.append(consumer.consumer_tag)
+
+    def iterconsume(self, limit=None):
+        """Cycle between all consumers in consume mode.
+
+        See :meth:`Consumer.iterconsume`.
+        """
+        head = self.consumers[:-1]
+        tail = self.consumers[-1]
+        [self._declare_consumer(consumer, nowait=True)
+                for consumer in head]
+        self._declare_consumer(tail, nowait=False)
+
+        return self.backend.consume(limit=limit)
+
+    def discard_all(self):
+        """Discard all messages. Does not support filtering.
+        See :meth:`Consumer.discard_all`."""
+        return sum([consumer.discard_all()
+                        for consumer in self.consumers])
+
+    def cancel(self):
+        """Cancel a running :meth:`iterconsume` session."""
+        for consumer_tag in self._open_channels:
+            try:
+                self.backend.cancel(consumer_tag)
+            except KeyError:
+                pass
+        self._open_channels = []
+
+    def close(self):
+        """Close all consumers."""
+        self.cancel()
+        for consumer in self.consumers:
+            consumer.close()

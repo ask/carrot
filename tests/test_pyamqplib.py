@@ -8,7 +8,7 @@ sys.path.append(os.getcwd())
 
 from tests.utils import establish_test_connection
 from carrot.connection import AMQPConnection
-from carrot.messaging import Consumer, Publisher
+from carrot.messaging import Consumer, Publisher, ConsumerSet
 from carrot.backends.pyamqplib import Backend as AMQPLibBackend
 from carrot.backends.pyamqplib import Message as AMQPLibMessage
 from carrot import serialization
@@ -16,6 +16,24 @@ from carrot import serialization
 TEST_QUEUE = "carrot.unittest"
 TEST_EXCHANGE = "carrot.unittest"
 TEST_ROUTING_KEY = "carrot.unittest"
+
+TEST_QUEUE_TWO = "carrot.unittest.two"
+TEST_EXCHANGE_TWO = "carrot.unittest.two"
+TEST_ROUTING_KEY_TWO = "carrot.unittest.two"
+
+TEST_CELERY_QUEUE = {
+            TEST_QUEUE: {
+                "exchange": TEST_EXCHANGE,
+                "exchange_type": "direct",
+                "routing_key": TEST_ROUTING_KEY,
+            },
+            TEST_QUEUE_TWO: {
+                "exchange": TEST_EXCHANGE_TWO,
+                "exchange_type": "direct",
+                "routing_key": TEST_ROUTING_KEY_TWO,
+            },
+        }
+
 
 class AdvancedDataType(object):
 
@@ -40,9 +58,14 @@ class TestMessaging(unittest.TestCase):
                         queue=TEST_QUEUE, exchange=TEST_EXCHANGE,
                         routing_key=TEST_ROUTING_KEY, **options)
 
-    def create_publisher(self, **options):
+    def create_consumerset(self, queues={}, consumers=[], **options):
+        return ConsumerSet(connection=self.conn, backend_cls=AMQPLibBackend,
+                           from_dict=queues, consumers=consumers, **options)
+
+    def create_publisher(self, exchange=TEST_EXCHANGE,
+                         routing_key=TEST_ROUTING_KEY, **options):
         return Publisher(connection=self.conn, backend_cls=AMQPLibBackend,
-                        exchange=TEST_EXCHANGE, routing_key=TEST_ROUTING_KEY,
+                        exchange=exchange, routing_key=routing_key,
                         **options)
 
     def test_regression_implied_auto_delete(self):
@@ -357,6 +380,64 @@ class TestMessaging(unittest.TestCase):
             consumer.close()
             publisher.close()
 
+
+    def test_consumerset_iterconsume(self):
+        consumerset = self.create_consumerset(queues={
+            "bar": {
+                "exchange": "foo",
+                "exchange_type": "direct",
+                "routing_key": "foo.bar",
+            },
+            "baz": {
+                "exchange": "foo",
+                "exchange_type": "direct",
+                "routing_key": "foo.baz",
+            },
+            "bam": {
+                "exchange": "foo",
+                "exchange_type": "direct",
+                "routing_key": "foo.bam",
+            },
+            "xuzzy": {
+                "exchange": "foo",
+                "exchange_type": "direct",
+                "routing_key": "foo.xuzzy",
+            }})
+        publisher = self.create_publisher(exchange="foo")
+        consumerset.discard_all()
+
+        scratchpad = {}
+
+        def callback(message_data, message):
+            scratchpad["data"] = message_data
+
+        def assertDataIs(what):
+            self.assertEquals(scratchpad.get("data"), what)
+
+        try:
+            consumerset.register_callback(callback)
+            it = consumerset.iterconsume()
+            publisher.send({"rkey": "foo.xuzzy"}, routing_key="foo.xuzzy")
+            it.next()
+            assertDataIs({"rkey": "foo.xuzzy"})
+
+            publisher.send({"rkey": "foo.xuzzy"}, routing_key="foo.xuzzy")
+            publisher.send({"rkey": "foo.bar"}, routing_key="foo.bar")
+            publisher.send({"rkey": "foo.baz"}, routing_key="foo.baz")
+            publisher.send({"rkey": "foo.bam"}, routing_key="foo.bam")
+
+            it.next()
+            assertDataIs({"rkey": "foo.xuzzy"})
+            it.next()
+            assertDataIs({"rkey": "foo.bar"})
+            it.next()
+            assertDataIs({"rkey": "foo.baz"})
+            it.next()
+            assertDataIs({"rkey": "foo.bam"})
+
+        finally:
+            consumerset.close()
+            publisher.close()
 
 if __name__ == '__main__':
     unittest.main()

@@ -32,6 +32,12 @@ def cached_property (func, name = None):
       
     return property (_get ,None ,_del )
 
+ACKNOWLEDGED_STATES = frozenset(["ACK", "REJECTED", "REQUEUED"])
+
+
+class MessageStateError(Exception):
+    """The message has already been acknowledged."""
+
 
 class BaseMessage(object):
     """Base class for received messages."""
@@ -58,10 +64,15 @@ class BaseMessage(object):
 
     def ack(self):
         """Acknowledge this message as being processed.,
+        This will remove the message from the queue.
 
-        This will remove the message from the queue."""
-        assert self._state == "RECEIVED", \
-            "Message has already been acknowledged or rejected."
+        :raises MessageStateError: If the message has already been
+            acknowledged/requeued/rejected.
+
+        """
+        if self.acknowledged:
+            raise MessageStateError(
+                "Message already acknowledged with state: %s" % self._state)
         self.backend.ack(self.delivery_tag)
         self._state = "ACK"
 
@@ -70,9 +81,13 @@ class BaseMessage(object):
 
         The message will be discarded by the server.
 
+        :raises MessageStateError: If the message has already been
+            acknowledged/requeued/rejected.
+
         """
-        assert self._state == "RECEIVED", \
-            "Message has already been acknowledged or rejected."
+        if self.acknowledged:
+            raise MessageStateError(
+                "Message already acknowledged with state: %s" % self._state)
         self.backend.reject(self.delivery_tag)
         self._state = "REJECTED"
 
@@ -82,11 +97,19 @@ class BaseMessage(object):
         You must not use this method as a means of selecting messages
         to process.
 
+        :raises MessageStateError: If the message has already been
+            acknowledged/requeued/rejected.
+
         """
-        assert self._state == "RECEIVED", \
-            "Message has already been acknowledged or rejected."
+        if self.acknowledged:
+            raise MessageStateError(
+                "Message already acknowledged with state: %s" % self._state)
         self.backend.requeue(self.delivery_tag)
         self._state = "REQUEUED"
+
+    @property
+    def acknowledged(self):
+        return self._state in ACKNOWLEDGED_STATES
 
 
 class BaseBackend(object):
@@ -111,9 +134,11 @@ class BaseBackend(object):
         """Pop a message off the queue."""
         pass
 
+    def declare_consumer(self, *args, **kwargs):
+        pass
+
     def consume(self, *args, **kwargs):
-        """Start a consumer and return a iterator that can iterate over new
-        messages."""
+        """Iterate over the declared consumers."""
         pass
 
     def cancel(self, *args, **kwargs):
