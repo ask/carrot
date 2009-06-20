@@ -5,6 +5,8 @@ Backend base classes.
 """
 from carrot.serialization import serialize, deserialize
 
+ACKNOWLEDGED_STATES = frozenset(["ACK", "REJECTED", "REQUEUED"])
+
 
 class MessageStateError(Exception):
     """The message has already been acknowledged."""
@@ -73,7 +75,7 @@ class BaseMessage(object):
 
     @property
     def acknowledged(self):
-        return self._state in ["ACK", "REJECTED", "REQUEUED"]
+        return self._state in ACKNOWLEDGED_STATES
 
 
 class BaseBackend(object):
