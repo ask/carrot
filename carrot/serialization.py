@@ -17,14 +17,18 @@ libraries are installed (`HessianPy`_ and `PyYAML`_, respectively).
 
 .. method:: encode
 
-    The :attr:`SerializerRegistry.encode` method of the default
+    The :meth:`SerializerRegistry.encode` method of the default
     :attr:`registry`.
 
 .. method:: decode
 
-    The :attr:`SerializerRegistry.decode` method of the default 
+    The :meth:`SerializerRegistry.decode` method of the default 
     :attr:`registry`.
 
+.. method:: set_default_registry
+
+    The :meth:`SerializerRegistry.set_default_registry` method of the default
+    :attr:`registry`.
 """
 
 import codecs
@@ -206,6 +210,7 @@ class SerializerRegistry(object):
 registry = SerializerRegistry()
 encode = registry.encode
 decode = registry.decode
+set_default_serializer = registry.set_default_serializer
 
 def register_json():
     """Register a encoder/decoder for JSON serialization."""
