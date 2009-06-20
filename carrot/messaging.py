@@ -460,13 +460,17 @@ class Consumer(object):
                 raise StopIteration
             yield item
 
-    def close(self):
-        """Close the channel to the queue."""
+    def cancel(self):
+        """Cancel a running :meth:`iterconsume` session."""
         if self.channel_open:
             try:
                 self.backend.cancel(self.consumer_tag)
             except KeyError:
                 pass
+
+    def close(self):
+        """Close the channel to the queue."""
+        self.cancel()
         self.backend.close()
         self._closed = True
 
@@ -820,6 +824,8 @@ class ConsumerSet(object):
             callback(message_data, message)
 
     def _declare_consumer(self, consumer, nowait=False):
+        """Declare consumer so messages can be received from it using
+        :meth:`iterconsume`."""
         # Use the ConsumerSet's consumer by default, but if the
         # child consumer has a callback, honor it.
         callback = consumer.callbacks and \
@@ -851,6 +857,7 @@ class ConsumerSet(object):
                         for consumer in self.consumers])
 
     def cancel(self):
+        """Cancel a running :meth:`iterconsume` session."""
         for consumer_tag in self._open_channels:
             try:
                 self.backend.cancel(consumer_tag)
