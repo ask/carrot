@@ -166,19 +166,17 @@ class Backend(BaseBackend):
             return None
         return self.message_to_python(raw_message)
 
-    def declare_consume(self, queue, no_ack, callback, consumer_tag):
+    def declare_consumer(self, queue, no_ack, callback, consumer_tag,
+            nowait=False):
         """Declare a consumer."""
         self.channel.basic_consume(queue=queue, no_ack=no_ack,
                                    callback=callback,
                                    consumer_tag=consumer_tag,
-                                   nowait=True)
+                                   nowait=nowait)
 
-    def consume(self, queue, no_ack, callback, consumer_tag, limit=None):
+    def consume(self, limit=None):
         """Returns an iterator that waits for one message at a time,
         calling the callback when messages arrive."""
-        self.channel.basic_consume(queue=queue, no_ack=no_ack,
-                                   callback=callback,
-                                   consumer_tag=consumer_tag)
         for total_message_count in itertools.count():
             if limit and total_message_count >= limit:
                 raise StopIteration

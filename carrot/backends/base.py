@@ -102,6 +102,9 @@ class BaseBackend(object):
         """Pop a message off the queue."""
         pass
 
+    def declare_consumer(self, *args, **kwargs):
+        pass
+
     def consume(self, *args, **kwargs):
         """Start a consumer and return a iterator that can iterate over new
         messages."""

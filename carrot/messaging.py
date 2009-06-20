@@ -231,7 +231,7 @@ class Consumer(object):
             self.auto_delete = True
 
         self.consumer_tag = self._generate_consumer_tag()
-        self._declare_consumer()
+        self._declare_queue()
 
     def __enter__(self):
         return self
@@ -256,7 +256,7 @@ class Consumer(object):
                 self.__class__.__name__,
                 str(uuid.uuid4()))
 
-    def _declare_consumer(self):
+    def _declare_queue(self):
         """Declare the AMQP channel."""
         if self.queue:
             self.backend.queue_declare(queue=self.queue, durable=self.durable,
@@ -388,7 +388,7 @@ class Consumer(object):
                 message.ack()
                 discarded_count += 1
 
-    def iterconsume(self, limit=None):
+    def iterconsume(self, limit=None, no_ack=None):
         """Iterator processing new messages as they arrive.
         Every new message will be passed to the callbacks, and the iterator
         returns ``True``. The iterator is infinite unless the ``limit``
@@ -409,11 +409,13 @@ class Consumer(object):
             reached.
 
         """
+        no_ack = no_ack or self.no_ack
+        self.backend.declare_consumer(queue=self.queue, no_ack=no_ack,
+                                      callback=self._receive_callback,
+                                      consumer_tag=self.consumer_tag,
+                                      nowait=True)
         self.channel_open = True
-        return self.backend.consume(queue=self.queue, no_ack=True,
-                                    callback=self._receive_callback,
-                                    consumer_tag=self.consumer_tag,
-                                    limit=limit)
+        return self.backend.consume(limit=limit)
 
     def wait(self, limit=None):
         """Go into consume mode.
@@ -816,30 +818,29 @@ class ConsumerSet(object):
         for callback in self.callbacks:
             callback(message_data, message)
 
+    def _declare_consumer(self, consumer, nowait=False):
+        # Use the ConsumerSet's consumer by default, but if the
+        # child consumer has a callback, honor it.
+        callback = consumer.callbacks and \
+                consumer._receive_callback or self._receive_callback
+        self.backend.declare_consumer(queue=consumer.queue,
+                                      no_ack=consumer.no_ack,
+                                      nowait=nowait,
+                                      callback=callback,
+                                      consumer_tag=consumer.consumer_tag)
+
     def iterconsume(self, limit=None):
         """Cycle between all consumers in consume mode.
 
         See :meth:`Consumer.iterconsume`.
         """
+        head = self.consumers[:-1]
+        tail = self.consumers[-1]
+        [self._declare_consumer(consumer, nowait=True)
+                for consumer in head]
+        self._declare_consumer(tail, nowait=False)
 
-        for index, consumer in enumerate(self.consumers):
-            #If the consumer has a callback, honor it.
-            callback = self._receive_callback
-            if consumer.callbacks:
-                callback = consumer._receive_callback
-
-            if index is len(self.consumers)-1:
-                break
-
-            self.backend.declare_consume(queue=consumer.queue,
-                                         no_ack=consumer.no_ack,
-                                         callback=callback,
-                                         consumer_tag=consumer.consumer_tag)
-
-        return self.backend.consume(queue=consumer.queue,
-                                 no_ack=consumer.no_ack,
-                                 callback=callback,
-                                 consumer_tag=consumer.consumer_tag)
+        return self.backend.consume(limit=limit)
 
     def discard_all(self):
         """Discard all messages. Does not support filtering.
