@@ -18,7 +18,7 @@
 		upgraded at the same time since carrot now uses the AMQP
 		``content-type`` field to know how to automatically de-serialize
 		your data. If you use an old-style ``Publisher`` with a new-style
-		``Consumer``, you will a raw string back as ``message_data`` 
+		``Consumer``, you will get a raw string back as ``message_data`` 
 		instead of your de-serialized data. An old-style ``Consumer``
 		will work with a new-style ``Publisher`` as long as you're using
 		the default ``JSON`` serialization methods. 
