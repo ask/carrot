@@ -3,7 +3,6 @@
 Backend base classes.
 
 """
-from functools import update_wrapper 
 from carrot import serialization
 
 ACKNOWLEDGED_STATES = frozenset(["ACK", "REJECTED", "REQUEUED"])
@@ -31,8 +30,8 @@ class BaseMessage(object):
         python structure sent by the publisher."""
         return serialization.decode(self.body, self.content_type, 
                                   self.content_encoding)
-                                
-    @cached_property
+
+    @property                            
     def payload(self):
         """The decoded message."""
         if not self._decoded_cache:
