@@ -601,7 +601,7 @@ class Publisher(object):
                 
             # If they passed in a string, we can't know anything 
             # about it.  So assume it's binary data. 
-            elif not conent_encoding:
+            elif not content_encoding:
                 content_encoding = 'binary'
 
         return self.backend.prepare_message(message_data, delivery_mode,
@@ -757,7 +757,7 @@ class ConsumerSet(object):
                             "binding_key": "links.webshot",
                             "default_routing_key": "links.webshot",
                     },
-                    "retrieve": {
+                "retrieve": {
                             "exchange": "link_exchange",
                             "exchange_type" = "topic",
                             "binding_key": "links.*",
