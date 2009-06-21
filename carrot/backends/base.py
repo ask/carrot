@@ -6,32 +6,6 @@ Backend base classes.
 from functools import update_wrapper 
 from carrot import serialization
 
-
-def cached_property (func, name = None):
-    """cached_property(func, name=None) -> a descriptor
-    This decorator implements an object's property which is computed
-    the first time it is accessed, and which value is then stored in
-    the object's __dict__ for later use. If the attribute is deleted,
-    the value will be recomputed the next time it is accessed.
-    """
-    if name is None :
-      name =func .__name__ 
-      
-    def _get (self ):
-      try :
-        return self .__dict__ [name ]
-      except KeyError :
-        value =func (self )
-        self .__dict__ [name ]=value 
-        return value 
-        
-    update_wrapper (_get ,func )
-    
-    def _del (self ):
-      self .__dict__ .pop (name ,None )
-      
-    return property (_get ,None ,_del )
-
 ACKNOWLEDGED_STATES = frozenset(["ACK", "REJECTED", "REQUEUED"])
 
 
@@ -49,7 +23,7 @@ class BaseMessage(object):
         self.delivery_tag = kwargs.get("delivery_tag")
         self.content_type = kwargs.get("content_type")
         self.content_encoding = kwargs.get("content_encoding")
-        
+        self._decoded_cache = None 
         self._state = "RECEIVED"
 
     def decode(self):
@@ -57,10 +31,12 @@ class BaseMessage(object):
         python structure sent by the publisher."""
         return serialization.decode(self.body, self.content_type, 
                                   self.content_encoding)
-                                  
+                                
     @cached_property
     def payload(self):
-        return self.decode()
+        if not self._decoded_cache:
+            self._decoded_cache = self.decode()
+        return self._decoded_cache
 
     def ack(self):
         """Acknowledge this message as being processed.,
