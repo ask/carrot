@@ -62,12 +62,7 @@ class </em><tt class="descclassname">carrot.backends.pyamqplib.</tt><tt class="d
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>connection</em> &#8211; see <a title="carrot.backends.pyamqplib.Backend.connection" class="reference internal" href="#carrot.backends.pyamqplib.Backend.connection"><tt class="xref docutils literal"><span class="pre">connection</span></tt></a>.</li>
-<li><em>encoder</em> &#8211; see <a title="carrot.backends.pyamqplib.Backend.encoder" class="reference internal" href="#carrot.backends.pyamqplib.Backend.encoder"><tt class="xref docutils literal"><span class="pre">encoder</span></tt></a>.</li>
-<li><em>decoder</em> &#8211; see <a title="carrot.backends.pyamqplib.Backend.decoder" class="reference internal" href="#carrot.backends.pyamqplib.Backend.decoder"><tt class="xref docutils literal"><span class="pre">decoder</span></tt></a>.</li>
-</ul>
-</td>
+<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>connection</em> &#8211; see <a title="carrot.backends.pyamqplib.Backend.connection" class="reference internal" href="#carrot.backends.pyamqplib.Backend.connection"><tt class="xref docutils literal"><span class="pre">connection</span></tt></a>.</td>
 </tr>
 </tbody>
 </table>
@@ -78,20 +73,6 @@ class </em><tt class="descclassname">carrot.backends.pyamqplib.</tt><tt class="d
 
 <p>A <a title="carrot.connection.AMQPConnection" class="reference external" href="carrot.connection.html#carrot.connection.AMQPConnection"><tt class="xref docutils literal"><span class="pre">carrot.connection.AMQPConnection</span></tt></a> instance. An established
 connection to the AMQP server.</p>
-<dl class="attribute">
-<dt id="carrot.backends.pyamqplib.Backend.encoder">
-<tt class="descname">encoder</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.encoder" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<p>A function that serializes to the format used.
-Defaults to <tt class="xref docutils literal"><span class="pre">carrot.serialization.serialize()</span></tt>.</p>
-<dl class="attribute">
-<dt id="carrot.backends.pyamqplib.Backend.decoder">
-<tt class="descname">decoder</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.decoder" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<p>A function that decodes objects serialized in the serialization
-format used. Defaults to <tt class="xref docutils literal"><span class="pre">carrot.serialization.deserialize()</span></tt>.</p>
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.ack">
 <tt class="descname">ack</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.ack" title="Permalink to this definition">¶</a></dt>
@@ -146,7 +127,7 @@ there was no messages waiting on the queue.</td>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.prepare_message">
-<tt class="descname">prepare_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode</em>, <em>priority=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.prepare_message" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">prepare_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode</em>, <em>priority=None</em>, <em>content_type=None</em>, <em>content_encoding=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.prepare_message" title="Permalink to this definition">¶</a></dt>
 <dd>Encapsulate data into a AMQP message.</dd></dl>
 
 <dl class="method">
@@ -211,7 +192,6 @@ them using a <a title="carrot.messaging.Consumer" class="reference external" hre
 <li><em>backend</em> &#8211; see <a title="carrot.backends.pyamqplib.Message.backend" class="reference internal" href="#carrot.backends.pyamqplib.Message.backend"><tt class="xref docutils literal"><span class="pre">backend</span></tt></a>.</li>
 <li><em>amqp_message</em> &#8211; see <a title="carrot.backends.pyamqplib.Message.amqp_message" class="reference internal" href="#carrot.backends.pyamqplib.Message.amqp_message"><tt class="xref docutils literal"><span class="pre">amqp_message</span></tt></a>.</li>
 <li><em>channel</em> &#8211; see <a title="carrot.backends.pyamqplib.Message.channel" class="reference internal" href="#carrot.backends.pyamqplib.Message.channel"><tt class="xref docutils literal"><span class="pre">channel</span></tt></a>.</li>
-<li><em>decoder</em> &#8211; see <a title="carrot.backends.pyamqplib.Message.decoder" class="reference internal" href="#carrot.backends.pyamqplib.Message.decoder"><tt class="xref docutils literal"><span class="pre">decoder</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -245,11 +225,6 @@ A subclass of <a title="carrot.backends.base.BaseBackend" class="reference exter
 <tt class="descname">channel</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Message.channel" title="Permalink to this definition">¶</a></dt>
 <dd>The AMQP channel. A <tt class="xref docutils literal"><span class="pre">amqplib.client_0_8.channel.Channel</span></tt>
 instance.</dd></dl>
-
-<dl class="attribute">
-<dt id="carrot.backends.pyamqplib.Message.decoder">
-<tt class="descname">decoder</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Message.decoder" title="Permalink to this definition">¶</a></dt>
-<dd>A function able to deserialize the serialized message data.</dd></dl>
 
 </dd></dl>
 

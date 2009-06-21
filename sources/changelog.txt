@@ -2,7 +2,29 @@
  Change history
 ================
 
-0.4.5 [2008-06-15 01:58 P.M CET] 
+0.x.x 
+------------------------------------------------------------------
+
+**BACKWARD-INCOMPATIBLE CHANGES**
+
+	* Custom encoder/decoder support has been moved to a centralized 
+		registry in ``carrot.serialization``. This means the 
+		``encoder``/``decoder`` optional arguments to ``Publisher.send`` 
+		`(and the similar attributes of  ``Publisher`` and ``Consumer`` 
+		classes) no longer exist.   See ``README`` for details of the new 
+		system.
+
+	* Any ``Consumer`` and ``Publisher`` instances should be 
+		upgraded at the same time since carrot now uses the AMQP
+		``content-type`` field to know how to automatically de-serialize
+		your data. If you use an old-style ``Publisher`` with a new-style
+		``Consumer``, you will get a raw string back as ``message_data`` 
+		instead of your de-serialized data. An old-style ``Consumer``
+		will work with a new-style ``Publisher`` as long as you're using
+		the default ``JSON`` serialization methods. 
+
+
+0.4.5 [2009-06-15 01:58 P.M CET] 
 ------------------------------------------------------------------
 
 **BACKWARD-INCOMPATIBLE CHANGES**
@@ -17,17 +39,17 @@
 	* No_ack was always set to ``True`` when using ``Consumer.iterconsume``.
 
 
-0.4.4 [2008-06-15 01:58 P.M CET] 
+0.4.4 [2009-06-15 01:58 P.M CET] 
 ------------------------------------------------------------------
 
 	* __init__.pyc was included in the distribution by error.
 
-0.4.3 [2008-06-13 09:26 P.M CET] 
+0.4.3 [2009-06-13 09:26 P.M CET] 
 ------------------------------------------------------------------
 
 	* Fix typo with long_description in ``setup.py``.
 
-0.4.2 [2008-06-13 08:30 P.M CET] 
+0.4.2 [2009-06-13 08:30 P.M CET] 
 ------------------------------------------------------------------
 
 	* Make sure README exists before reading it for ``long_description``.
@@ -36,13 +58,13 @@
 	* ``discard_all``: Use ``AMQP.queue_purge`` if ``filterfunc`` is not
 		specified
 
-0.4.1 [2008-06-08 04:21 P.M CET] 
+0.4.1 [2009-06-08 04:21 P.M CET] 
 ------------------------------------------------------------------
 
 * Consumer/Publisher now correctly sets the encoder/decoder if they
 	have been overriden by setting the class attribute.
 
-0.4.0 [2008-06-06 01:39 P.M CET] 
+0.4.0 [2009-06-06 01:39 P.M CET] 
 ------------------------------------------------------------------
 
 **IMPORTANT** Please don't use ``Consumer.wait`` in production. Use either
@@ -197,4 +219,4 @@ if used.
 0.1.0 [2009-03-24 05:16 P.M ]` 
 --------------------------------------------------------------
 
-* Initial release
+ * Initial release

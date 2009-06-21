@@ -79,21 +79,6 @@ class </em><tt class="descclassname">carrot.backends.base.</tt><tt class="descna
 <dd>Iterate over the declared consumers.</dd></dl>
 
 <dl class="method">
-<dt id="carrot.backends.base.BaseBackend.decoder">
-<tt class="descname">decoder</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.decoder" title="Permalink to this definition">¶</a></dt>
-<dd>decode(string, all_unicode=False) -&gt; parse the JSON representation into
-python objects. The optional argument <a href="#id1"><span class="problematic" id="id2">`</span></a>all_unicode&#8217;, specifies how to
-convert the strings in the JSON representation into python objects.
-If it is False (default), it will return strings everywhere possible
-and unicode objects only where necessary, else it will return unicode
-objects everywhere (this is slower).</dd></dl>
-
-<dl class="method">
-<dt id="carrot.backends.base.BaseBackend.encoder">
-<tt class="descname">encoder</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.encoder" title="Permalink to this definition">¶</a></dt>
-<dd>encode(object) -&gt; generate the JSON representation for object.</dd></dl>
-
-<dl class="method">
 <dt id="carrot.backends.base.BaseBackend.exchange_declare">
 <tt class="descname">exchange_declare</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.exchange_declare" title="Permalink to this definition">¶</a></dt>
 <dd>Declare an exchange by name.</dd></dl>
@@ -172,6 +157,11 @@ acknowledged/requeued/rejected.</td>
 <tt class="descname">decode</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseMessage.decode" title="Permalink to this definition">¶</a></dt>
 <dd>Deserialize the message body, returning the original
 python structure sent by the publisher.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.backends.base.BaseMessage.payload">
+<tt class="descname">payload</tt><a class="headerlink" href="#carrot.backends.base.BaseMessage.payload" title="Permalink to this definition">¶</a></dt>
+<dd>The decoded message.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseMessage.reject">

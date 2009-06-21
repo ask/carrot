@@ -151,21 +151,16 @@
 
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.declare_consumer">declare_consumer() (carrot.backends.pyamqplib.Backend method)</a></dt>
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseMessage.decode">decode() (carrot.backends.base.BaseMessage method)</a></dt>
-<dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.decoder">decoder (carrot.backends.pyamqplib.Backend attribute)</a></dt>
   <dd><dl>
-    <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message.decoder">(carrot.backends.pyamqplib.Message attribute)</a></dt>
-    <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.decoder">(carrot.messaging.Consumer attribute)</a></dt>
-    <dt><a href="reference/carrot.messaging.html#carrot.messaging.ConsumerSet.decoder">(carrot.messaging.ConsumerSet attribute)</a></dt>
-    <dt><a href="reference/carrot.messaging.html#carrot.messaging.Messaging.decoder">(carrot.messaging.Messaging attribute)</a></dt>
+    <dt><a href="reference/carrot.serialization.html#carrot.serialization.decode">(in module carrot.serialization)</a></dt>
   </dl></dd>
-<dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseBackend.decoder">decoder() (carrot.backends.base.BaseBackend method)</a></dt>
-<dt><a href="reference/carrot.backends.html#carrot.backends.DefaultBackend">DefaultBackend (class in carrot.backends)</a></dt></dl></td><td width="33%" valign="top"><dl>
+<dt><a href="reference/carrot.backends.html#carrot.backends.DefaultBackend">DefaultBackend (class in carrot.backends)</a></dt>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.delivery_mode">delivery_mode (carrot.messaging.Publisher attribute)</a></dt>
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message.delivery_tag">delivery_tag (carrot.backends.pyamqplib.Message attribute)</a></dt>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.discard_all">discard_all() (carrot.messaging.Consumer method)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.ConsumerSet.discard_all">(carrot.messaging.ConsumerSet method)</a></dt>
-  </dl></dd>
+  </dl></dd></dl></td><td width="33%" valign="top"><dl>
 <dt><a href="reference/carrot.connection.html#carrot.connection.DjangoAMQPConnection">DjangoAMQPConnection (class in carrot.connection)</a></dt>
 <dt><a href="reference/carrot.connection.html#carrot.connection.DummyConnection">DummyConnection (class in carrot.connection)</a></dt>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.durable">durable (carrot.messaging.Consumer attribute)</a></dt>
@@ -178,20 +173,15 @@
 <table width="100%" class="indextable"><tr><td width="33%" valign="top">
 <dl>
 
-<dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.encoder">encoder (carrot.backends.pyamqplib.Backend attribute)</a></dt>
-  <dd><dl>
-    <dt><a href="reference/carrot.messaging.html#carrot.messaging.Messaging.encoder">(carrot.messaging.Messaging attribute)</a></dt>
-    <dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.encoder">(carrot.messaging.Publisher attribute)</a></dt>
-  </dl></dd>
-<dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseBackend.encoder">encoder() (carrot.backends.base.BaseBackend method)</a></dt>
+<dt><a href="reference/carrot.serialization.html#carrot.serialization.encode">encode() (in module carrot.serialization)</a>, <a href="reference/carrot.serialization.html#carrot.serialization.encode">[1]</a></dt>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.exchange">exchange (carrot.messaging.Consumer attribute)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.exchange">(carrot.messaging.Publisher attribute)</a></dt>
-  </dl></dd></dl></td><td width="33%" valign="top"><dl>
+  </dl></dd>
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseBackend.exchange_declare">exchange_declare() (carrot.backends.base.BaseBackend method)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.exchange_declare">(carrot.backends.pyamqplib.Backend method)</a></dt>
-  </dl></dd>
+  </dl></dd></dl></td><td width="33%" valign="top"><dl>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.exchange_type">exchange_type (carrot.messaging.Consumer attribute)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.exchange_type">(carrot.messaging.Publisher attribute)</a></dt>
@@ -274,6 +264,7 @@
 <dl>
 
 <dt><a href="reference/carrot.connection.html#carrot.connection.AMQPConnection.password">password (carrot.connection.AMQPConnection attribute)</a></dt>
+<dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseMessage.payload">payload (carrot.backends.base.BaseMessage attribute)</a></dt>
 <dt><a href="reference/carrot.connection.html#carrot.connection.AMQPConnection.port">port (carrot.connection.AMQPConnection attribute)</a></dt>
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseBackend.prepare_message">prepare_message() (carrot.backends.base.BaseBackend method)</a></dt>
   <dd><dl>
@@ -326,6 +317,7 @@
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.ConsumerSet.register_callback">(carrot.messaging.ConsumerSet method)</a></dt>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.Messaging.register_callback">(carrot.messaging.Messaging method)</a></dt>
   </dl></dd>
+<dt><a href="reference/carrot.serialization.html#carrot.serialization.registry">registry (in module carrot.serialization)</a>, <a href="reference/carrot.serialization.html#carrot.serialization.registry">[1]</a></dt>
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseBackend.reject">reject() (carrot.backends.base.BaseBackend method)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseMessage.reject">(carrot.backends.base.BaseMessage method)</a></dt>
@@ -349,7 +341,10 @@
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Messaging.send">send() (carrot.messaging.Messaging method)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.send">(carrot.messaging.Publisher method)</a></dt>
-  </dl></dd></dl></td><td width="33%" valign="top"><dl>
+  </dl></dd>
+<dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.serializer">serializer (carrot.messaging.Publisher attribute)</a></dt>
+<dt><a href="reference/carrot.serialization.html#carrot.serialization.SerializerNotInstalled">SerializerNotInstalled</a></dt></dl></td><td width="33%" valign="top"><dl>
+<dt><a href="reference/carrot.serialization.html#carrot.serialization.set_default_registry">set_default_registry() (in module carrot.serialization)</a></dt>
 <dt><a href="reference/carrot.connection.html#carrot.connection.AMQPConnection.ssl">ssl (carrot.connection.AMQPConnection attribute)</a></dt>
 </dl></td></tr></table>
 

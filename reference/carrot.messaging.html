@@ -73,7 +73,6 @@ class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">
 <li><em>auto_delete</em> &#8211; see <a title="carrot.messaging.Consumer.auto_delete" class="reference internal" href="#carrot.messaging.Consumer.auto_delete"><tt class="xref docutils literal"><span class="pre">auto_delete</span></tt></a>.</li>
 <li><em>exclusive</em> &#8211; see <a title="carrot.messaging.Consumer.exclusive" class="reference internal" href="#carrot.messaging.Consumer.exclusive"><tt class="xref docutils literal"><span class="pre">exclusive</span></tt></a>.</li>
 <li><em>exchange_type</em> &#8211; see <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">exchange_type</span></tt></a>.</li>
-<li><em>decoder</em> &#8211; see <a title="carrot.messaging.Consumer.decoder" class="reference internal" href="#carrot.messaging.Consumer.decoder"><tt class="xref docutils literal"><span class="pre">decoder</span></tt></a>.</li>
 <li><em>backend_cls</em> &#8211; see <a title="carrot.messaging.Consumer.backend_cls" class="reference internal" href="#carrot.messaging.Consumer.backend_cls"><tt class="xref docutils literal"><span class="pre">backend_cls</span></tt></a>.</li>
 <li><em>auto_ack</em> &#8211; see <a title="carrot.messaging.Consumer.auto_ack" class="reference internal" href="#carrot.messaging.Consumer.auto_ack"><tt class="xref docutils literal"><span class="pre">auto_ack</span></tt></a>.</li>
 <li><em>no_ack</em> &#8211; see <a title="carrot.messaging.Consumer.no_ack" class="reference internal" href="#carrot.messaging.Consumer.no_ack"><tt class="xref docutils literal"><span class="pre">no_ack</span></tt></a>.</li>
@@ -202,11 +201,6 @@ from the blog post <a class="reference external" href="http://bit.ly/amqp-exchan
 Rajith Attapattu. Recommended reading.</p>
 </blockquote>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="carrot.messaging.Consumer.decoder">
-<tt class="descname">decoder</tt><a class="headerlink" href="#carrot.messaging.Consumer.decoder" title="Permalink to this definition">¶</a></dt>
-<dd>A function able to deserialize the message body.</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.backend_cls">
@@ -507,7 +501,7 @@ See <a title="carrot.messaging.Consumer.register_callback" class="reference inte
                 "binding_key": "links.webshot",
                 "default_routing_key": "links.webshot",
         },
-        "retrieve": {
+    "retrieve": {
                 "exchange": "link_exchange",
                 "exchange_type" = "topic",
                 "binding_key": "links.*",
@@ -529,11 +523,6 @@ See <a title="carrot.messaging.Consumer.register_callback" class="reference inte
 <tt class="descname">backend_cls</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.backend_cls" title="Permalink to this definition">¶</a></dt>
 <dd>The messaging backend class used. Defaults to the <tt class="docutils literal"><span class="pre">pyamqplib</span></tt>
 backend.</dd></dl>
-
-<dl class="attribute">
-<dt id="carrot.messaging.ConsumerSet.decoder">
-<tt class="descname">decoder</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.decoder" title="Permalink to this definition">¶</a></dt>
-<dd>Default decoder. See <a title="carrot.messaging.Consumer.decoder" class="reference internal" href="#carrot.messaging.Consumer.decoder"><tt class="xref docutils literal"><span class="pre">Consumer.decoder</span></tt></a>.</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.ConsumerSet.auto_ack">
@@ -607,16 +596,6 @@ class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">
 <tt class="descname">consumer_cls</tt><a class="headerlink" href="#carrot.messaging.Messaging.consumer_cls" title="Permalink to this definition">¶</a></dt>
 <dd>alias of <a title="carrot.messaging.Consumer" class="reference internal" href="#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">Consumer</span></tt></a></dd></dl>
 
-<dl class="attribute">
-<dt id="carrot.messaging.Messaging.decoder">
-<tt class="descname">decoder</tt><a class="headerlink" href="#carrot.messaging.Messaging.decoder" title="Permalink to this definition">¶</a></dt>
-<dd>The decoder used.</dd></dl>
-
-<dl class="attribute">
-<dt id="carrot.messaging.Messaging.encoder">
-<tt class="descname">encoder</tt><a class="headerlink" href="#carrot.messaging.Messaging.encoder" title="Permalink to this definition">¶</a></dt>
-<dd>The encoder used.</dd></dl>
-
 <dl class="method">
 <dt id="carrot.messaging.Messaging.fetch">
 <tt class="descname">fetch</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging.fetch" title="Permalink to this definition">¶</a></dt>
@@ -657,11 +636,11 @@ class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">
 <li><em>connection</em> &#8211; see <a title="carrot.messaging.Publisher.connection" class="reference internal" href="#carrot.messaging.Publisher.connection"><tt class="xref docutils literal"><span class="pre">connection</span></tt></a>.</li>
 <li><em>exchange</em> &#8211; see <a title="carrot.messaging.Publisher.exchange" class="reference internal" href="#carrot.messaging.Publisher.exchange"><tt class="xref docutils literal"><span class="pre">exchange</span></tt></a>.</li>
 <li><em>routing_key</em> &#8211; see <a title="carrot.messaging.Publisher.routing_key" class="reference internal" href="#carrot.messaging.Publisher.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a>.</li>
-<li><em>encoder</em> &#8211; see <a title="carrot.messaging.Publisher.encoder" class="reference internal" href="#carrot.messaging.Publisher.encoder"><tt class="xref docutils literal"><span class="pre">encoder</span></tt></a>.</li>
 <li><em>backend_cls</em> &#8211; see <a title="carrot.messaging.Publisher.backend_cls" class="reference internal" href="#carrot.messaging.Publisher.backend_cls"><tt class="xref docutils literal"><span class="pre">backend_cls</span></tt></a>.</li>
 <li><em>exchange_type</em> &#8211; see <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">Consumer.exchange_type</span></tt></a>.</li>
 <li><em>durable</em> &#8211; see <a title="carrot.messaging.Consumer.durable" class="reference internal" href="#carrot.messaging.Consumer.durable"><tt class="xref docutils literal"><span class="pre">Consumer.durable</span></tt></a>.</li>
 <li><em>auto_delete</em> &#8211; see <a title="carrot.messaging.Consumer.auto_delete" class="reference internal" href="#carrot.messaging.Consumer.auto_delete"><tt class="xref docutils literal"><span class="pre">Consumer.auto_delete</span></tt></a>.</li>
+<li><em>serializer</em> &#8211; see <a title="carrot.messaging.Publisher.serializer" class="reference internal" href="#carrot.messaging.Publisher.serializer"><tt class="xref docutils literal"><span class="pre">serializer</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -713,13 +692,6 @@ preserved if the server dies or restarts.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="carrot.messaging.Publisher.encoder">
-<tt class="descname">encoder</tt><a class="headerlink" href="#carrot.messaging.Publisher.encoder" title="Permalink to this definition">¶</a></dt>
-<dd>The function responsible for encoding the message data passed
-to <a title="carrot.messaging.Publisher.send" class="reference internal" href="#carrot.messaging.Publisher.send"><tt class="xref docutils literal"><span class="pre">send()</span></tt></a>. Note that any consumer of the messages sent
-must have a decoder supporting the serialization scheme.</dd></dl>
-
-<dl class="attribute">
 <dt id="carrot.messaging.Publisher.exchange_type">
 <tt class="descname">exchange_type</tt><a class="headerlink" href="#carrot.messaging.Publisher.exchange_type" title="Permalink to this definition">¶</a></dt>
 <dd>See <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">Consumer.exchange_type</span></tt></a>.</dd></dl>
@@ -741,6 +713,15 @@ must have a decoder supporting the serialization scheme.</dd></dl>
 backend.</dd></dl>
 
 <dl class="attribute">
+<dt id="carrot.messaging.Publisher.serializer">
+<tt class="descname">serializer</tt><a class="headerlink" href="#carrot.messaging.Publisher.serializer" title="Permalink to this definition">¶</a></dt>
+<dd>A string identifying the default serialization method to use.
+Defaults to <tt class="docutils literal"><span class="pre">json</span></tt>. Can be <tt class="docutils literal"><span class="pre">json</span></tt> (default), <tt class="docutils literal"><span class="pre">raw</span></tt>,
+<tt class="docutils literal"><span class="pre">pickle</span></tt>, <tt class="docutils literal"><span class="pre">hessian</span></tt>, <tt class="docutils literal"><span class="pre">yaml</span></tt>, or any custom serialization
+methods that have been registered with
+<tt class="docutils literal"><span class="pre">carrot.serialization.registry</span></tt>.</dd></dl>
+
+<dl class="attribute">
 <dt>
 <tt class="descname">backend_cls</tt></dt>
 <dd>alias of <tt class="xref docutils literal"><span class="pre">Backend</span></tt></dd></dl>
@@ -752,13 +733,13 @@ backend.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Publisher.create_message">
-<tt class="descname">create_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode=None</em>, <em>priority=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.create_message" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">create_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode=None</em>, <em>priority=None</em>, <em>content_type=None</em>, <em>content_encoding=None</em>, <em>serializer=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.create_message" title="Permalink to this definition">¶</a></dt>
 <dd>With any data, serialize it and encapsulate it in a AMQP
 message with the proper headers set.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Publisher.send">
-<tt class="descname">send</tt><big>(</big><em>message_data</em>, <em>routing_key=None</em>, <em>delivery_mode=None</em>, <em>mandatory=False</em>, <em>immediate=False</em>, <em>priority=0</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.send" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">send</tt><big>(</big><em>message_data</em>, <em>routing_key=None</em>, <em>delivery_mode=None</em>, <em>mandatory=False</em>, <em>immediate=False</em>, <em>priority=0</em>, <em>content_type=None</em>, <em>content_encoding=None</em>, <em>serializer=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.send" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send a message.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -781,6 +762,16 @@ behaviour, where the server will accept and queue the message,
 but with no guarantee that the message will ever be consumed.</li>
 <li><em>delivery_mode</em> &#8211; Override the default <a title="carrot.messaging.Publisher.delivery_mode" class="reference internal" href="#carrot.messaging.Publisher.delivery_mode"><tt class="xref docutils literal"><span class="pre">delivery_mode</span></tt></a>.</li>
 <li><em>priority</em> &#8211; The message priority, <tt class="docutils literal"><span class="pre">0</span></tt> to <tt class="docutils literal"><span class="pre">9</span></tt>.</li>
+<li><em>content_type</em> &#8211; The messages content_type. If content_type
+is set, no serialization occurs as it is assumed this is either
+a binary object, or you&#8217;ve done your own serialization.
+Leave blank if using built-in serialization as our library
+properly sets content_type.</li>
+<li><em>content_encoding</em> &#8211; The character set in which this object
+is encoded. Use &#8220;binary&#8221; if sending in raw binary objects.
+Leave blank if using built-in serialization as our library
+properly sets content_encoding.</li>
+<li><em>serializer</em> &#8211; Override the default <a title="carrot.messaging.Publisher.serializer" class="reference internal" href="#carrot.messaging.Publisher.serializer"><tt class="xref docutils literal"><span class="pre">serializer</span></tt></a>.</li>
 </ul>
 </td>
 </tr>

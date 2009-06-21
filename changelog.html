@@ -46,8 +46,38 @@
             
   <div class="section" id="change-history">
 <h1>Change history<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="x-x">
+<h2>0.x.x<a class="headerlink" href="#x-x" title="Permalink to this headline">¶</a></h2>
+<p><strong>BACKWARD-INCOMPATIBLE CHANGES</strong></p>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>Custom encoder/decoder support has been moved to a centralized</dt>
+<dd><p class="first last">registry in <tt class="docutils literal"><span class="pre">carrot.serialization</span></tt>. This means the
+<tt class="docutils literal"><span class="pre">encoder</span></tt>/<tt class="docutils literal"><span class="pre">decoder</span></tt> optional arguments to <tt class="docutils literal"><span class="pre">Publisher.send</span></tt>
+<cite>(and the similar attributes of  ``Publisher`</cite> and <tt class="docutils literal"><span class="pre">Consumer</span></tt>
+classes) no longer exist.   See <tt class="docutils literal"><span class="pre">README</span></tt> for details of the new
+system.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Any <tt class="docutils literal"><span class="pre">Consumer</span></tt> and <tt class="docutils literal"><span class="pre">Publisher</span></tt> instances should be</dt>
+<dd><p class="first last">upgraded at the same time since carrot now uses the AMQP
+<tt class="docutils literal"><span class="pre">content-type</span></tt> field to know how to automatically de-serialize
+your data. If you use an old-style <tt class="docutils literal"><span class="pre">Publisher</span></tt> with a new-style
+<tt class="docutils literal"><span class="pre">Consumer</span></tt>, you will get a raw string back as <tt class="docutils literal"><span class="pre">message_data</span></tt>
+instead of your de-serialized data. An old-style <tt class="docutils literal"><span class="pre">Consumer</span></tt>
+will work with a new-style <tt class="docutils literal"><span class="pre">Publisher</span></tt> as long as you&#8217;re using
+the default <tt class="docutils literal"><span class="pre">JSON</span></tt> serialization methods.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</blockquote>
+</div>
 <div class="section" id="p-m-cet">
-<h2>0.4.5 [2008-06-15 01:58 P.M CET]<a class="headerlink" href="#p-m-cet" title="Permalink to this headline">¶</a></h2>
+<h2>0.4.5 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#p-m-cet" title="Permalink to this headline">¶</a></h2>
 <p><strong>BACKWARD-INCOMPATIBLE CHANGES</strong></p>
 <blockquote>
 <ul>
@@ -71,7 +101,7 @@ the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the
 </blockquote>
 </div>
 <div class="section" id="id3">
-<h2>0.4.4 [2008-06-15 01:58 P.M CET]<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2>0.4.4 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>__init__.pyc was included in the distribution by error.</li>
@@ -79,7 +109,7 @@ the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the
 </blockquote>
 </div>
 <div class="section" id="id4">
-<h2>0.4.3 [2008-06-13 09:26 P.M CET]<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<h2>0.4.3 [2009-06-13 09:26 P.M CET]<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>Fix typo with long_description in <tt class="docutils literal"><span class="pre">setup.py</span></tt>.</li>
@@ -87,7 +117,7 @@ the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the
 </blockquote>
 </div>
 <div class="section" id="id5">
-<h2>0.4.2 [2008-06-13 08:30 P.M CET]<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<h2>0.4.2 [2009-06-13 08:30 P.M CET]<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul>
 <li><dl class="first docutils">
@@ -106,7 +136,7 @@ the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the
 </blockquote>
 </div>
 <div class="section" id="id6">
-<h2>0.4.1 [2008-06-08 04:21 P.M CET]<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<h2>0.4.1 [2009-06-08 04:21 P.M CET]<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><dl class="first docutils">
 <dt>Consumer/Publisher now correctly sets the encoder/decoder if they</dt>
@@ -117,7 +147,7 @@ the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the
 </ul>
 </div>
 <div class="section" id="id7">
-<h2>0.4.0 [2008-06-06 01:39 P.M CET]<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<h2>0.4.0 [2009-06-06 01:39 P.M CET]<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p><strong>IMPORTANT</strong> Please don&#8217;t use <tt class="docutils literal"><span class="pre">Consumer.wait</span></tt> in production. Use either
 of <tt class="docutils literal"><span class="pre">Consumer.iterconsume</span></tt> or <tt class="docutils literal"><span class="pre">Consumer.iterqueue</span></tt>.</p>
 <p><strong>IMPORTANT</strong> The <tt class="docutils literal"><span class="pre">ack</span></tt> argument to <tt class="docutils literal"><span class="pre">Consumer.process_next</span></tt> has been
@@ -345,9 +375,11 @@ publisher/consumer.</p>
 </div>
 <div class="section" id="id11">
 <h2>0.1.0 [2009-03-24 05:16 P.M ]`<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<blockquote>
 <ul class="simple">
 <li>Initial release</li>
 </ul>
+</blockquote>
 </div>
 </div>
 
@@ -360,12 +392,13 @@ publisher/consumer.</p>
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
 <li><a class="reference external" href="">Change history</a><ul>
-<li><a class="reference external" href="#p-m-cet">0.4.5 [2008-06-15 01:58 P.M CET]</a></li>
-<li><a class="reference external" href="#id3">0.4.4 [2008-06-15 01:58 P.M CET]</a></li>
-<li><a class="reference external" href="#id4">0.4.3 [2008-06-13 09:26 P.M CET]</a></li>
-<li><a class="reference external" href="#id5">0.4.2 [2008-06-13 08:30 P.M CET]</a></li>
-<li><a class="reference external" href="#id6">0.4.1 [2008-06-08 04:21 P.M CET]</a></li>
-<li><a class="reference external" href="#id7">0.4.0 [2008-06-06 01:39 P.M CET]</a></li>
+<li><a class="reference external" href="#x-x">0.x.x</a></li>
+<li><a class="reference external" href="#p-m-cet">0.4.5 [2009-06-15 01:58 P.M CET]</a></li>
+<li><a class="reference external" href="#id3">0.4.4 [2009-06-15 01:58 P.M CET]</a></li>
+<li><a class="reference external" href="#id4">0.4.3 [2009-06-13 09:26 P.M CET]</a></li>
+<li><a class="reference external" href="#id5">0.4.2 [2009-06-13 08:30 P.M CET]</a></li>
+<li><a class="reference external" href="#id6">0.4.1 [2009-06-08 04:21 P.M CET]</a></li>
+<li><a class="reference external" href="#id7">0.4.0 [2009-06-06 01:39 P.M CET]</a></li>
 <li><a class="reference external" href="#pre7-2009-06-03-05-08-p-m-cet">0.4.0-pre7 [2009-06-03 05:08 P.M CET]</a></li>
 <li><a class="reference external" href="#pre6-2009-06-03-04-55-p-m-cet">0.4.0-pre6 [2009-06-03 04:55 P.M CET]</a></li>
 <li><a class="reference external" href="#pre3-2009-05-29-02-27-p-m-cet">0.4.0-pre3 [2009-05-29 02:27 P.M CET]</a></li>

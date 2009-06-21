@@ -241,11 +241,99 @@ defined in the last section.</p>
 where the following text has been printed to the screen:</p>
 <div class="highlight-python"><pre>Got feed import message for: http://cnn.com/rss/edition.rss</pre>
 </div>
+</div>
+<div class="section" id="serialization-of-data">
+<h2>Serialization of Data<a class="headerlink" href="#serialization-of-data" title="Permalink to this headline">¶</a></h2>
 <p>By default every message is encoded using <a class="reference external" href="http://www.json.org/">JSON</a>, so sending
-Python data structures like dictionaries and lists works. If you want
-to support more complicated data, you might want to configure the publisher
-and consumer to use something like <tt class="docutils literal"><span class="pre">pickle</span></tt>, by providing them with
-an <tt class="docutils literal"><span class="pre">encoder</span></tt> and <tt class="docutils literal"><span class="pre">decoder</span></tt> respectively.</p>
+Python data structures like dictionaries and lists works.
+<a class="reference external" href="http://yaml.org/">YAML</a> and Python&#8217;s built-in <tt class="docutils literal"><span class="pre">pickle</span></tt> module is also supported,
+and if needed you can register any custom serialization scheme you
+want to use.</p>
+<p>Each option has its advantages and disadvantages.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">json</span></tt> &#8211; JSON is supported in many programming languages, is now</dt>
+<dd><p class="first">a standard part of Python (since 2.6), and is fairly fast to
+decode using the modern Python libraries such as <tt class="docutils literal"><span class="pre">cjson</span> <span class="pre">or</span>
+<span class="pre">``simplejson</span></tt>.</p>
+<p>The primary disadvantage to <tt class="docutils literal"><span class="pre">JSON</span></tt> is that it limits you to
+the following data types: strings, unicode, floats, boolean,
+dictionaries, and lists.  Decimals and dates are notably missing.</p>
+<p>Also, binary data will be transferred using base64 encoding, which
+will cause the transferred data to be around 34% larger than an
+encoding which supports native binary types.</p>
+<p class="last">However, if your data fits inside the above constraints and
+you need cross-language support, the default setting of <tt class="docutils literal"><span class="pre">JSON</span></tt>
+is probably your best choice.</p>
+</dd>
+<dt><tt class="docutils literal"><span class="pre">pickle</span></tt> &#8211; If you have no desire to support any language other than</dt>
+<dd>Python, then using the <tt class="docutils literal"><span class="pre">pickle</span></tt> encoding will gain you
+the support of all built-in Python data types (except class instances),
+smaller messages when sending binary files, and a slight speedup
+over <tt class="docutils literal"><span class="pre">JSON</span></tt> processing.</dd>
+<dt><tt class="docutils literal"><span class="pre">yaml</span></tt> &#8211; YAML has many of the same characteristics as <tt class="docutils literal"><span class="pre">json</span></tt>,</dt>
+<dd><p class="first">except that it natively supports more data types (including dates,
+recursive references, etc.)</p>
+<p>However, the Python libraries for YAML are a good bit slower
+than the libraries for JSON.</p>
+<p class="last">If you need a more expressive set of data types and need to maintain
+cross-language compatability, then <tt class="docutils literal"><span class="pre">YAML</span></tt> may be a better fit
+than the above.</p>
+</dd>
+</dl>
+<p>To instruct carrot to use an alternate serialization method,
+use one of the following options.</p>
+<blockquote>
+<ol class="arabic">
+<li><p class="first">Change the system-wide default using
+<tt class="docutils literal"><span class="pre">carrot.serialization.registry.set_default_serializer</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot</span> <span class="kn">import</span> <span class="n">serialization</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">serialization</span><span class="o">.</span><span class="n">set_default_serializer</span><span class="p">(</span><span class="s">&quot;pickle&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Set the serialization option on a per-Publisher basis:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">serializer</span><span class="o">=</span><span class="s">&quot;yaml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Set the serialization option on a per-call basis</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s">&quot;import_feed&quot;</span><span class="p">:</span> <span class="s">&quot;http://cnn.com/rss/edition.rss&quot;</span><span class="p">},</span>
+<span class="gp">... </span>               <span class="n">serializer</span><span class="o">=</span><span class="s">&quot;pickle&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</blockquote>
+<p>Note that <tt class="docutils literal"><span class="pre">Consumer``s</span> <span class="pre">do</span> <span class="pre">not</span> <span class="pre">need</span> <span class="pre">the</span> <span class="pre">serialization</span> <span class="pre">method</span> <span class="pre">specified</span> <span class="pre">in</span>
+<span class="pre">their</span> <span class="pre">code.</span>&nbsp; <span class="pre">They</span> <span class="pre">can</span> <span class="pre">auto-detect</span> <span class="pre">the</span> <span class="pre">serialization</span> <span class="pre">method</span> <span class="pre">since</span> <span class="pre">we</span> <span class="pre">supply</span>
+<span class="pre">the</span>&nbsp; <span class="pre">``Content-type</span></tt> header as part of the AMQP message.</p>
+</div>
+<div class="section" id="sending-raw-data-without-serialization">
+<h2>Sending raw data without Serialization<a class="headerlink" href="#sending-raw-data-without-serialization" title="Permalink to this headline">¶</a></h2>
+<p>In some cases, you do not need your message data serialized. If you pass
+in a plain string or unicode object as your message, then carrot will
+not waste cycles serializing/deserializing the data.</p>
+<p>You can optionally specify a <tt class="docutils literal"><span class="pre">content_type</span></tt> and <tt class="docutils literal"><span class="pre">content_encoding</span></tt>
+for the raw data.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span>
+<span class="go">                          routing_key=&quot;import_pictures&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;~/my_picture.jpg&#39;</span><span class="p">,</span><span class="s">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span>
+<span class="go">                   content_type=&quot;image/jpeg&quot;,</span>
+<span class="go">                   content_encoding=&quot;binary&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">message</span></tt> object returned by the <tt class="docutils literal"><span class="pre">Consumer</span></tt> class will have a
+<tt class="docutils literal"><span class="pre">content_type</span></tt> and <tt class="docutils literal"><span class="pre">content_encoding</span></tt> attribute.</p>
 </div>
 <div class="section" id="receiving-messages-without-a-callback">
 <h2>Receiving messages without a callback<a class="headerlink" href="#receiving-messages-without-a-callback" title="Permalink to this headline">¶</a></h2>
@@ -257,7 +345,7 @@ re-queue the message.</p>
 <span class="gp">... </span>                    <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">message</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">message</span><span class="p">:</span>
-<span class="gp">... </span>   <span class="n">message_data</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+<span class="gp">... </span>   <span class="n">message_data</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">payload</span>
 <span class="gp">... </span>   <span class="n">message</span><span class="o">.</span><span class="n">ack</span><span class="p">()</span>
 <span class="gp">... </span><span class="k">else</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="c"># No messages waiting on the queue.</span>
@@ -352,6 +440,8 @@ file in the top distribution directory for the full license text.</p>
 <li><a class="reference external" href="#creating-a-connection">Creating a connection</a></li>
 <li><a class="reference external" href="#receiving-messages-using-a-consumer">Receiving messages using a Consumer</a></li>
 <li><a class="reference external" href="#sending-messages-using-a-publisher">Sending messages using a Publisher</a></li>
+<li><a class="reference external" href="#serialization-of-data">Serialization of Data</a></li>
+<li><a class="reference external" href="#sending-raw-data-without-serialization">Sending raw data without Serialization</a></li>
 <li><a class="reference external" href="#receiving-messages-without-a-callback">Receiving messages without a callback</a></li>
 <li><a class="reference external" href="#sub-classing-the-messaging-classes">Sub-classing the messaging classes</a><ul>
 <li><a class="reference external" href="#getting-help">Getting Help</a></li>
