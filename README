@@ -286,7 +286,7 @@ the  ``Content-type`` header as part of the AMQP message.
 
 
 Sending raw data without Serialization
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------
 
 In some cases, you do not need your message data serialized. If you pass
 in a plain string or unicode object as your message, then carrot will
