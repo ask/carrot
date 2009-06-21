@@ -208,7 +208,7 @@ where the following text has been printed to the screen::
 
 
 Serialization of Data
-~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 By default every message is encoded using `JSON`_, so sending
 Python data structures like dictionaries and lists works.
