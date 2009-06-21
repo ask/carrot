@@ -42,14 +42,6 @@ class SerializerNotInstalled(StandardError):
 class SerializerRegistry(object):
     """The registry keeps track of serialization methods."""
     
-    def __new__(cls):
-        """
-        Make the registry a singleton.
-        """
-        if not '_sr_instance' in cls.__dict__:
-            cls._sr_instance = object.__new__(cls)
-        return cls._sr_instance
-
     def __init__(self):
         self._encoders = {}
         self._decoders = {}
