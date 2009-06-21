@@ -157,11 +157,11 @@ class TestMessaging(unittest.TestCase):
         consumer.close()
 
     def test_custom_serialization_scheme(self):
-        serialization.registry.register('custom_test', 
-                pickle.dumps, pickle.loads, 
+        serialization.registry.register('custom_test',
+                pickle.dumps, pickle.loads,
                 content_type='application/x-custom-test',
                 content_encoding='binary')
-                
+
         consumer = self.create_consumer()
         publisher = self.create_publisher()
         consumer.discard_all()

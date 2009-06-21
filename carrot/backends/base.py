@@ -31,7 +31,7 @@ class BaseMessage(object):
         return serialization.decode(self.body, self.content_type,
                                     self.content_encoding)
 
-    @property                            
+    @property
     def payload(self):
         """The decoded message."""
         if not self._decoded_cache:

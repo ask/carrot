@@ -60,13 +60,13 @@ class TestSerialization(unittest.TestCase):
 
         self.assertEquals(unicode_string,
                           registry.decode(
-                              unicode_string_as_utf8, 
-                              content_type='plain/text', 
+                              unicode_string_as_utf8,
+                              content_type='plain/text',
                               content_encoding='utf-8'))
         self.assertEquals(latin_string,
                           registry.decode(
-                              latin_string_as_latin1, 
-                              content_type='application/data', 
+                              latin_string_as_latin1,
+                              content_type='application/data',
                               content_encoding='latin-1'))
 
     def test_content_type_binary(self):
@@ -74,92 +74,92 @@ class TestSerialization(unittest.TestCase):
 
         self.assertNotEquals(unicode_string,
                              registry.decode(
-                                 unicode_string_as_utf8, 
-                                 content_type='application/data', 
+                                 unicode_string_as_utf8,
+                                 content_type='application/data',
                                  content_encoding='binary'))
 
         self.assertEquals(unicode_string_as_utf8,
                           registry.decode(
-                              unicode_string_as_utf8, 
-                              content_type='application/data', 
+                              unicode_string_as_utf8,
+                              content_type='application/data',
                               content_encoding='binary'))
 
     def test_content_type_encoding(self):
         self.assertEquals(unicode_string_as_utf8,
                           registry.encode(
                               unicode_string, serializer="raw")[-1])
-        self.assertEquals(latin_string_as_utf8, 
+        self.assertEquals(latin_string_as_utf8,
                           registry.encode(
                               latin_string, serializer="raw")[-1])
 
     def test_json_decode(self):
         self.assertEquals(py_data,
                           registry.decode(
-                              json_data, 
-                              content_type='application/json', 
+                              json_data,
+                              content_type='application/json',
                               content_encoding='utf-8'))
-        
+
     def test_json_encode(self):
         self.assertEquals(registry.decode(
-                              registry.encode(py_data, serializer="json")[-1], 
-                              content_type='application/json', 
+                              registry.encode(py_data, serializer="json")[-1],
+                              content_type='application/json',
                               content_encoding='utf-8'),
                           registry.decode(
-                              json_data, 
-                              content_type='application/json', 
+                              json_data,
+                              content_type='application/json',
                               content_encoding='utf-8'))
 
     def test_yaml_decode(self):
         self.assertEquals(py_data,
                           registry.decode(
-                              yaml_data, 
-                              content_type='application/x-yaml', 
+                              yaml_data,
+                              content_type='application/x-yaml',
                               content_encoding='utf-8'))
-        
+
     def test_yaml_encode(self):
         self.assertEquals(registry.decode(
-                              registry.encode(py_data, serializer="yaml")[-1], 
-                              content_type='application/x-yaml', 
+                              registry.encode(py_data, serializer="yaml")[-1],
+                              content_type='application/x-yaml',
                               content_encoding='utf-8'),
                           registry.decode(
-                              yaml_data, 
-                              content_type='application/x-yaml', 
+                              yaml_data,
+                              content_type='application/x-yaml',
                               content_encoding='utf-8'))
-    # 
+    #
     # def test_hessian_decode(self):
     #     print '---------'
     #     print registry.decode(
-    #         hessian_data, 
-    #         content_type='application/x-hessian', 
+    #         hessian_data,
+    #         content_type='application/x-hessian',
     #         content_encoding='binary')
     #     print '---------'
     #     self.assertEquals(py_data,
     #                       registry.decode(
-    #                           hessian_data, 
-    #                           content_type='application/x-hessian', 
+    #                           hessian_data,
+    #                           content_type='application/x-hessian',
     #                           content_encoding='binary'))
-    #     
+    #
     # def test_hessian_encode(self):
     #     self.assertEquals(registry.decode(
     #                           registry.encode(py_data,
-    #                                           serializer="hessian")[-1], 
-    #                           content_type='application/x-hessian', 
+    #                                           serializer="hessian")[-1],
+    #                           content_type='application/x-hessian',
     #                           content_encoding='binary'),
     #                       registry.decode(
-    #                           hessian_data, 
-    #                           content_type='application/x-hessian', 
+    #                           hessian_data,
+    #                           content_type='application/x-hessian',
     #                           content_encoding='binary'))
 
     def test_pickle_decode(self):
         self.assertEquals(py_data,
                           registry.decode(
-                              pickle_data, 
-                              content_type='application/x-python-serialize', 
+                              pickle_data,
+                              content_type='application/x-python-serialize',
                               content_encoding='binary'))
-        
+
     def test_pickle_encode(self):
         self.assertEquals(pickle_data,
-                          registry.encode(py_data, 
+                          registry.encode(py_data,
                               serializer="pickle")[-1])
 
 
