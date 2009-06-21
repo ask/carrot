@@ -199,9 +199,36 @@ class SerializerRegistry(object):
         return decoder(data)
 
 
+"""
+.. data:: registry
+
+Global registry of serializers/deserializers.
+
+"""
 registry = SerializerRegistry()
+
+"""
+.. function:: encode(data, serializer=default_serializer)
+
+Encode data using the registry's default encoder.
+
+"""
 encode = registry.encode
+
+"""
+.. function:: decode(data, content_type, content_encoding):
+
+Decode data using the registry's default decoder.
+
+"""
 decode = registry.decode
+
+"""
+.. function:: set_default_serializer(name)
+
+Change the registry's default serializer.
+
+"""
 set_default_serializer = registry.set_default_serializer
 
 def register_json():
