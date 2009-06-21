@@ -209,6 +209,7 @@ Decode data using the registry's default decoder.
 
 """
 decode = registry.decode
+set_default_serializer = registry.set_default_serializer
 
 """
 .. function:: set_default_serializer(name)
