@@ -52,8 +52,7 @@ class SerializerRegistry(object):
 
     def register(self, name, encoder, decoder, content_type,
                  content_encoding='utf-8'):
-        """
-        Register a new encoder/decoder.
+        """Register a new encoder/decoder.
 
         :param name: A convenience name for the serialization method.
 
