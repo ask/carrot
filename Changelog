@@ -11,8 +11,26 @@
 		registry in ``carrot.serialization``. This means the 
 		``encoder``/``decoder`` optional arguments to ``Publisher.send`` 
 		`(and the similar attributes of  ``Publisher`` and ``Consumer`` 
-		classes) no longer exist.   See ``README`` for details of the new 
-		system.
+		classes) no longer exist.   
+
+		An example of the new-style serialization which changes the 
+		system-wide default:
+
+		    >>> from carrot import serialization
+		    >>> 
+		    >>> def my_encode(data): 
+		    ...     return repr(data)
+		    ...     
+		    >>> def my_decode(data): 
+		    ...     return eval(data)
+		    ... 
+		    >>> serialization.registry.register('custom', my_encode, my_decode,
+		    ...                   content_type='application/x-my-serialization',
+		    ...                   content_encoding='utf-8')
+		    ... 
+		    >>> serialization.set_default_serializer("custom")
+
+		See ``README`` for details of the new system.
 
 	* Any ``Consumer`` and ``Publisher`` instances should be 
 		upgraded at the same time since carrot now uses the AMQP
