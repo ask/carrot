@@ -532,10 +532,11 @@ class Publisher(object):
     .. attribute:: serializer
 
         A string identifying the default serialization method to use.
-        Defaults to ``json``. Can be ``json`` (default), ``raw``, 
-        ``pickle``, ``hessian``, ``yaml``, or any custom serialization 
-        methods that have been registered with 
-        ``carrot.serialization.registry``. 
+        Defaults to ``json``. Can be ``json`` (default), ``raw``,
+        ``pickle``, ``hessian``, ``yaml``, or any custom serialization
+        methods that have been registered with
+        ``carrot.serialization.registry``.
+
     """
 
     exchange = ""
@@ -578,7 +579,7 @@ class Publisher(object):
         self.close()
 
     def create_message(self, message_data, delivery_mode=None, priority=None,
-                       content_type=None, content_encoding=None, 
+                       content_type=None, content_encoding=None,
                        serializer=None):
         """With any data, serialize it and encapsulate it in a AMQP
         message with the proper headers set."""
@@ -588,29 +589,29 @@ class Publisher(object):
         # No content_type? Then we're serializing the data internally.
         if not content_type:
             serializer = serializer or self.serializer
-            (content_type, content_encoding, 
-             message_data) = serialization.encode(message_data, 
+            (content_type, content_encoding,
+             message_data) = serialization.encode(message_data,
                                                   serializer=serializer)
         else:
-            # If the programmer doesn't want us to serialize, 
+            # If the programmer doesn't want us to serialize,
             # make sure content_encoding is set.
             if isinstance(message_data, unicode):
                 if not content_encoding:
                     content_encoding = 'utf-8'
                 message_data = message_data.encode(content_encoding)
-                
-            # If they passed in a string, we can't know anything 
-            # about it.  So assume it's binary data. 
+
+            # If they passed in a string, we can't know anything
+            # about it.  So assume it's binary data.
             elif not content_encoding:
                 content_encoding = 'binary'
 
         return self.backend.prepare_message(message_data, delivery_mode,
-                                            priority=priority, 
-                                            content_type=content_type, 
+                                            priority=priority,
+                                            content_type=content_type,
                                             content_encoding=content_encoding)
 
     def send(self, message_data, routing_key=None, delivery_mode=None,
-            mandatory=False, immediate=False, priority=0, content_type=None, 
+            mandatory=False, immediate=False, priority=0, content_type=None,
             content_encoding=None, serializer=None):
         """Send a message.
 
@@ -635,27 +636,26 @@ class Publisher(object):
         :keyword delivery_mode: Override the default :attr:`delivery_mode`.
 
         :keyword priority: The message priority, ``0`` to ``9``.
-        
-        :keyword content_type: The messages content_type. If content_type 
-            is set, no serialization occurs as it is assumed this is either 
+
+        :keyword content_type: The messages content_type. If content_type
+            is set, no serialization occurs as it is assumed this is either
             a binary object, or you've done your own serialization.
             Leave blank if using built-in serialization as our library
             properly sets content_type.
 
         :keyword content_encoding: The character set in which this object
-            is encoded. Use "binary" if sending in raw binary objects. 
+            is encoded. Use "binary" if sending in raw binary objects.
             Leave blank if using built-in serialization as our library
             properly sets content_encoding.
 
         :keyword serializer: Override the default :attr:`serializer`.
-        
 
         """
         if not routing_key:
             routing_key = self.routing_key
         message = self.create_message(message_data, priority=priority,
-                                      delivery_mode=delivery_mode, 
-                                      content_type=content_type, 
+                                      delivery_mode=delivery_mode,
+                                      content_type=content_type,
                                       content_encoding=content_encoding,
                                       serializer=serializer)
         self.backend.publish(message,

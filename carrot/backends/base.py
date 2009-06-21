@@ -22,14 +22,14 @@ class BaseMessage(object):
         self.delivery_tag = kwargs.get("delivery_tag")
         self.content_type = kwargs.get("content_type")
         self.content_encoding = kwargs.get("content_encoding")
-        self._decoded_cache = None 
+        self._decoded_cache = None
         self._state = "RECEIVED"
 
     def decode(self):
         """Deserialize the message body, returning the original
         python structure sent by the publisher."""
-        return serialization.decode(self.body, self.content_type, 
-                                  self.content_encoding)
+        return serialization.decode(self.body, self.content_type,
+                                    self.content_encoding)
 
     @property                            
     def payload(self):

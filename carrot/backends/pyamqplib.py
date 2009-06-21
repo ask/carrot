@@ -63,10 +63,9 @@ class Message(BaseMessage):
 
         kwargs.update({
             "body": amqp_message.body,
-            "delivery_tag": amqp_message.delivery_tag, 
+            "delivery_tag": amqp_message.delivery_tag,
             "content_type": amqp_message.content_type,
-            "content_encoding": 
-                            amqp_message.content_encoding})
+            "content_encoding": amqp_message.content_encoding})
 
         super(Message, self).__init__(backend, **kwargs)
 
@@ -186,12 +185,11 @@ class Backend(BaseBackend):
         """Reject and requeue a message by delivery tag."""
         return self.channel.basic_reject(delivery_tag, requeue=True)
 
-    def prepare_message(self, message_data, delivery_mode, priority=None, 
-                        content_type=None, 
-                        content_encoding=None):
+    def prepare_message(self, message_data, delivery_mode, priority=None,
+                content_type=None, content_encoding=None):
         """Encapsulate data into a AMQP message."""
-        message = amqp.Message(message_data, priority=priority, 
-                               content_type=content_type, 
+        message = amqp.Message(message_data, priority=priority,
+                               content_type=content_type,
                                content_encoding=content_encoding)
         message.properties["delivery_mode"] = delivery_mode
         return message

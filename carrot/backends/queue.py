@@ -38,8 +38,8 @@ class Backend(BaseBackend):
         if not mqueue.qsize():
             return None
         message_data, content_type, content_encoding = mqueue.get()
-        return Message(backend=self, body=message_data, 
-                       content_type=content_type, 
+        return Message(backend=self, body=message_data,
+                       content_type=content_type,
                        content_encoding=content_encoding)
 
     def consume(self, queue, no_ack, callback, consumer_tag):
@@ -56,7 +56,7 @@ class Backend(BaseBackend):
         """Discard all messages in the queue."""
         mqueue = Queue()
 
-    def prepare_message(self, message_data, delivery_mode, 
+    def prepare_message(self, message_data, delivery_mode,
                         content_type, content_encoding, **kwargs):
         """Prepare message for sending."""
         return (message_data, content_type, content_encoding)

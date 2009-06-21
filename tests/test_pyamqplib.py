@@ -380,7 +380,6 @@ class TestMessaging(unittest.TestCase):
             consumer.close()
             publisher.close()
 
-
     def test_consumerset_iterconsume(self):
         consumerset = self.create_consumerset(queues={
             "bar": {
