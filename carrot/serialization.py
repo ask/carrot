@@ -11,24 +11,6 @@ libraries are installed (`HessianPy`_ and `PyYAML`_, respectively).
 .. _`HessianPy`: http://hessianpy.sourceforge.net/
 .. _`PyYAML`: http://pyyaml.org/
 
-.. attribute:: registry
-
-    A default instance of ``SerializerRegistry``
-
-.. method:: encode
-
-    The :meth:`SerializerRegistry.encode` method of the default
-    :attr:`registry`.
-
-.. method:: decode
-
-    The :meth:`SerializerRegistry.decode` method of the default
-    :attr:`registry`.
-
-.. method:: set_default_registry
-
-    The :meth:`SerializerRegistry.set_default_registry` method of the default
-    :attr:`registry`.
 """
 
 import codecs
@@ -79,7 +61,7 @@ class SerializerRegistry(object):
         if decoder:
             self._decoders[content_type] = decoder
 
-    def set_default_serializer(self, name):
+    def _set_default_serializer(self, name):
         """
         Set the default serialization method used by this library.
 
@@ -109,8 +91,7 @@ class SerializerRegistry(object):
             the serialization method you want the data marshalled
             into. (For example, ``json``, ``raw``, or ``pickle``).
 
-            If ``None`` (default), then the serialization method
-            set by ``set_default_serializer`` will be used, unless
+            If ``None`` (default), then `JSON`_ will be used, unless
             ``data`` is a ``str`` or ``unicode`` object. In this
             latter case, no serialization occurs as it would be
             unnecessary.
@@ -209,16 +190,6 @@ Decode data using the registry's default decoder.
 
 """
 decode = registry.decode
-set_default_serializer = registry.set_default_serializer
-
-"""
-.. function:: set_default_serializer(name)
-
-Change the registry's default serializer.
-
-"""
-set_default_serializer = registry.set_default_serializer
-
 
 def raw_encode(data):
     """Special case serializer."""
@@ -336,4 +307,4 @@ register_yaml()
 
 # JSON is assumed to always be available, so is the default.
 # (this matches the historical use of carrot.)
-registry.set_default_serializer('json')
+registry._set_default_serializer('json')
