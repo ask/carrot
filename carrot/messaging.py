@@ -731,7 +731,7 @@ class ConsumerSet(object):
     """Receive messages from multiple consumers.
 
     :param connection: see :attr:`connection`.
-    :param from_dict see :attr:`from_dict`.
+    :param from_dict: see :attr:`from_dict`.
     :param consumers: see :attr:`consumers`.
     :param callbacks: see :attr:`callbacks`.
     :param backend_cls: see :attr:`backend_cls`.
