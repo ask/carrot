@@ -2,10 +2,10 @@
  carrot - AMQP Messaging Framework for Python
 ##############################################
 
-:Version: 0.4.5
+:Version: 0.5.0
 
-**NOTE** This release contains backward-incompatible changes and
-important bugfixes. Please read the `Changelog`_ for more information.
+**NOTE** This release contains backward-incompatible changes.
+Please read the `Changelog`_ for more information.
 
 .. _`Changelog`: http://ask.github.com/carrot/changelog.html
 
@@ -258,20 +258,14 @@ Each option has its advantages and disadvantages.
 To instruct carrot to use an alternate serialization method, 
 use one of the following options.
 
-    1.  Change the system-wide default using 
-        ``carrot.serialization.registry.set_default_serializer``:
-        
-            >>> from carrot import serialization
-            >>> serialization.set_default_serializer("pickle")
-        
-    2.  Set the serialization option on a per-Publisher basis: 
+    1.  Set the serialization option on a per-Publisher basis: 
         
             >>> from carrot.messaging import Publisher
             >>> publisher = Publisher(connection=amqpconn,
             ...                       exchange="feed", routing_key="importer",
             ...                       serializer="yaml")
 
-    3.  Set the serialization option on a per-call basis
+    2.  Set the serialization option on a per-call basis
 
             >>> from carrot.messaging import Publisher
             >>> publisher = Publisher(connection=amqpconn,
@@ -282,18 +276,18 @@ use one of the following options.
 
 Note that ``Consumer``s do not need the serialization method specified in 
 their code.  They can auto-detect the serialization method since we supply 
-the  ``Content-type`` header as part of the AMQP message.
+the ``Content-type`` header as part of the AMQP message.
 
 
 Sending raw data without Serialization
 ---------------------------------------
 
-In some cases, you do not need your message data serialized. If you pass
-in a plain string or unicode object as your message, then carrot will
+In some cases, you don't need your message data to be serialized. If you
+pass in a plain string or unicode object as your message, then carrot will
 not waste cycles serializing/deserializing the data.
 
 You can optionally specify a ``content_type`` and ``content_encoding``
-for the raw data. 
+for the raw data:
 
     >>> from carrot.messaging import Publisher
     >>> publisher = Publisher(connection=amqpconn,

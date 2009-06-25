@@ -2,7 +2,7 @@
  Change history
 ================
 
-0.x.x 
+0.5.0 [2009-06-25 08:16 P.M CET]
 ------------------------------------------------------------------
 
 **BACKWARD-INCOMPATIBLE CHANGES**
@@ -22,6 +22,13 @@
 		instead of your de-serialized data. An old-style ``Consumer``
 		will work with a new-style ``Publisher`` as long as you're using
 		the default ``JSON`` serialization methods. 
+
+	* Acknowledging/Rejecting/Requeuing a message twice now raises
+		an exception.
+
+*ENHANCEMENTS*
+
+	* ``ConsumerSet``: Receive messages from several consumers.
 
 
 0.4.5 [2009-06-15 01:58 P.M CET] 

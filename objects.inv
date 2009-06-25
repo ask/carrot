@@ -1,6 +1,6 @@
 # Sphinx inventory version 1
 # Project: Carrot
-# Version: 0.4
+# Version: 0.5
 carrot.connection mod reference/carrot.connection.html
 carrot.serialization mod reference/carrot.serialization.html
 carrot.backends.queue mod reference/carrot.backends.queue.html
@@ -118,7 +118,7 @@ carrot.backends.base.BaseBackend.message_to_python method reference/carrot.backe
 carrot.backends.base.BaseMessage class reference/carrot.backends.base.html
 carrot.messaging.ConsumerSet.register_callback method reference/carrot.messaging.html
 carrot.backends.pyamqplib.Backend.queue_purge method reference/carrot.backends.pyamqplib.html
-carrot.serialization.encode method reference/carrot.serialization.html
+carrot.serialization.encode function reference/carrot.serialization.html
 carrot.messaging.Consumer.iterqueue method reference/carrot.messaging.html
 carrot.messaging.Consumer.durable attribute reference/carrot.messaging.html
 carrot.backends.base.BaseBackend.consume method reference/carrot.backends.base.html
@@ -126,7 +126,7 @@ carrot.backends.pyamqplib.Backend.prepare_message method reference/carrot.backen
 carrot.messaging.Consumer.fetch method reference/carrot.messaging.html
 carrot.messaging.Consumer.no_ack attribute reference/carrot.messaging.html
 carrot.backends.pyamqplib.Message class reference/carrot.backends.pyamqplib.html
-carrot.serialization.registry attribute reference/carrot.serialization.html
+carrot.serialization.registry data reference/carrot.serialization.html
 carrot.connection.AMQPConnection.connect method reference/carrot.connection.html
 carrot.backends.DefaultBackend class reference/carrot.backends.html
 carrot.backends.queue.Backend class reference/carrot.backends.queue.html
@@ -142,8 +142,6 @@ carrot.connection.DummyConnection class reference/carrot.connection.html
 carrot.messaging.ConsumerSet.from_dict attribute reference/carrot.messaging.html
 carrot.backends.pyamqplib.Backend.exchange_declare method reference/carrot.backends.pyamqplib.html
 carrot.connection.AMQPConnection.port attribute reference/carrot.connection.html
-carrot.serialization.decode method reference/carrot.serialization.html
 carrot.messaging.Consumer.receive method reference/carrot.messaging.html
 carrot.messaging.Consumer.iterconsume method reference/carrot.messaging.html
-carrot.serialization.set_default_registry method reference/carrot.serialization.html
 carrot.backends.pyamqplib.Message.body attribute reference/carrot.backends.pyamqplib.html

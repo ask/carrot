@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.serialization &mdash; Carrot v0.4.5 documentation</title>
+    <title>carrot.serialization &mdash; Carrot v0.5.0 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.4.5',
+        VERSION:     '0.5.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.4.5 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.5.0 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="Change history" href="../changelog.html" />
     <link rel="prev" title="carrot.backends.queue" href="carrot.backends.queue.html" /> 
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="carrot.backends.queue.html" title="carrot.backends.queue"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.4.5 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.5.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -56,29 +56,6 @@
 Requires a json library (<a class="reference external" href="http://pypi.python.org/pypi/python-cjson/">cjson</a>, <a class="reference external" href="http://code.google.com/p/simplejson/">simplejson</a>, or <a class="reference external" href="http://docs.python.org/library/json.html">Python 2.6+</a>).</p>
 <p>Optionally installs support for <tt class="docutils literal"><span class="pre">Hessian</span> <span class="pre">1.0</span></tt> and <tt class="docutils literal"><span class="pre">YAML</span></tt> if the necessary
 libraries are installed (<a class="reference external" href="http://hessianpy.sourceforge.net/">HessianPy</a> and <a class="reference external" href="http://pyyaml.org/">PyYAML</a>, respectively).</p>
-<dl class="attribute">
-<dt id="carrot.serialization.registry">
-<tt class="descclassname">carrot.serialization.</tt><tt class="descname">registry</tt><a class="headerlink" href="#carrot.serialization.registry" title="Permalink to this definition">¶</a></dt>
-<dd>A default instance of <tt class="docutils literal"><span class="pre">SerializerRegistry</span></tt></dd></dl>
-
-<dl class="method">
-<dt id="carrot.serialization.encode">
-<tt class="descclassname">carrot.serialization.</tt><tt class="descname">encode</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.serialization.encode" title="Permalink to this definition">¶</a></dt>
-<dd>The <tt class="xref docutils literal"><span class="pre">SerializerRegistry.encode()</span></tt> method of the default
-<a title="carrot.serialization.registry" class="reference internal" href="#carrot.serialization.registry"><tt class="xref docutils literal"><span class="pre">registry</span></tt></a>.</dd></dl>
-
-<dl class="method">
-<dt id="carrot.serialization.decode">
-<tt class="descclassname">carrot.serialization.</tt><tt class="descname">decode</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.serialization.decode" title="Permalink to this definition">¶</a></dt>
-<dd>The <tt class="xref docutils literal"><span class="pre">SerializerRegistry.decode()</span></tt> method of the default
-<a title="carrot.serialization.registry" class="reference internal" href="#carrot.serialization.registry"><tt class="xref docutils literal"><span class="pre">registry</span></tt></a>.</dd></dl>
-
-<dl class="method">
-<dt id="carrot.serialization.set_default_registry">
-<tt class="descclassname">carrot.serialization.</tt><tt class="descname">set_default_registry</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.serialization.set_default_registry" title="Permalink to this definition">¶</a></dt>
-<dd>The <tt class="xref docutils literal"><span class="pre">SerializerRegistry.set_default_registry()</span></tt> method of the default
-<a title="carrot.serialization.registry" class="reference internal" href="#carrot.serialization.registry"><tt class="xref docutils literal"><span class="pre">registry</span></tt></a>.</dd></dl>
-
 <dl class="exception">
 <dt id="carrot.serialization.SerializerNotInstalled">
 <em class="property">
@@ -86,11 +63,11 @@ exception </em><tt class="descclassname">carrot.serialization.</tt><tt class="de
 <dd>Support for the requested serialization type is not installed</dd></dl>
 
 <dl class="data">
-<dt>
-<tt class="descclassname">carrot.serialization.</tt><tt class="descname">registry</tt></dt>
+<dt id="carrot.serialization.registry">
+<tt class="descclassname">carrot.serialization.</tt><tt class="descname">registry</tt><a class="headerlink" href="#carrot.serialization.registry" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="function">
-<dt>
-<tt class="descclassname">carrot.serialization.</tt><tt class="descname">encode</tt><big>(</big><em>data</em>, <em>serializer=default_serializer</em><big>)</big></dt>
+<dt id="carrot.serialization.encode">
+<tt class="descclassname">carrot.serialization.</tt><tt class="descname">encode</tt><big>(</big><em>data</em>, <em>serializer=default_serializer</em><big>)</big><a class="headerlink" href="#carrot.serialization.encode" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>Encode data using the registry&#8217;s default encoder.</p>
@@ -147,7 +124,7 @@ exception </em><tt class="descclassname">carrot.serialization.</tt><tt class="de
         <li class="right" >
           <a href="carrot.backends.queue.html" title="carrot.backends.queue"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.4.5 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.5.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>

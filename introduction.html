@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.4.5 documentation</title>
+    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.5.0 documentation</title>
     <link rel="stylesheet" href="static/nature.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.4.5',
+        VERSION:     '0.5.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.4.5 documentation" href="index.html" />
+    <link rel="top" title="Carrot v0.5.0 documentation" href="index.html" />
     <link rel="next" title="Frequently Asked Questions" href="faq.html" />
     <link rel="prev" title="Carrot Documentation" href="index.html" /> 
   </head>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="index.html" title="Carrot Documentation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Carrot v0.4.5 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.5.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,12 +54,12 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.4.5</td>
+<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.5.0</td>
 </tr>
 </tbody>
 </table>
-<p><strong>NOTE</strong> This release contains backward-incompatible changes and
-important bugfixes. Please read the <a class="reference external" href="http://ask.github.com/carrot/changelog.html">Changelog</a> for more information.</p>
+<p><strong>NOTE</strong> This release contains backward-incompatible changes.
+Please read the <a class="reference external" href="http://ask.github.com/carrot/changelog.html">Changelog</a> for more information.</p>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p><cite>carrot</cite> is an <a class="reference external" href="http://amqp.org">AMQP</a> messaging queue framework. AMQP is the Advanced Message
@@ -284,13 +284,6 @@ than the above.</p>
 use one of the following options.</p>
 <blockquote>
 <ol class="arabic">
-<li><p class="first">Change the system-wide default using
-<tt class="docutils literal"><span class="pre">carrot.serialization.registry.set_default_serializer</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot</span> <span class="kn">import</span> <span class="n">serialization</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">serialization</span><span class="o">.</span><span class="n">set_default_serializer</span><span class="p">(</span><span class="s">&quot;pickle&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
 <li><p class="first">Set the serialization option on a per-Publisher basis:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
@@ -313,15 +306,15 @@ use one of the following options.</p>
 </blockquote>
 <p>Note that <tt class="docutils literal"><span class="pre">Consumer``s</span> <span class="pre">do</span> <span class="pre">not</span> <span class="pre">need</span> <span class="pre">the</span> <span class="pre">serialization</span> <span class="pre">method</span> <span class="pre">specified</span> <span class="pre">in</span>
 <span class="pre">their</span> <span class="pre">code.</span>&nbsp; <span class="pre">They</span> <span class="pre">can</span> <span class="pre">auto-detect</span> <span class="pre">the</span> <span class="pre">serialization</span> <span class="pre">method</span> <span class="pre">since</span> <span class="pre">we</span> <span class="pre">supply</span>
-<span class="pre">the</span>&nbsp; <span class="pre">``Content-type</span></tt> header as part of the AMQP message.</p>
+<span class="pre">the</span> <span class="pre">``Content-type</span></tt> header as part of the AMQP message.</p>
 </div>
 <div class="section" id="sending-raw-data-without-serialization">
 <h2>Sending raw data without Serialization<a class="headerlink" href="#sending-raw-data-without-serialization" title="Permalink to this headline">¶</a></h2>
-<p>In some cases, you do not need your message data serialized. If you pass
-in a plain string or unicode object as your message, then carrot will
+<p>In some cases, you don&#8217;t need your message data to be serialized. If you
+pass in a plain string or unicode object as your message, then carrot will
 not waste cycles serializing/deserializing the data.</p>
 <p>You can optionally specify a <tt class="docutils literal"><span class="pre">content_type</span></tt> and <tt class="docutils literal"><span class="pre">content_encoding</span></tt>
-for the raw data.</p>
+for the raw data:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
 <span class="gp">... </span>                      <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span>
@@ -500,7 +493,7 @@ file in the top distribution directory for the full license text.</p>
         <li class="right" >
           <a href="index.html" title="Carrot Documentation"
              >previous</a> |</li>
-        <li><a href="index.html">Carrot v0.4.5 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.5.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
