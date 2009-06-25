@@ -37,7 +37,7 @@
 **BACKWARD-INCOMPATIBLE CHANGES**
 
 	* the exchange is now also declared in the ``Publisher``. This means
-		the following attributes (if used) must be set on *both
+		the following attributes (if used) must be set on *both*
 		the ``Publisher`` and the ``Consumer``:
 		``exchange_type``, ``durable`` and ``auto_delete``.
 
