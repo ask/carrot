@@ -4,8 +4,8 @@
 
 :Version: 0.5.0
 
-**NOTE** This release contains backward-incompatible changes and
-important bugfixes. Please read the `Changelog`_ for more information.
+**NOTE** This release contains backward-incompatible changes.
+Please read the `Changelog`_ for more information.
 
 .. _`Changelog`: http://ask.github.com/carrot/changelog.html
 
