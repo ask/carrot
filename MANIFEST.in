@@ -4,6 +4,7 @@ include FAQ
 include INSTALL
 include LICENSE
 include MANIFEST.in
+include README.rst
 include README
 include THANKS
 include TODO

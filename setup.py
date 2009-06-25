@@ -74,8 +74,8 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
             data_files.append([dirpath, [os.path.join(dirpath, f) for f in
                 filenames]])
 
-if os.path.exists("README"):
-    long_description = codecs.open('README', "r", "utf-8").read()
+if os.path.exists("README.rst"):
+    long_description = codecs.open('README.rst', "r", "utf-8").read()
 else:
     long_description = "See http://pypi.python.org/pypi/carrot"
 
