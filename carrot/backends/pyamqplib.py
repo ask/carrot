@@ -61,11 +61,11 @@ class Message(BaseMessage):
         self.amqp_message = amqp_message
         self.backend = backend
 
-        kwargs.update({
-            "body": amqp_message.body,
-            "delivery_tag": amqp_message.delivery_tag,
-            "content_type": amqp_message.content_type,
-            "content_encoding": amqp_message.content_encoding})
+        for attr_name in ("body",
+                          "delivery_tag",
+                          "content_type",
+                          "content_encoding"):
+            kwargs[attr_name] = getattr(amqp_message, attr_name, None)
 
         super(Message, self).__init__(backend, **kwargs)
 
