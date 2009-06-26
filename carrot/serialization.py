@@ -205,33 +205,8 @@ def raw_encode(data):
 
 def register_json():
     """Register a encoder/decoder for JSON serialization."""
-
-    # Try to import a module that provides json parsing and emitting, starting
-    # with the fastest alternative and falling back to the slower ones.
-    try:
-        # cjson is the fastest
-        import cjson
-        json_serialize = cjson.encode
-        json_deserialize = cjson.decode
-    except ImportError:
-        try:
-            # Then try to find simplejson. Later versions has C speedups which
-            # makes it pretty fast.
-            import simplejson
-            json_serialize = simplejson.dumps
-            json_deserialize = simplejson.loads
-        except ImportError:
-            try:
-                # Then try to find the python 2.6 stdlib json module.
-                import json
-                json_serialize = json.dumps
-                json_deserialize = json.loads
-            except ImportError:
-                # If all of the above fails, fallback to the simplejson
-                # embedded in Django.
-                from django.utils import simplejson
-                json_serialize = simplejson.dumps
-                json_deserialize = simplejson.loads
+    from anyjson import serialize as json_serialize
+    from anyjson import deserialize as json_deserialize
 
     registry.register('json', json_serialize, json_deserialize,
                       content_type='application/json',

@@ -92,6 +92,7 @@ setup(
     zip_safe=False,
     test_suite="nose.collector",
     install_requires=[
+        'anyjson',
         'amqplib',
     ],
     classifiers=[
