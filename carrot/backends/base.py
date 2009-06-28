@@ -22,6 +22,7 @@ class BaseMessage(object):
         self.delivery_tag = kwargs.get("delivery_tag")
         self.content_type = kwargs.get("content_type")
         self.content_encoding = kwargs.get("content_encoding")
+        self.delivery_info = kwargs.get("delivery_info", {})
         self._decoded_cache = None
         self._state = "RECEIVED"
 

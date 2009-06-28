@@ -64,7 +64,8 @@ class Message(BaseMessage):
         for attr_name in ("body",
                           "delivery_tag",
                           "content_type",
-                          "content_encoding"):
+                          "content_encoding",
+                          "delivery_info"):
             kwargs[attr_name] = getattr(amqp_message, attr_name, None)
 
         super(Message, self).__init__(backend, **kwargs)
