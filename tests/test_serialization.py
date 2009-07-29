@@ -85,12 +85,19 @@ class TestSerialization(unittest.TestCase):
                               content_encoding='binary'))
 
     def test_content_type_encoding(self):
+        # Using the "raw" serializer
         self.assertEquals(unicode_string_as_utf8,
                           registry.encode(
                               unicode_string, serializer="raw")[-1])
         self.assertEquals(latin_string_as_utf8,
                           registry.encode(
                               latin_string, serializer="raw")[-1])
+        # And again w/o a specific serializer to check the
+        # code where we force unicode objects into a string.
+        self.assertEquals(unicode_string_as_utf8,
+                            registry.encode(unicode_string)[-1])
+        self.assertEquals(latin_string_as_utf8,
+                            registry.encode(latin_string)[-1])
 
     def test_json_decode(self):
         self.assertEquals(py_data,
