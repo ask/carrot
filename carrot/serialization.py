@@ -124,7 +124,7 @@ class SerializerRegistry(object):
 
         # For unicode objects, force it into a string
         if not serializer and isinstance(data, unicode):
-            payload = data.encode(content_encoding)
+            payload = data.encode("utf-8")
             return "text/plain", "utf-8", payload
 
         if serializer:
