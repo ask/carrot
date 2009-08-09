@@ -87,9 +87,15 @@ class AMQPConnection(object):
         self.connect_timeout = kwargs.get("connect_timeout",
                                           self.connect_timeout)
         self.ssl = kwargs.get("ssl", self.ssl)
-        self.connection = None
+        self._closed = None
+        self._connection = None
 
-        self.connect()
+    @property
+    def connection(self):
+        if not self._connection:
+            self._connection = self._establish()
+            self._closed = False
+        return self._connection
 
     def __enter__(self):
         return self
@@ -99,22 +105,23 @@ class AMQPConnection(object):
             raise e_type(e_value)
         self.close()
 
+    def _establish(self):
+        return amqp.Connection(host=self.host,
+                               userid=self.userid,
+                               password=self.password,
+                               virtual_host=self.virtual_host,
+                               insist=self.insist,
+                               ssl=self.ssl,
+                               connect_timeout=self.connect_timeout)
+
     def connect(self):
         """Establish a connection to the AMQP server."""
-        self.connection = amqp.Connection(host=self.host,
-                                        userid=self.userid,
-                                        password=self.password,
-                                        virtual_host=self.virtual_host,
-                                        insist=self.insist,
-                                        ssl=self.ssl,
-                                        connect_timeout=self.connect_timeout)
-        self._closed = False
         return self.connection
 
     def close(self):
         """Close the currently open connection."""
-        if self.connection:
-            self.connection.close()
+        if self._connection:
+            self._connection.close()
         self._closed = True
 
 
