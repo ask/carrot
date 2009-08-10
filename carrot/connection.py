@@ -4,8 +4,14 @@ Getting a connection to the AMQP server.
 
 """
 from amqplib import client_0_8 as amqp
+from socket import error as SocketError
 
 DEFAULT_CONNECT_TIMEOUT = 5 # seconds
+
+
+class ConnectionError(SocketError):
+    """An error occured while trying to establish a connection to the 
+    AMQP server."""
 
 
 class AMQPConnection(object):
@@ -20,7 +26,6 @@ class AMQPConnection(object):
     :keyword insist: see :attr:`insist`.
     :keyword connect_timeout: see :attr:`connect_timeout`.
     :keyword ssl: see :attr:`ssl`.
-
 
     .. attribute:: hostname
 
@@ -62,6 +67,26 @@ class AMQPConnection(object):
 
         Use SSL to connect to the server.
         The default is ``False``.
+    
+    
+    :raises ConnectionError: If the connection couldn't be established.
+        This is a subclass of :exc:`socket.error`, with its ``errno``
+        attribute set to its corresponding OS error code.
+
+    **Handling errors**
+
+    The ``errno`` attribute of the :exc:`ConnectionError` instance can be used
+    to find out why the connection could not be established, e.g.:
+
+        >>> from carrot.connection import AMQPConnection, ConnectionError
+        >>> import errno
+        >>> try:
+        ...     conn = AMQPConnection(...).connection
+        ... except ConnectionError, exc:
+        ...     if exc.errno == errno.ECONNREFUSED:
+        ...         # Connection refused
+        ...     if exc.errno == errno.EPIPE:
+        ...         # Connection lost
 
     """
     virtual_host = "/"
@@ -106,13 +131,18 @@ class AMQPConnection(object):
         self.close()
 
     def _establish(self):
-        return amqp.Connection(host=self.host,
+        try:
+            conn = amqp.Connection(host=self.host,
                                userid=self.userid,
                                password=self.password,
                                virtual_host=self.virtual_host,
                                insist=self.insist,
                                ssl=self.ssl,
                                connect_timeout=self.connect_timeout)
+        except SocketError, exc:
+            raise ConnectionError(*exc.args)
+        else:
+            return conn
 
     def connect(self):
         """Establish a connection to the AMQP server."""
