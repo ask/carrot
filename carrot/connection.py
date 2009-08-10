@@ -4,6 +4,8 @@ Getting a connection to the AMQP server.
 
 """
 from amqplib import client_0_8 as amqp
+from amqplib.client_0_8.connection import AMQPConnectionException
+import socket
 
 DEFAULT_CONNECT_TIMEOUT = 5 # seconds
 
@@ -70,6 +72,8 @@ class AMQPConnection(object):
     ssl = False
     _closed = True
 
+    AMQPConnectionException = AMQPConnectionException
+
     @property
     def host(self):
         """The host as a hostname/port pair separated by colon."""
@@ -123,8 +127,11 @@ class AMQPConnection(object):
 
     def close(self):
         """Close the currently open connection."""
-        if self._connection:
-            self._connection.close()
+        try:
+            if self._connection:
+                self._connection.close()
+        except socket.error:
+            pass
         self._closed = True
 
 
