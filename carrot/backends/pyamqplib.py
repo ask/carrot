@@ -86,7 +86,14 @@ class Backend(BaseBackend):
 
     def __init__(self, connection, **kwargs):
         self.connection = connection
-        self.channel = self.connection.connection.channel()
+        self._channel = None
+
+    @property
+    def channel(self):
+        """If no channel exists, a new one is requested."""
+        if not self._channel:
+            self._channel = self.connection.get_channel()
+        return self._channel
 
     def queue_exists(self, queue):
         """Check if a queue has been declared.
@@ -167,6 +174,8 @@ class Backend(BaseBackend):
 
     def cancel(self, consumer_tag):
         """Cancel a channel by consumer tag."""
+        if not self.channel.connection:
+            return
         self.channel.basic_cancel(consumer_tag)
 
     def close(self):
