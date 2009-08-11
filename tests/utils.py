@@ -1,6 +1,6 @@
 import os
 
-from carrot.connection import AMQPConnection
+from carrot.connection import BrokerConnection
 
 
 AMQP_HOST = os.environ.get('AMQP_HOST', "localhost")
@@ -17,4 +17,4 @@ def test_connection_args():
 
 
 def establish_test_connection():
-    return AMQPConnection(**test_connection_args())
+    return BrokerConnection(**test_connection_args())

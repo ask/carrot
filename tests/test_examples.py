@@ -5,7 +5,7 @@ sys.path.insert(0, os.pardir)
 sys.path.append(os.getcwd())
 
 from tests.utils import establish_test_connection
-from carrot.connection import AMQPConnection
+from carrot.connection import BrokerConnection
 from carrot.backends.pyamqplib import Message
 
 README_QUEUE = "feed"
@@ -83,7 +83,7 @@ class TestExamples(unittest.TestCase):
         consumer = self.consumer
         tcallbacks = self.tcallbacks
         self.assertTrue(consumer.connection)
-        self.assertTrue(isinstance(consumer.connection, AMQPConnection))
+        self.assertTrue(isinstance(consumer.connection, BrokerConnection))
         self.assertEquals(consumer.queue, README_QUEUE)
         self.assertEquals(consumer.exchange, README_EXCHANGE)
         self.assertEquals(consumer.routing_key, README_ROUTING_KEY)
@@ -92,7 +92,7 @@ class TestExamples(unittest.TestCase):
     def test_README_publisher(self):
         publisher = create_README_publisher(self.conn)
         self.assertTrue(publisher.connection)
-        self.assertTrue(isinstance(publisher.connection, AMQPConnection))
+        self.assertTrue(isinstance(publisher.connection, BrokerConnection))
         self.assertEquals(publisher.exchange, README_EXCHANGE)
         self.assertEquals(publisher.routing_key, README_ROUTING_KEY)
 

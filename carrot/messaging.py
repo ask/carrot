@@ -29,7 +29,8 @@ class Consumer(object):
 
     .. attribute:: connection
 
-        A :class:`carrot.connection.AMQPConnection` instance.
+        The connection to the broker.
+        A :class:`carrot.connection.BrokerConnection` instance.
 
     .. attribute:: queue
 
@@ -164,7 +165,7 @@ class Consumer(object):
 
     Example Usage
 
-        >>> consumer = Consumer(connection=DjangoAMQPConnection(),
+        >>> consumer = Consumer(connection=DjangoBrokerConnection(),
         ...               queue="foo", exchange="foo", routing_key="foo")
         >>> def process_message(message_data, message):
         ...     print("Got message %s: %s" % (
@@ -472,8 +473,8 @@ class Publisher(object):
 
     .. attribute:: connection
 
-        The AMQP connection. A :class:`carrot.connection.AMQPConnection`
-        instance.
+        The connection to the broker.
+        A :class:`carrot.connection.BrokerConnection` instance.
 
     .. attribute:: exchange
 
@@ -718,8 +719,8 @@ class ConsumerSet(object):
 
     .. attribute:: connection
 
-        The AMQP connection. A :class:`carrot.connection.AMQPConnection`
-        instance.
+        The connection to the broker.
+        A :class:`carrot.connection.BrokerConnection` instance.
 
     .. attribute:: callbacks
 

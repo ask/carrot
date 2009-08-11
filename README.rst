@@ -2,7 +2,7 @@
  carrot - AMQP Messaging Framework for Python
 ##############################################
 
-:Version: 0.5.0
+:Version: 0.5.1
 
 **NOTE** This release contains backward-incompatible changes.
 Please read the `Changelog`_ for more information.
@@ -138,18 +138,18 @@ Creating a connection
 ---------------------
 
     You can set up a connection by creating an instance of
-    ``carrot.messaging.AMQPConnection``, with the appropriate options for
-    your AMQP server:
+    ``carrot.messaging.BrokerConnection``, with the appropriate options for
+    your broker:
 
-    >>> from carrot.connection import AMQPConnection
-    >>> amqpconn = AMQPConnection(hostname="localhost", port=5672,
+    >>> from carrot.connection import BrokerConnection
+    >>> conn = BrokerConnection(hostname="localhost", port=5672,
     ...                           userid="test", password="test",
     ...                           vhost="test")
 
 
     If you're using Django you can use the
-    ``carrot.connection.DjangoAMQPConnection`` class instead, which loads the
-    connection settings from your ``settings.py``::
+    ``carrot.connection.DjangoBrokerConnection`` class instead, which loads
+    the connection settings from your ``settings.py``::
 
        AMQP_SERVER = "localhost"
        AMQP_PORT = 5672
@@ -159,8 +159,8 @@ Creating a connection
 
     Then create a connection by doing:
 
-        >>> from carrot.connection import DjangoAMQPConnection
-        >>> amqpconn = DjangoAMQPConnection()
+        >>> from carrot.connection import DjangoBrokerConnection
+        >>> conn = DjangoBrokerConnection()
 
 
 
@@ -177,7 +177,7 @@ mode, where it continuously polls the queue for new messages, and when a
 message is received it passes the message to all registered callbacks.
 
     >>> from carrot.messaging import Consumer
-    >>> consumer = Consumer(connection=amqpconn, queue="feed",
+    >>> consumer = Consumer(connection=conn, queue="feed",
     ...                     exchange="feed", routing_key="importer")
     >>> def import_feed_callback(message_data, message)
     ...     feed_url = message_data["import_feed"]
@@ -195,7 +195,7 @@ Then we open up another Python shell to send some messages to the consumer
 defined in the last section.
 
     >>> from carrot.messaging import Publisher
-    >>> publisher = Publisher(connection=amqpconn,
+    >>> publisher = Publisher(connection=conn,
     ...                       exchange="feed", routing_key="importer")
     >>> publisher.send({"import_feed": "http://cnn.com/rss/edition.rss"})
     >>> publisher.close()
@@ -261,14 +261,14 @@ use one of the following options.
     1.  Set the serialization option on a per-Publisher basis: 
         
             >>> from carrot.messaging import Publisher
-            >>> publisher = Publisher(connection=amqpconn,
+            >>> publisher = Publisher(connection=conn,
             ...                       exchange="feed", routing_key="importer",
             ...                       serializer="yaml")
 
     2.  Set the serialization option on a per-call basis
 
             >>> from carrot.messaging import Publisher
-            >>> publisher = Publisher(connection=amqpconn,
+            >>> publisher = Publisher(connection=conn,
             ...                       exchange="feed", routing_key="importer")
             >>> publisher.send({"import_feed": "http://cnn.com/rss/edition.rss"}, 
             ...                serializer="pickle")
@@ -290,7 +290,7 @@ You can optionally specify a ``content_type`` and ``content_encoding``
 for the raw data:
 
     >>> from carrot.messaging import Publisher
-    >>> publisher = Publisher(connection=amqpconn,
+    >>> publisher = Publisher(connection=conn,
     ...                       exchange="feed",
                               routing_key="import_pictures")
     >>> publisher.send(open('~/my_picture.jpg','rb').read(), 
@@ -310,7 +310,7 @@ This method returns a ``Message`` object, from where you can get the
 message body, de-serialize the body to get the data, acknowledge, reject or
 re-queue the message.
 
-    >>> consumer = Consumer(connection=amqpconn, queue="feed",
+    >>> consumer = Consumer(connection=conn, queue="feed",
     ...                     exchange="feed", routing_key="importer")
     >>> message = consumer.fetch()
     >>> if message:
@@ -350,11 +350,11 @@ can define the above publisher and consumer like so:
     ...         else:
     ...             raise Exception("Unknown action: %s" % action)
 
-    >>> publisher = FeedPublisher(connection=amqpconn)
+    >>> publisher = FeedPublisher(connection=conn)
     >>> publisher.import_feed("http://cnn.com/rss/edition.rss")
     >>> publisher.close()
 
-    >>> consumer = FeedConsumer(connection=amqpconn)
+    >>> consumer = FeedConsumer(connection=conn)
     >>> consumer.wait() # Go into the consumer loop.
 
 Getting Help

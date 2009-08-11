@@ -79,8 +79,8 @@ class Backend(BaseBackend):
 
     .. attribute:: connection
 
-    A :class:`carrot.connection.AMQPConnection` instance. An established
-    connection to the AMQP server.
+    A :class:`carrot.connection.BrokerConnection` instance. An established
+    connection to the broker.
 
     """
 

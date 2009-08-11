@@ -8,7 +8,7 @@ sys.path.append(os.getcwd())
 
 from tests.utils import AMQP_HOST, AMQP_PORT, AMQP_VHOST, \
                         AMQP_USER, AMQP_PASSWORD
-from carrot.connection import DjangoAMQPConnection, AMQPConnection
+from carrot.connection import DjangoBrokerConnection, BrokerConnection
 from UserDict import UserDict
 
 
@@ -31,7 +31,7 @@ def configured_or_configure(settings, **conf):
 
 class TestDjangoSpecific(unittest.TestCase):
 
-    def test_DjangoAMQPConnection(self):
+    def test_DjangoBrokerConnection(self):
         try:
             from django.conf import settings
         except ImportError:
@@ -53,8 +53,8 @@ class TestDjangoSpecific(unittest.TestCase):
             "userid": AMQP_USER,
             "password": AMQP_PASSWORD}
 
-        conn = DjangoAMQPConnection()
-        self.assertTrue(isinstance(conn, AMQPConnection))
+        conn = DjangoBrokerConnection()
+        self.assertTrue(isinstance(conn, BrokerConnection))
 
         for val_name, val_value in expected_values.items():
             self.assertEquals(getattr(conn, val_name, None), val_value)

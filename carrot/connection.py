@@ -149,7 +149,7 @@ AMQPConnection = BrokerConnection
 
 
 class DjangoBrokerConnection(BrokerConnection):
-    """A version of :class:`AMQPConnection` that takes configuration
+    """A version of :class:`BrokerConnection` that takes configuration
     from the Django ``settings.py`` module.
 
     :keyword hostname: The hostname of the AMQP server to connect to,

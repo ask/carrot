@@ -7,12 +7,12 @@ sys.path.append(os.getcwd())
 
 from carrot.backends.queue import Message as PyQueueMessage
 from carrot.backends.queue import Backend as PyQueueBackend
-from carrot.connection import AMQPConnection
+from carrot.connection import BrokerConnection
 from carrot.messaging import Messaging
 
 
 def create_backend():
-    return PyQueueBackend(connection=AMQPConnection())
+    return PyQueueBackend(connection=BrokerConnection())
 
 
 class TestPyQueueMessage(unittest.TestCase):
@@ -65,7 +65,7 @@ class TMessaging(Messaging):
 class TestMessaging(unittest.TestCase):
 
     def test_messaging(self):
-        m = TMessaging(connection=AMQPConnection(backend_cls=PyQueueBackend))
+        m = TMessaging(connection=BrokerConnection(backend_cls=PyQueueBackend))
         self.assertTrue(m)
 
         self.assertEquals(m.fetch(), None)
