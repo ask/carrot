@@ -95,6 +95,16 @@ class Backend(BaseBackend):
             self._channel = self.connection.get_channel()
         return self._channel
 
+    def establish_connection(self):
+        conninfo = self.connection
+        return amqp.Connection(host=conninfo.host,
+                               userid=conninfo.userid,
+                               password=conninfo.password,
+                               virtual_host=conninfo.virtual_host,
+                               insist=conninfo.insist,
+                               ssl=conninfo.ssl,
+                               connect_timeout=conninfo.connect_timeout)
+
     def queue_exists(self, queue):
         """Check if a queue has been declared.
 

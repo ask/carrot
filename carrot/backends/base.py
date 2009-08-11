@@ -153,3 +153,7 @@ class BaseBackend(object):
     def close(self):
         """Close the backend."""
         pass
+
+    def establish_connection(self):
+        """Establish a connection to the backend."""
+        pass

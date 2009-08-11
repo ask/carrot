@@ -5,12 +5,13 @@ Getting a connection to the AMQP server.
 """
 from amqplib import client_0_8 as amqp
 from amqplib.client_0_8.connection import AMQPConnectionException
+from carrot.backends import DefaultBackend
 import socket
 
 DEFAULT_CONNECT_TIMEOUT = 5 # seconds
 
 
-class AMQPConnection(object):
+class BrokerConnection(object):
     """A network/socket connection to an AMQP message broker.
 
     :param hostname: see :attr:`hostname`.
@@ -64,6 +65,11 @@ class AMQPConnection(object):
         Use SSL to connect to the server.
         The default is ``False``.
     
+    .. attribute:: backend_cls
+
+        The messaging backend class used. Defaults to the ``pyamqplib``
+        backend.
+    
     """
     virtual_host = "/"
     port = 5672
@@ -71,15 +77,16 @@ class AMQPConnection(object):
     connect_timeout = DEFAULT_CONNECT_TIMEOUT
     ssl = False
     _closed = True
+    backend_cls = DefaultBackend
 
-    AMQPConnectionException = AMQPConnectionException
+    ConnectionException = AMQPConnectionException
 
     @property
     def host(self):
         """The host as a hostname/port pair separated by colon."""
         return ":".join([self.hostname, str(self.port)])
 
-    def __init__(self, hostname, userid, password,
+    def __init__(self, hostname=None, userid=None, password=None,
             virtual_host=None, port=None, **kwargs):
         self.hostname = hostname
         self.userid = userid
@@ -90,13 +97,16 @@ class AMQPConnection(object):
         self.connect_timeout = kwargs.get("connect_timeout",
                                           self.connect_timeout)
         self.ssl = kwargs.get("ssl", self.ssl)
+        self.backend_cls = kwargs.get("backend_cls", self.backend_cls)
         self._closed = None
         self._connection = None
 
     @property
     def connection(self):
+        if self._closed == True:
+            return
         if not self._connection:
-            self._connection = self._establish()
+            self._connection = self._establish_connection()
             self._closed = False
         return self._connection
 
@@ -108,14 +118,13 @@ class AMQPConnection(object):
             raise e_type(e_value)
         self.close()
 
-    def _establish(self):
-        return amqp.Connection(host=self.host,
-                               userid=self.userid,
-                               password=self.password,
-                               virtual_host=self.virtual_host,
-                               insist=self.insist,
-                               ssl=self.ssl,
-                               connect_timeout=self.connect_timeout)
+    def _establish_connection(self):
+        return self.create_backend().establish_connection()
+
+    def create_backend(self):
+        """Create a new instance of the current backend in
+        :attr:`backend_cls`."""
+        return self.backend_cls(connection=self)
 
     def get_channel(self):
         """Request a new AMQP channel."""
@@ -123,6 +132,7 @@ class AMQPConnection(object):
 
     def connect(self):
         """Establish a connection to the AMQP server."""
+        self._closed = False
         return self.connection
 
     def close(self):
@@ -134,37 +144,11 @@ class AMQPConnection(object):
             pass
         self._closed = True
 
-
-class DummyConnection(object):
-    """A connection class that does nothing, for non-networked backends."""
-    _closed = True
-
-    def __init__(self, *args, **kwargs):
-        self._closed = False
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, e_type, e_value, e_trace):
-        if e_type:
-            raise e_type(e_value)
-        self.close()
-
-    def connect(self):
-        """Doesn't do anything. Just for API compatibility."""
-        pass
-
-    def close(self):
-        """Doesn't do anything. Just for API compatibility."""
-        self._closed = True
-
-    @property
-    def host(self):
-        """Always empty string."""
-        return ""
+# For backwards compatability.
+AMQPConnection = BrokerConnection
 
 
-class DjangoAMQPConnection(AMQPConnection):
+class DjangoBrokerConnection(BrokerConnection):
     """A version of :class:`AMQPConnection` that takes configuration
     from the Django ``settings.py`` module.
 
@@ -202,4 +186,7 @@ class DjangoAMQPConnection(AMQPConnection):
         kwargs["port"] = kwargs.get("port",
                 getattr(settings, "AMQP_PORT", self.port))
 
-        super(DjangoAMQPConnection, self).__init__(*args, **kwargs)
+        super(DjangoBrokerConnection, self).__init__(*args, **kwargs)
+
+# For backwards compatability.
+DjangoAMQPConnection = DjangoBrokerConnection

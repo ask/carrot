@@ -55,7 +55,6 @@ class TestDjangoSpecific(unittest.TestCase):
 
         conn = DjangoAMQPConnection()
         self.assertTrue(isinstance(conn, AMQPConnection))
-        self.assertTrue(getattr(conn, "connection", None))
 
         for val_name, val_value in expected_values.items():
             self.assertEquals(getattr(conn, val_name, None), val_value)

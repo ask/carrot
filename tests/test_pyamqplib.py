@@ -96,7 +96,6 @@ class TestMessaging(unittest.TestCase):
 
     def test_consumer_backend(self):
         consumer = self.create_consumer()
-        self.assertTrue(isinstance(consumer.backend, consumer.backend_cls))
         self.assertTrue(consumer.backend.connection is self.conn)
         consumer.close()
 

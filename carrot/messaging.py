@@ -8,7 +8,6 @@ from itertools import count, ifilter, islice
 import warnings
 import uuid
 
-from carrot.backends import DefaultBackend
 from carrot import serialization
 
 
@@ -24,7 +23,6 @@ class Consumer(object):
     :keyword auto_delete: see :attr:`auto_delete`.
     :keyword exclusive: see :attr:`exclusive`.
     :keyword exchange_type: see :attr:`exchange_type`.
-    :keyword backend_cls: see :attr:`backend_cls`.
     :keyword auto_ack: see :attr:`auto_ack`.
     :keyword no_ack: see :attr:`no_ack`.
 
@@ -125,12 +123,8 @@ class Consumer(object):
             from the blog post `AMQP in 10 minutes: Part 4`_ by
             Rajith Attapattu. Recommended reading.
 
-            .. _`AMQP in 10 minutes: Part 4`: http://bit.ly/amqp-exchange-types
-
-    .. attribute:: backend_cls
-
-        The messaging backend class used. Defaults to the ``pyamqplib``
-        backend.
+            .. _`AMQP in 10 minutes: Part 4`:
+                http://bit.ly/amqp-exchange-types
 
     .. attribute:: callbacks
 
@@ -188,7 +182,6 @@ class Consumer(object):
     exchange_type = "direct"
     channel_open = False
     warn_if_exists = False
-    backend_cls = DefaultBackend
     auto_ack = False
     no_ack = False
     _closed = True
@@ -196,8 +189,7 @@ class Consumer(object):
     def __init__(self, connection, queue=None, exchange=None,
             routing_key=None, **kwargs):
         self.connection = connection
-        self.backend_cls = kwargs.get("backend_cls", self.backend_cls)
-        self.backend = self.backend_cls(connection=connection)
+        self.backend = self.connection.create_backend()
         self.queue = queue or self.queue
 
         # Binding.
@@ -472,7 +464,6 @@ class Publisher(object):
     :param exchange: see :attr:`exchange`.
     :param routing_key: see :attr:`routing_key`.
 
-    :keyword backend_cls: see :attr:`backend_cls`.
     :keyword exchange_type: see :attr:`Consumer.exchange_type`.
     :keyword durable: see :attr:`Consumer.durable`.
     :keyword auto_delete: see :attr:`Consumer.auto_delete`.
@@ -524,11 +515,6 @@ class Publisher(object):
 
         See :attr:`Consumer.auto_delete`.
 
-    .. attribute:: backend_cls
-
-        The messaging backend class used. Defaults to the ``pyamqplib``
-        backend.
-
     .. attribute:: serializer
 
         A string identifying the default serialization method to use.
@@ -542,7 +528,6 @@ class Publisher(object):
     exchange = ""
     routing_key = ""
     delivery_mode = 2 # Persistent
-    backend_cls = DefaultBackend
     _closed = True
     exchange_type = "direct"
     durable = True
@@ -551,8 +536,7 @@ class Publisher(object):
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
         self.connection = connection
-        self.backend_cls = kwargs.get("backend_cls", self.backend_cls)
-        self.backend = self.backend_cls(connection=connection)
+        self.backend = self.connection.create_backend()
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
         self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
@@ -679,16 +663,13 @@ class Messaging(object):
 
     def __init__(self, connection, **kwargs):
         self.connection = connection
-        self.backend_cls = kwargs.get("backend_cls")
         self.exchange = kwargs.get("exchange", self.exchange)
         self.queue = kwargs.get("queue", self.queue)
         self.routing_key = kwargs.get("routing_key", self.routing_key)
         self.publisher = self.publisher_cls(connection,
-                exchange=self.exchange, routing_key=self.routing_key,
-                backend_cls=self.backend_cls)
+                exchange=self.exchange, routing_key=self.routing_key)
         self.consumer = self.consumer_cls(connection, queue=self.queue,
-                exchange=self.exchange, routing_key=self.routing_key,
-                backend_cls=self.backend_cls)
+                exchange=self.exchange, routing_key=self.routing_key)
         self.consumer.register_callback(self.receive)
         self.callbacks = []
         self._closed = False
@@ -734,7 +715,6 @@ class ConsumerSet(object):
     :param from_dict: see :attr:`from_dict`.
     :param consumers: see :attr:`consumers`.
     :param callbacks: see :attr:`callbacks`.
-    :param backend_cls: see :attr:`backend_cls`.
 
     .. attribute:: connection
 
@@ -771,17 +751,11 @@ class ConsumerSet(object):
 
         Add consumers from a list of :class:`Consumer` instances.
 
-    .. attribute:: backend_cls
-
-        The messaging backend class used. Defaults to the ``pyamqplib``
-        backend.
-
     .. attribute:: auto_ack
 
         Default value for the :attr:`Consumer.auto_ack` attribute.
 
     """
-    backend_cls = DefaultBackend
     auto_ack = False
 
     def __init__(self, connection, from_dict=None, consumers=None,
@@ -793,8 +767,7 @@ class ConsumerSet(object):
         self.callbacks = callbacks or []
         self._open_channels = []
 
-        self.backend_cls = options.get("backend_cls", self.backend_cls)
-        self.backend = self.backend_cls(connection=connection)
+        self.backend = self.connection.create_backend()
 
         self.auto_ack = options.get("auto_ack", self.auto_ack)
 
