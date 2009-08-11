@@ -49,11 +49,14 @@ class Message(BaseMessage):
     .. attribute:: amqp_message
 
         A :class:`amqplib.client_0_8.basic_message.Message` instance.
+        This is a private attribute and should not be accessed by
+        production code.
 
     .. attribute:: channel
 
         The AMQP channel. A :class:`amqplib.client_0_8.channel.Channel`
-        instance.
+        instance. This is a private attribute and should not be accessed
+        by production code.
 
     """
 

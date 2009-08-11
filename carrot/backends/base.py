@@ -16,6 +16,8 @@ class BaseMessage(object):
     """Base class for received messages."""
     _state = None
 
+    MessageStateError = MessageStateError
+
     def __init__(self, backend, **kwargs):
         self.backend = backend
         self.body = kwargs.get("body")
@@ -48,7 +50,7 @@ class BaseMessage(object):
 
         """
         if self.acknowledged:
-            raise MessageStateError(
+            raise self.MessageStateError(
                 "Message already acknowledged with state: %s" % self._state)
         self.backend.ack(self.delivery_tag)
         self._state = "ACK"
@@ -63,7 +65,7 @@ class BaseMessage(object):
 
         """
         if self.acknowledged:
-            raise MessageStateError(
+            raise self.MessageStateError(
                 "Message already acknowledged with state: %s" % self._state)
         self.backend.reject(self.delivery_tag)
         self._state = "REJECTED"
@@ -79,7 +81,7 @@ class BaseMessage(object):
 
         """
         if self.acknowledged:
-            raise MessageStateError(
+            raise self.MessageStateError(
                 "Message already acknowledged with state: %s" % self._state)
         self.backend.requeue(self.delivery_tag)
         self._state = "REQUEUED"
