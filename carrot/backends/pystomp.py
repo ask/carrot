@@ -2,6 +2,11 @@ from stomp import Stomp
 from carrot.backends.base import BaseMessage, BaseBackend
 from uuid import uuid4 as gen_unique_id
 from itertools import count
+from errno import EAGAIN
+import socket
+import time
+
+DEFAULT_PORT = 61613
 
 
 class Message(BaseMessage):
@@ -41,6 +46,7 @@ class Message(BaseMessage):
         kwargs["delivery_tag"] = frame.headers["message-id"]
         kwargs["content_type"] = frame.headers.get("content-type")
         kwargs["content_encoding"] = frame.headers.get("content-encoding")
+        kwargs["priority"] = frame.headers.get("priority")
 
         super(Message, self).__init__(backend, **kwargs)
 
@@ -69,21 +75,39 @@ class Message(BaseMessage):
 
 class Backend(BaseBackend):
     Stomp = Stomp
+    Message = Message
+    default_port = DEFAULT_PORT
 
     def __init__(self, connection, **kwargs):
         self.connection = connection
+        self.default_port = kwargs.get("default_port", self.default_port)
         self._channel = None
         self._consumers = {} # open consumers by consumer tag
         self._callbacks = {}
 
     def establish_connection(self):
         conninfo = self.connection
+        if not conninfo.port:
+            conninfo.port = self.default_port
         stomp = self.Stomp(conninfo.hostname, conninfo.port)
         stomp.connect()
         return stomp
 
+    def close_connection(self, connection):
+        connection.disconnect()
+
     def queue_exists(self, queue):
         return True
+
+    def queue_purge(self, queue, **kwargs):
+        for purge_count in count(1):
+            message = self.get(queue)
+            if not message: # Hack to give ActiveMQ some time.
+                time.sleep(0.2)
+                message = self.get(queue)
+                if not message:
+                    return purge_count
+            message.ack()
 
     def queue_declare(self, queue, durable, exclusive, auto_delete, **kwargs):
         self.channel.subscribe({"destination": queue, "ack": "client"}) 
@@ -100,36 +124,69 @@ class Backend(BaseBackend):
         for total_message_count in count():
             if limit and total_message_count >= limit:
                 raise StopIteration
-            frame = self.channel.receive_frame()
-            queue = frame.headers["destination"]
+            while True:
+                frame = self.channel.receive_frame()
+                if frame:
+                    break
+            queue = frame.headers.get("destination")
+
+            if not queue or queue not in self._callbacks:
+                continue
+
             self._callbacks[queue](frame)
+
             yield True
+
+    def _blocking(self):
+        self.channel.sock.setblocking(True)
+
+    def _nonblocking(self):
+        self.channel.sock.setblocking(False)
             
     def get(self, queue, no_ack=False):
-        frame = self.channel.receive_frame()
-        if not frame:
-            return None
-        return self.message_to_python(frame)
+        self._nonblocking()
+        try:
+            frame = self.channel.receive_frame()
+            if not frame:
+                return None
+            destination = frame.headers.get("destination")
+            if not destination or destination != queue:
+                return None
+            return self.message_to_python(frame)
+        except socket.error, exc:
+            if exc.errno == EAGAIN: # Nothing to receive.
+                return None
+        finally:
+            self._blocking()
 
     def ack(self, frame):
         self.channel.ack(frame)
 
     def message_to_python(self, raw_message):
         """Convert encoded message body back to a Python value."""
-        return Message(backend=self, frame=raw_message)
+        return self.Message(backend=self, frame=raw_message)
 
     def prepare_message(self, message_data, delivery_mode, priority=0,
             content_type=None, content_encoding=None):
         persistent = "true" if delivery_mode == 2 else "false"
+        if not priority:
+            priority = 0
         return {"body": message_data,
                 "persistent": persistent,
                 "priority": priority,
                 "content-encoding": content_encoding,
                 "content-type": content_type}
 
-    def publish(self, message, exchange, routing_key, mandatory):
-        message["destination"] = exchange
-        self.channel.send(message)
+    def publish(self, message, exchange, routing_key, **kwargs):
+        self.channel._is_connected()
+        headers = dict(message)
+        body = headers.pop("body")
+        headers["destination"] = exchange
+        frame = self.channel.frame.build_frame({"command": "SEND",
+                                                "headers": headers,
+                                                "body": body},
+                                                want_receipt=True)
+        self.channel.send_frame(frame)
 
     def cancel(self, consumer_tag):
         if not self._channel or consumer_tag not in self._consumers:
@@ -138,7 +195,7 @@ class Backend(BaseBackend):
         self.channel.unsubscribe({"destination": queue})
 
     def close(self):
-        for consumer_tag in _consumers.keys():
+        for consumer_tag in self._consumers.keys():
             self.cancel(consumer_tag)
 
     @property
