@@ -11,6 +11,8 @@ from carrot.backends.base import BaseMessage, BaseBackend
 from itertools import count
 import warnings
 
+DEFAULT_PORT = 5672
+
 
 class QueueAlreadyExistsWarning(UserWarning):
     """A queue with that name already exists, so a recently changed
@@ -75,9 +77,13 @@ class Backend(BaseBackend):
     connection to the broker.
 
     """
+    default_port = DEFAULT_PORT
+
+    Message = Message
 
     def __init__(self, connection, **kwargs):
         self.connection = connection
+        self.default_port = kwargs.get("default_port", self.default_port)
         self._channel = None
 
     @property
@@ -88,7 +94,10 @@ class Backend(BaseBackend):
         return self._channel
 
     def establish_connection(self):
+        """Establish connection to the AMQP broker."""
         conninfo = self.connection
+        if not conninfo.port:
+            conninfo.port = self.default_port
         return amqp.Connection(host=conninfo.host,
                                userid=conninfo.userid,
                                password=conninfo.password,
@@ -96,6 +105,10 @@ class Backend(BaseBackend):
                                insist=conninfo.insist,
                                ssl=conninfo.ssl,
                                connect_timeout=conninfo.connect_timeout)
+
+    def close_connection(self, connection):
+        """Close the AMQP broker connection."""
+        connection.close()
 
     def queue_exists(self, queue):
         """Check if a queue has been declared.
@@ -142,7 +155,7 @@ class Backend(BaseBackend):
 
     def message_to_python(self, raw_message):
         """Convert encoded message body back to a Python value."""
-        return Message(backend=self, amqp_message=raw_message)
+        return self.Message(backend=self, amqp_message=raw_message)
 
     def get(self, queue, no_ack=False):
         """Receive a message from a declared queue by name.
@@ -167,7 +180,7 @@ class Backend(BaseBackend):
 
     def consume(self, limit=None):
         """Returns an iterator that waits for one message at a time."""
-        for total_message_count in count(1):
+        for total_message_count in count():
             if limit and total_message_count >= limit:
                 raise StopIteration
             self.channel.wait()
