@@ -25,17 +25,12 @@ class Message(BaseMessage):
     them using a :class:`carrot.messaging.Consumer`.
 
     :param backend: see :attr:`backend`.
-
-    :param amqp_message: see :attr:`amqp_message`.
-
-    :param channel: see :attr:`channel`.
+    :param amqp_message: see :attr:`_amqp_message`.
 
 
     .. attribute:: body
 
-        The message body. This data is serialized,
-        so you probably want to deserialize it using
-        :meth:`carrot.backends.base.BaseMessage.decode`.
+        The message body. 
 
     .. attribute:: delivery_tag
 
@@ -46,22 +41,16 @@ class Message(BaseMessage):
         The message backend used.
         A subclass of :class:`carrot.backends.base.BaseBackend`.
 
-    .. attribute:: amqp_message
+    .. attribute:: _amqp_message
 
         A :class:`amqplib.client_0_8.basic_message.Message` instance.
         This is a private attribute and should not be accessed by
         production code.
 
-    .. attribute:: channel
-
-        The AMQP channel. A :class:`amqplib.client_0_8.channel.Channel`
-        instance. This is a private attribute and should not be accessed
-        by production code.
-
     """
 
     def __init__(self, backend, amqp_message, **kwargs):
-        self.amqp_message = amqp_message
+        self._amqp_message = amqp_message
         self.backend = backend
 
         for attr_name in ("body",
