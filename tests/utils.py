@@ -11,6 +11,7 @@ AMQP_PASSWORD = os.environ.get('AMQP_PASSWORD', "guest")
 
 STOMP_HOST = os.environ.get('STOMP_HOST', 'localhost')
 STOMP_PORT = os.environ.get('STOMP_PORT', 61613)
+STOMP_QUEUE = os.environ.get('STOMP_QUEUE', '/queue/testcarrot')
 
 
 def test_connection_args():
