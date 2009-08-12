@@ -9,8 +9,10 @@ from carrot.backends.pystomp import Message as StompMessage
 from carrot.backends.pystomp import Backend as StompBackend
 from carrot.connection import BrokerConnection
 from carrot.messaging import Messaging
-from tests.utils import test_stomp_connection_args
+from tests.utils import test_stomp_connection_args, STOMP_QUEUE
 from stomp.frame import Frame
+from tests.backend import BackendMessagingCase
+from carrot.serialization import encode
 
 
 def create_connection():
@@ -55,19 +57,32 @@ class TestStompMessage(unittest.TestCase):
         self.assertRaises(NotImplementedError, m2.reject)
         self.assertRaises(NotImplementedError, m3.requeue)
 
-class TestPyQueueBackend(unittest.TestCase):
 
-    def xxx_backend(self):
-        b = create_backend()
-        message_body = "Vandelay Industries"
-        b.publish(b.prepare_message(message_body, "direct",
-                                    content_type='text/plain',
-                                    content_encoding="ascii"),
-                  exchange="test",
-                  routing_key="test")
-        m_in_q = b.get()
-        self.assertTrue(isinstance(m_in_q, PyQueueMessage))
-        self.assertEquals(m_in_q.body, message_body)
+class TestPyStompMessaging(BackendMessagingCase):
+
+    def setUp(self):
+        self.conn = create_connection()
+        self.queue = STOMP_QUEUE
+        self.exchange = STOMP_QUEUE
+        self.routing_key = STOMP_QUEUE
+
+    def create_raw_message(self, publisher, body, delivery_tag):
+        content_type, content_encoding, payload = encode(body)
+        frame = MockFrame().mock(body=payload, headers={
+            "message-id": delivery_tag,
+            "content-type": content_type,
+            "content-encoding": content_encoding,
+        })
+        return frame
+
+    def test_consumer_discard_all(self):
+        pass
+
+    def test_empty_queue_returns_None(self):
+        # TODO get is currently blocking.
+        pass
+
+BackendMessagingCase = None # Don't run tests on the base class.
 
 """
 
@@ -91,7 +106,6 @@ class XXXMessaging(unittest.TestCase):
         next_msg_data = next_msg.decode()
         self.assertEquals(next_msg_data, mdata)
         self.assertEquals(m.fetch(), None)
-
 
 if __name__ == '__main__':
     unittest.main()
