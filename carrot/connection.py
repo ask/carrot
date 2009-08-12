@@ -72,7 +72,7 @@ class BrokerConnection(object):
     
     """
     virtual_host = "/"
-    port = 5672
+    port = None
     insist = False
     connect_timeout = DEFAULT_CONNECT_TIMEOUT
     ssl = False
@@ -139,7 +139,8 @@ class BrokerConnection(object):
         """Close the currently open connection."""
         try:
             if self._connection:
-                self._connection.close()
+                backend = self.backend_cls(connection=self)
+                backend.close_connection(self._connection)
         except socket.error:
             pass
         self._closed = True
@@ -176,15 +177,15 @@ class DjangoBrokerConnection(BrokerConnection):
     def __init__(self, *args, **kwargs):
         from django.conf import settings
         kwargs["hostname"] = kwargs.get("hostname",
-                getattr(settings, "AMQP_SERVER"))
+                getattr(settings, "AMQP_SERVER", None))
         kwargs["userid"] = kwargs.get("userid",
-                getattr(settings, "AMQP_USER"))
+                getattr(settings, "AMQP_USER", None))
         kwargs["password"] = kwargs.get("password",
-                getattr(settings, "AMQP_PASSWORD"))
+                getattr(settings, "AMQP_PASSWORD", None))
         kwargs["virtual_host"] = kwargs.get("virtual_host",
-                getattr(settings, "AMQP_VHOST"))
+                getattr(settings, "AMQP_VHOST", None))
         kwargs["port"] = kwargs.get("port",
-                getattr(settings, "AMQP_PORT", self.port))
+                getattr(settings, "AMQP_PORT", None))
 
         super(DjangoBrokerConnection, self).__init__(*args, **kwargs)
 
