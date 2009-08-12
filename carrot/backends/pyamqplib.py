@@ -8,7 +8,7 @@
 from amqplib import client_0_8 as amqp
 from amqplib.client_0_8.exceptions import AMQPChannelException
 from carrot.backends.base import BaseMessage, BaseBackend
-import itertools
+from itertools import count
 import warnings
 
 
@@ -166,9 +166,8 @@ class Backend(BaseBackend):
                                    nowait=nowait)
 
     def consume(self, limit=None):
-        """Returns an iterator that waits for one message at a time,
-        calling the callback when messages arrive."""
-        for total_message_count in itertools.count():
+        """Returns an iterator that waits for one message at a time."""
+        for total_message_count in count(1):
             if limit and total_message_count >= limit:
                 raise StopIteration
             self.channel.wait()
