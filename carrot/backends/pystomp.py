@@ -2,9 +2,8 @@ from stomp import Stomp
 from carrot.backends.base import BaseMessage, BaseBackend
 from uuid import uuid4 as gen_unique_id
 from itertools import count
-from errno import EAGAIN
-import socket
 import time
+import socket
 
 DEFAULT_PORT = 61613
 
@@ -94,20 +93,28 @@ class Backend(BaseBackend):
         return stomp
 
     def close_connection(self, connection):
-        connection.disconnect()
+        try:
+            connection.disconnect()
+        except socket.error:
+            pass
 
     def queue_exists(self, queue):
         return True
 
     def queue_purge(self, queue, **kwargs):
-        for purge_count in count(1):
-            message = self.get(queue)
-            if not message: # Hack to give ActiveMQ some time.
-                time.sleep(0.2)
-                message = self.get(queue)
-                if not message:
+        # Create a totally new channel to purge the whole queue
+        channel = self.establish_connection()
+        try:
+            for purge_count in count(0):
+                frame = channel.poll()
+                if not frame:
                     return purge_count
-            message.ack()
+                channel.ack(frame)
+        finally:
+            try:
+                channel.disconnect()
+            except socket.error:
+                pass
 
     def queue_declare(self, queue, durable, exclusive, auto_delete, **kwargs):
         self.channel.subscribe({"destination": queue, "ack": "client"}) 
@@ -137,27 +144,14 @@ class Backend(BaseBackend):
 
             yield True
 
-    def _blocking(self):
-        self.channel.sock.setblocking(True)
-
-    def _nonblocking(self):
-        self.channel.sock.setblocking(False)
-            
     def get(self, queue, no_ack=False):
-        self._nonblocking()
-        try:
-            frame = self.channel.receive_frame()
-            if not frame:
-                return None
-            destination = frame.headers.get("destination")
-            if not destination or destination != queue:
-                return None
-            return self.message_to_python(frame)
-        except socket.error, exc:
-            if exc.errno == EAGAIN: # Nothing to receive.
-                return None
-        finally:
-            self._blocking()
+        frame = self.channel.poll()
+        if not frame:
+            return None
+        destination = frame.headers.get("destination")
+        if not destination or destination != queue:
+            return None
+        return self.message_to_python(frame)
 
     def ack(self, frame):
         self.channel.ack(frame)
@@ -201,5 +195,7 @@ class Backend(BaseBackend):
     @property
     def channel(self):
         if not self._channel:
-            self._channel = self.connection.connection
+            # Sorry, but the python-stomp library needs one connection
+            # for each channel.
+            self._channel = self.establish_connection()
         return self._channel

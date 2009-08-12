@@ -27,9 +27,12 @@ class BackendMessagingCase(unittest.TestCase):
 
     def setUp(self):
         self.conn = establish_test_connection()
+
         self.queue = TEST_QUEUE
         self.exchange = TEST_EXCHANGE
         self.routing_key = TEST_ROUTING_KEY
+        c = self.create_consumer()
+        c.discard_all()
 
     def create_consumer(self, **options):
         return Consumer(connection=self.conn,
@@ -245,7 +248,10 @@ class BackendMessagingCase(unittest.TestCase):
     def test_iterqueue(self):
         consumer = self.create_consumer()
         publisher = self.create_publisher()
-        consumer.discard_all()
+        sys.stderr.write("CONSUMER QUEUE: %s\n" % consumer.queue)
+        sys.stderr.write("PUBLISHER QUEUE: %s\n" % publisher.exchange)
+        num = consumer.discard_all()
+        sys.stderr.write("DISCARDED: %d" % num)
 
         it = consumer.iterqueue(limit=100)
         consumer.register_callback(lambda *args: args)
@@ -254,14 +260,24 @@ class BackendMessagingCase(unittest.TestCase):
             publisher.send({"foo%d" % i: "bar%d" % i})
         time.sleep(0.5)
 
+        messages = []
+        try:
+            for i in xrange(100):
+                messages.append(it.next().decode())
+        except StopIteration:
+            self.assertTrue(False, "iterqueue fails StopIteration")
+
+        def assertIsInMessages(what):
+            for data in messages:
+                if what in data:
+                    self.assertTrue(True, "%s in data" % what)
+                    return data
+            self.assertTrue(False, "%s in data" % what)
+            return
+
         for i in xrange(100):
-            try:
-                message = it.next()
-                data = message.decode()
-                self.assertTrue("foo%d" % i in data)
-                self.assertEquals(data.get("foo%d" % i), "bar%d" % i)
-            except StopIteration:
-                self.assertTrue(False, "iterqueue fails StopIteration")
+            data = assertIsInMessages("foo%d" % i)
+            self.assertEquals(data.get("foo%d" % i), "bar%d" % i)
 
         self.assertRaises(StopIteration, it.next)
 
