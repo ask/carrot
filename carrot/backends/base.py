@@ -93,6 +93,7 @@ class BaseMessage(object):
 
 class BaseBackend(object):
     """Base class for backends."""
+    default_port = None
 
     def __init__(self, connection, **kwargs):
         self.connection = connection
@@ -128,6 +129,11 @@ class BaseBackend(object):
         """Acknowledge the message."""
         pass
 
+    def queue_purge(self, queue, **kwargs):
+        """Discard all messages in the queue. This will delete the messages
+        and results in an empty queue."""
+        return 0
+
     def reject(self, delivery_tag):
         """Reject the message."""
         pass
@@ -158,4 +164,8 @@ class BaseBackend(object):
 
     def establish_connection(self):
         """Establish a connection to the backend."""
+        pass
+
+    def close_connection(self, connection):
+        """Close the connection."""
         pass
