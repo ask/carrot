@@ -102,22 +102,16 @@ class Backend(BaseBackend):
         return True
 
     def queue_purge(self, queue, **kwargs):
-        # Create a totally new channel to purge the whole queue
-        channel = self.establish_connection()
+        self.channel.subscribe({"destination": queue, "ack": "auto"})
         try:
             for purge_count in count(0):
-                frame = channel.poll()
+                frame = self.channel.poll()
                 if not frame:
                     return purge_count
-                channel.ack(frame)
+                self.channel.ack(frame)
         finally:
-            try:
-                channel.disconnect()
-            except socket.error:
-                pass
+            self.channel.unsubscribe({"destination": queue})
 
-    def queue_declare(self, queue, durable, exclusive, auto_delete, **kwargs):
-        self.channel.subscribe({"destination": queue, "ack": "client"}) 
 
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
             **kwargs):
@@ -132,8 +126,11 @@ class Backend(BaseBackend):
             if limit and total_message_count >= limit:
                 raise StopIteration
             while True:
+                import sys
+                sys.stderr.write("TRYING TO RECEIVE FRAME...\n")
                 frame = self.channel.receive_frame()
                 if frame:
+                    sys.stderr.write("GOT FRAME: %s\n" % frame)
                     break
             queue = frame.headers.get("destination")
 
@@ -145,13 +142,13 @@ class Backend(BaseBackend):
             yield True
 
     def get(self, queue, no_ack=False):
-        frame = self.channel.poll()
-        if not frame:
-            return None
-        destination = frame.headers.get("destination")
-        if not destination or destination != queue:
-            return None
-        return self.message_to_python(frame)
+        ack = "auto" if no_ack else "client"
+        self.channel.subscribe({"destination": queue, "ack": ack})
+        try:
+            frame = self.channel.poll()
+        finally:
+            self.channel.unsubscribe({"destination": queue})
+        return self.message_to_python(frame) if frame else None
 
     def ack(self, frame):
         self.channel.ack(frame)
@@ -191,6 +188,8 @@ class Backend(BaseBackend):
     def close(self):
         for consumer_tag in self._consumers.keys():
             self.cancel(consumer_tag)
+        if self._channel:
+            self._channel.disconnect()
 
     @property
     def channel(self):

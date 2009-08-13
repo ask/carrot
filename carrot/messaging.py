@@ -190,7 +190,9 @@ class Consumer(object):
     def __init__(self, connection, queue=None, exchange=None,
             routing_key=None, **kwargs):
         self.connection = connection
-        self.backend = self.connection.create_backend()
+        self.backend = kwargs.get("backend", None)
+        if not self.backend:
+            self.backend = self.connection.create_backend()
         self.queue = queue or self.queue
 
         # Binding.
@@ -784,11 +786,13 @@ class ConsumerSet(object):
 
     def add_consumer_from_dict(self, queue, **options):
         """Add another consumer from dictionary configuration."""
-        consumer = Consumer(self.connection, queue=queue, **options)
+        consumer = Consumer(self.connection, queue=queue,
+                backend=self.backend, **options)
         self.consumers.append(consumer)
 
     def add_consumer(self, consumer):
         """Add another consumer from a :class:`Consumer` instance."""
+        consumer.backend = self.backend
         self.consumers.append(consumer)
 
     def register_callback(self, callback):
