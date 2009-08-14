@@ -166,7 +166,8 @@ class Backend(BaseBackend):
                 "content-type": content_type}
 
     def publish(self, message, exchange, routing_key, **kwargs):
-        self.channel.put(message, exchange)
+        message["destination"] = exchange
+        self.channel.stomp.send(message)
 
     def cancel(self, consumer_tag):
         if not self._channel or consumer_tag not in self._consumers:
