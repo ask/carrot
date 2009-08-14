@@ -135,7 +135,7 @@ class BackendMessagingCase(unittest.TestCase):
         self.assertFalse(consumer.fetch())
         consumer.close()
 
-    def xxx_custom_serialization_scheme(self):
+    def test_custom_serialization_scheme(self):
         serialization.registry.register('custom_test',
                 pickle.dumps, pickle.loads,
                 content_type='application/x-custom-test',
@@ -203,7 +203,7 @@ class BackendMessagingCase(unittest.TestCase):
         consumer.close()
         publisher.close()
 
-    def xxx_consumer_process_next(self):
+    def test_consumer_process_next(self):
         consumer = self.create_consumer()
         publisher = self.create_publisher()
         consumer.discard_all()
@@ -243,11 +243,10 @@ class BackendMessagingCase(unittest.TestCase):
         consumer.close()
         publisher.close()
 
-    def xxx_iterqueue(self):
+    def test_iterqueue(self):
         consumer = self.create_consumer()
         publisher = self.create_publisher()
         num = consumer.discard_all()
-        sys.stderr.write("DISCARDED: %d" % num)
 
         it = consumer.iterqueue(limit=100)
         consumer.register_callback(lambda *args: args)
@@ -298,28 +297,22 @@ class BackendMessagingCase(unittest.TestCase):
         publisher = self.create_publisher()
         consumer.discard_all()
 
-        sys.stderr.write("YEZ!\n")
         publisher.send({"foo": "Baz"})
-        sys.stderr.write("SENT!\n")
         message = fetch_next_message(consumer)
-        sys.stderr.write("ReCEIVED: %s\n" % message)
         self.assertEquals(message._state, "ACK")
         consumer.close()
         publisher.close()
 
         publisher = self.create_publisher()
         consumer = self.create_consumer(auto_ack=False)
-        sys.stderr.write("YEZ!\n")
         publisher.send({"foo": "Baz"})
-        sys.stderr.write("SENT!\n")
         message = fetch_next_message(consumer)
-        sys.stderr.write("ReCEIVED: %s\n" % message)
         self.assertEquals(message._state, "RECEIVED")
 
         consumer.close()
         publisher.close()
 
-    def xxx_consumer_consume(self):
+    def test_consumer_consume(self):
         consumer = self.create_consumer(auto_ack=True)
         publisher = self.create_publisher()
         consumer.discard_all()
@@ -372,7 +365,7 @@ class BackendMessagingCase(unittest.TestCase):
             consumer.close()
             publisher.close()
 
-    def xxx_consumerset_iterconsume(self):
+    def test_consumerset_iterconsume(self):
         consumerset = self.create_consumerset(queues={
             "bar": {
                 "exchange": "foo",
