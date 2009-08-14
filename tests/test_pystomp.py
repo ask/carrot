@@ -8,10 +8,9 @@ sys.path.append(os.getcwd())
 from carrot.backends.pystomp import Message as StompMessage
 from carrot.backends.pystomp import Backend as StompBackend
 from carrot.connection import BrokerConnection
-from carrot.messaging import Messaging
+from carrot.messaging import Publisher, Consumer
 from tests.utils import test_stomp_connection_args, STOMP_QUEUE
 from stomp.frame import Frame
-from tests.backend import BackendMessagingCase
 from carrot.serialization import encode
 
 
@@ -58,7 +57,7 @@ class TestStompMessage(unittest.TestCase):
         self.assertRaises(NotImplementedError, m3.requeue)
 
 
-class TestPyStompMessaging(BackendMessagingCase):
+class TestPyStompMessaging(unittest.TestCase):
 
     def setUp(self):
         self.conn = create_connection()
@@ -66,6 +65,51 @@ class TestPyStompMessaging(BackendMessagingCase):
         self.exchange = STOMP_QUEUE
         self.routing_key = STOMP_QUEUE
 
+    def create_consumer(self, **options):
+        return Consumer(connection=self.conn,
+                        queue=self.queue, exchange=self.exchange,
+                        routing_key=self.routing_key, **options)
+
+    def create_publisher(self, **options):
+        return Publisher(connection=self.conn,
+                exchange=self.exchange,
+                routing_key=self.routing_key, **options)
+
+
+    def test_backend(self):
+
+        publisher = self.create_publisher()
+        consumer = self.create_consumer()
+        for i in range(100):
+            publisher.send({"foo%d" % i: "bar%d" % i})
+        publisher.close()
+
+        discarded = consumer.discard_all()
+        self.assertEquals(discarded, 100)
+        publisher.close()
+        consumer.close()
+
+        publisher = self.create_publisher()
+        for i in range(100):
+            publisher.send({"foo%d" % i: "bar%d" % i})
+
+        consumer = self.create_consumer()
+        for i in range(100):
+            while True:
+                message = consumer.fetch()
+                if message:
+                    break
+            self.assertTrue("foo%d" % i in message.payload)
+            message.ack()
+
+        publisher.close()
+        consumer.close()
+
+
+        consumer = self.create_consumer()
+        discarded = consumer.discard_all()
+        self.assertEquals(discarded, 0)
+        
     def create_raw_message(self, publisher, body, delivery_tag):
         content_type, content_encoding, payload = encode(body)
         frame = MockFrame().mock(body=payload, headers={
@@ -74,40 +118,3 @@ class TestPyStompMessaging(BackendMessagingCase):
             "content-encoding": content_encoding,
         })
         return frame
-
-    def test_consumer_discard_all(self):
-        pass
-
-    def test_empty_queue_returns_None(self):
-        # TODO get is currently blocking.
-        pass
-
-BackendMessagingCase = None # Don't run tests on the base class.
-
-"""
-
-
-class TMessaging(Messaging):
-    exchange = "test"
-    routing_key = "test"
-    queue = "test"
-
-
-class XXXMessaging(unittest.TestCase):
-
-    def test_messaging(self):
-        m = TMessaging(connection=BrokerConnection(backend_cls=StompBackend))
-        self.assertTrue(m)
-
-        self.assertEquals(m.fetch(), None)
-        mdata = {"name": "Cosmo Kramer"}
-        m.send(mdata)
-        next_msg = m.fetch()
-        next_msg_data = next_msg.decode()
-        self.assertEquals(next_msg_data, mdata)
-        self.assertEquals(m.fetch(), None)
-
-if __name__ == '__main__':
-    unittest.main()
-
-"""
