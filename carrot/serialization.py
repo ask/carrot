@@ -191,6 +191,7 @@ Decode data using the registry's default decoder.
 """
 decode = registry.decode
 
+
 def raw_encode(data):
     """Special case serializer."""
     content_type = 'application/data'

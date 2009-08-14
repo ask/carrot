@@ -43,7 +43,7 @@ class BackendMessagingCase(unittest.TestCase):
     def create_publisher(self, exchange=None, routing_key=None, **options):
         exchange = exchange or self.exchange
         routing_key = routing_key or self.routing_key
-        return Publisher(connection=self.conn, 
+        return Publisher(connection=self.conn,
                         exchange=exchange, routing_key=routing_key,
                         **options)
 
@@ -123,7 +123,7 @@ class BackendMessagingCase(unittest.TestCase):
 
         consumer.close()
         publisher.close()
-    
+
     def create_raw_message(self, publisher, body, delivery_tag):
         raw_message = publisher.create_message(body)
         raw_message.delivery_tag = delivery_tag

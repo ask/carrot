@@ -18,6 +18,7 @@ def create_connection():
     return BrokerConnection(backend_cls=StompBackend,
                             **test_stomp_connection_args())
 
+
 def create_backend():
     return create_connection().create_backend()
 
@@ -75,9 +76,7 @@ class TestPyStompMessaging(unittest.TestCase):
                 exchange=self.exchange,
                 routing_key=self.routing_key, **options)
 
-
     def test_backend(self):
-
         publisher = self.create_publisher()
         consumer = self.create_consumer()
         for i in range(100):
@@ -109,7 +108,7 @@ class TestPyStompMessaging(unittest.TestCase):
         consumer = self.create_consumer()
         discarded = consumer.discard_all()
         self.assertEquals(discarded, 0)
-        
+
     def create_raw_message(self, publisher, body, delivery_tag):
         content_type, content_encoding, payload = encode(body)
         frame = MockFrame().mock(body=payload, headers={

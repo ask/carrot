@@ -64,12 +64,12 @@ class BrokerConnection(object):
 
         Use SSL to connect to the server.
         The default is ``False``.
-    
+
     .. attribute:: backend_cls
 
         The messaging backend class used. Defaults to the ``pyamqplib``
         backend.
-    
+
     """
     virtual_host = "/"
     port = None

@@ -32,7 +32,7 @@ class Message(BaseMessage):
 
     .. attribute:: body
 
-        The message body. 
+        The message body.
 
     .. attribute:: delivery_tag
 
