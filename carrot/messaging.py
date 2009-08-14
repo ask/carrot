@@ -285,7 +285,7 @@ class Consumer(object):
             if auto_ack and not message.acknowledged:
                 message.ack()
             if enable_callbacks:
-                self._receive_callback(message)
+                self.receive(message.payload, message)
         return message
 
     def process_next(self):
