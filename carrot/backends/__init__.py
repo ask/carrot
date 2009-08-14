@@ -6,6 +6,14 @@ Working with Backends.
 import sys
 from functools import partial
 
+BACKEND_ALIASES = {
+    "amqplib": "pyamqplib",
+    "stomp": "pystomp",
+    "stompy": "pystomp",
+    "memory": "queue",
+}
+
+
 """
 .. data:: DEFAULT_BACKEND
 
@@ -32,7 +40,9 @@ def get_backend_cls(backend):
 
     """
     if backend.find(".") == -1:
-        backend = "carrot.backends.%s" % backend
+        alias_to = BACKEND_ALIASES.get("backend", None)
+        backend = "carrot.backends.%s" % (alias_to or backend)
+
     __import__(backend)
     backend_module = sys.modules[backend]
     return getattr(backend_module, "Backend")
