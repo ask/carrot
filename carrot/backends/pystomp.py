@@ -1,4 +1,4 @@
-from stomp import Stomp
+from stompy import Stomp
 from carrot.backends.base import BaseMessage, BaseBackend
 from uuid import uuid4 as gen_unique_id
 from itertools import count
@@ -102,15 +102,11 @@ class Backend(BaseBackend):
         return True
 
     def queue_purge(self, queue, **kwargs):
-        self.channel.subscribe({"destination": queue, "ack": "auto"})
-        try:
-            for purge_count in count(0):
-                frame = self.channel.poll()
-                if not frame:
-                    return purge_count
-                self.channel.ack(frame)
-        finally:
-            self.channel.unsubscribe({"destination": queue})
+        for purge_count in count(0):
+            frame = self.channel.poll()
+            if not frame:
+                return purge_count
+            self.channel.ack(frame)
 
 
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
@@ -141,13 +137,11 @@ class Backend(BaseBackend):
 
             yield True
 
+    def queue_declare(self, queue, *args, **kwargs):
+        self.channel.subscribe({"destination": queue, "ack": "client"})
+
     def get(self, queue, no_ack=False):
-        ack = "auto" if no_ack else "client"
-        self.channel.subscribe({"destination": queue, "ack": ack})
-        try:
-            frame = self.channel.poll()
-        finally:
-            self.channel.unsubscribe({"destination": queue})
+        frame = self.channel.poll()
         return self.message_to_python(frame) if frame else None
 
     def ack(self, frame):
@@ -169,7 +163,6 @@ class Backend(BaseBackend):
                 "content-type": content_type}
 
     def publish(self, message, exchange, routing_key, **kwargs):
-        self.channel._is_connected()
         headers = dict(message)
         body = headers.pop("body")
         headers["destination"] = exchange
@@ -189,7 +182,10 @@ class Backend(BaseBackend):
         for consumer_tag in self._consumers.keys():
             self.cancel(consumer_tag)
         if self._channel:
-            self._channel.disconnect()
+            try:
+                self._channel.disconnect()
+            except socket.error:
+                pass
 
     @property
     def channel(self):
