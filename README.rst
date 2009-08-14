@@ -22,8 +22,9 @@ providing a high-level interface for producing and consuming messages. At the
 same time it is a goal to re-use what is already available as much as possible.
 
 `carrot` has pluggable messaging back-ends, so it is possible to support
-several messaging systems. At the time of release, the `py-amqplib`_ based
-backend is considered suitable for production use.
+several messaging systems. Currently, there is support for `AMQP`_
+(`py-amqplib`_) and `STOMP`_ (`python-stomp`_). There is also a in-memory
+backend for testing purposes that uses the `Python queue module`_.
 
 Several AMQP message broker implementations exists, including `RabbitMQ`_,
 `ZeroMQ`_ and `Apache ActiveMQ`_. You'll need to have one of these installed,
@@ -37,6 +38,9 @@ refer to the `Wikipedia article about AMQP`_.
 .. _`RabbitMQ`: http://www.rabbitmq.com/
 .. _`ZeroMQ`: http://www.zeromq.org/
 .. _`AMQP`: http://amqp.org
+.. _`STOMP`: http://stomp.codehaus.org
+.. _`python-stomp`: http://bitbucket.org/asksol/python-stomp
+.. _`Python Queue module`: http://docs.python.org/library/queue.html
 .. _`Apache ActiveMQ`: http://activemq.apache.org/
 .. _`Django`: http://www.djangoproject.com/
 .. _`Rabbits and warrens`: http://blogs.digitar.com/jjww/2009/01/rabbits-and-warrens/
