@@ -122,11 +122,8 @@ class Backend(BaseBackend):
             if limit and total_message_count >= limit:
                 raise StopIteration
             while True:
-                import sys
-                sys.stderr.write("TRYING TO RECEIVE FRAME...\n")
                 frame = self.channel.receive_frame()
                 if frame:
-                    sys.stderr.write("GOT FRAME: %s\n" % frame)
                     break
             queue = frame.headers.get("destination")
 
