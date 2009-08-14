@@ -1,4 +1,5 @@
-from stompy import Stomp
+from stompy import Client
+from stompy import Empty as QueueEmpty
 from carrot.backends.base import BaseMessage, BaseBackend
 from uuid import uuid4 as gen_unique_id
 from itertools import count
@@ -73,7 +74,7 @@ class Message(BaseMessage):
 
 
 class Backend(BaseBackend):
-    Stomp = Stomp
+    Stomp = Client
     Message = Message
     default_port = DEFAULT_PORT
 
@@ -103,16 +104,17 @@ class Backend(BaseBackend):
 
     def queue_purge(self, queue, **kwargs):
         for purge_count in count(0):
-            frame = self.channel.poll()
-            if not frame:
+            try:
+                frame = self.channel.get_nowait()
+            except QueueEmpty:
                 return purge_count
-            self.channel.ack(frame)
-
+            else:
+                self.channel.ack(frame)
 
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
             **kwargs):
         ack = "auto" if no_ack else "client"
-        self.channel.subscribe({"destination": queue, "ack": ack})
+        self.channel.subscribe(queue, ack=ack)
         self._consumers[consumer_tag] = queue
         self._callbacks[queue] = callback
 
@@ -122,7 +124,7 @@ class Backend(BaseBackend):
             if limit and total_message_count >= limit:
                 raise StopIteration
             while True:
-                frame = self.channel.receive_frame()
+                frame = self.channel.get()
                 if frame:
                     break
             queue = frame.headers.get("destination")
@@ -135,11 +137,15 @@ class Backend(BaseBackend):
             yield True
 
     def queue_declare(self, queue, *args, **kwargs):
-        self.channel.subscribe({"destination": queue, "ack": "client"})
+        self.channel.subscribe(queue, ack="client")
 
     def get(self, queue, no_ack=False):
-        frame = self.channel.poll()
-        return self.message_to_python(frame) if frame else None
+        try:
+            frame = self.channel.get_nowait()
+        except QueueEmpty:
+            return None
+        else:
+            return self.message_to_python(frame)
 
     def ack(self, frame):
         self.channel.ack(frame)
@@ -160,20 +166,13 @@ class Backend(BaseBackend):
                 "content-type": content_type}
 
     def publish(self, message, exchange, routing_key, **kwargs):
-        headers = dict(message)
-        body = headers.pop("body")
-        headers["destination"] = exchange
-        frame = self.channel.frame.build_frame({"command": "SEND",
-                                                "headers": headers,
-                                                "body": body},
-                                                want_receipt=True)
-        self.channel.send_frame(frame)
+        self.channel.put(message, exchange)
 
     def cancel(self, consumer_tag):
         if not self._channel or consumer_tag not in self._consumers:
             return
         queue = self._consumers[consumer_tag]
-        self.channel.unsubscribe({"destination": queue})
+        self.channel.unsubscribe(queue)
 
     def close(self):
         for consumer_tag in self._consumers.keys():
