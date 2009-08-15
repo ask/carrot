@@ -5,7 +5,7 @@ Getting a connection to the AMQP server.
 """
 from amqplib import client_0_8 as amqp
 from amqplib.client_0_8.connection import AMQPConnectionException
-from carrot.backends import DefaultBackend
+from carrot.backends import get_backend_cls
 import socket
 
 DEFAULT_CONNECT_TIMEOUT = 5 # seconds
@@ -77,7 +77,7 @@ class BrokerConnection(object):
     connect_timeout = DEFAULT_CONNECT_TIMEOUT
     ssl = False
     _closed = True
-    backend_cls = DefaultBackend
+    backend_cls = None
 
     ConnectionException = AMQPConnectionException
 
@@ -97,7 +97,7 @@ class BrokerConnection(object):
         self.connect_timeout = kwargs.get("connect_timeout",
                                           self.connect_timeout)
         self.ssl = kwargs.get("ssl", self.ssl)
-        self.backend_cls = kwargs.get("backend_cls", self.backend_cls)
+        self.backend_cls = kwargs.get("backend_cls", None)
         self._closed = None
         self._connection = None
 
@@ -121,10 +121,18 @@ class BrokerConnection(object):
     def _establish_connection(self):
         return self.create_backend().establish_connection()
 
+    def get_backend_cls(self):
+        """Get the currently used backend class."""
+        backend_cls = self.backend_cls
+        if not backend_cls or isinstance(backend_cls, basestring):
+            backend_cls = get_backend_cls(backend_cls)
+        return backend_cls
+
     def create_backend(self):
         """Create a new instance of the current backend in
         :attr:`backend_cls`."""
-        return self.backend_cls(connection=self)
+        backend_cls = self.get_backend_cls()
+        return backend_cls(connection=self)
 
     def get_channel(self):
         """Request a new AMQP channel."""
@@ -139,7 +147,7 @@ class BrokerConnection(object):
         """Close the currently open connection."""
         try:
             if self._connection:
-                backend = self.backend_cls(connection=self)
+                backend = self.create_backend()
                 backend.close_connection(self._connection)
         except socket.error:
             pass
@@ -176,6 +184,9 @@ class DjangoBrokerConnection(BrokerConnection):
 
     def __init__(self, *args, **kwargs):
         from django.conf import settings
+        if not kwargs.get("backend_cls"):
+            if hasattr(settings, "CARROT_BACKEND"):
+                kwargs["backend_cls"] = settings.CARROT_BACKEND
         kwargs["hostname"] = kwargs.get("hostname",
                 getattr(settings, "AMQP_SERVER", None))
         kwargs["userid"] = kwargs.get("userid",

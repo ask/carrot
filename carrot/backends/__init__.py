@@ -6,6 +6,9 @@ Working with Backends.
 import sys
 from functools import partial
 
+DEFAULT_BACKEND = "pyamqplib"
+
+
 BACKEND_ALIASES = {
     "amqp": "pyamqplib",
     "amqplib": "pyamqplib",
@@ -16,24 +19,7 @@ BACKEND_ALIASES = {
 }
 
 
-"""
-.. data:: DEFAULT_BACKEND
-
-    Name of the default backend used.
-
-    If running under Django, this will be the value of
-    ``settings.CARROT_BACKEND``.
-"""
-DEFAULT_BACKEND = "pyamqplib"
-
-try:
-    from django.conf import settings
-    DEFAULT_BACKEND = getattr(settings, "CARROT_BACKEND", DEFAULT_BACKEND)
-except ImportError:
-    pass
-
-
-def get_backend_cls(backend):
+def get_backend_cls(backend=None):
     """Get backend class by name.
 
     If the name does not include "``.``" (is not fully qualified),
@@ -41,6 +27,9 @@ def get_backend_cls(backend):
     ``"pyqueue"`` becomes ``"carrot.backends.pyqueue"``.
 
     """
+    if not backend:
+        backend = DEFAULT_BACKEND
+
     if backend.find(".") == -1:
         alias_to = BACKEND_ALIASES.get(backend.lower(), None)
         backend = "carrot.backends.%s" % (alias_to or backend)
@@ -48,23 +37,3 @@ def get_backend_cls(backend):
     __import__(backend)
     backend_module = sys.modules[backend]
     return getattr(backend_module, "Backend")
-
-
-"""
-.. function:: get_default_backend_cls()
-
-    Get the default backend class.
-
-    Default is ``DEFAULT_BACKEND``.
-
-"""
-get_default_backend_cls = partial(get_backend_cls, DEFAULT_BACKEND)
-
-
-"""
-.. class:: DefaultBackend
-
-    The default backend class.
-    This is the class specified in ``DEFAULT_BACKEND``.
-"""
-DefaultBackend = get_default_backend_cls()

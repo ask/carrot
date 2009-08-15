@@ -3,7 +3,6 @@
 Sending/Receiving Messages.
 
 """
-from carrot.backends import DefaultBackend
 from itertools import count, ifilter, islice
 import warnings
 import uuid
