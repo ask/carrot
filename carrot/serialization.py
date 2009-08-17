@@ -155,8 +155,8 @@ class SerializerRegistry(object):
         content_type = content_type or 'application/data'
         content_encoding = (content_encoding or 'utf-8').lower()
 
-        # Don't decode 8-bit strings
-        if content_encoding not in ('binary', 'ascii-8bit'):
+        # Don't decode 8-bit strings or unicode objects
+        if content_encoding not in ('binary', 'ascii-8bit') and not isinstance(data, unicode):
             data = codecs.decode(data, content_encoding)
 
         try:
