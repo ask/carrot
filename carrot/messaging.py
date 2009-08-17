@@ -894,6 +894,23 @@ class ConsumerSet(object):
         return sum([consumer.discard_all()
                         for consumer in self.consumers])
 
+    def flow(self, active):
+        """This method asks the peer to pause or restart the flow of
+        content data.
+
+        See :meth:`Consumer.flow`.
+
+        """
+        self.backend.flow(active)
+
+    def qos(self, prefetch_size=0, prefetch_count=0, apply_global=False):
+        """Request specific Quality of Service.
+
+        See :meth:`Consumer.cos`.
+
+        """
+        self.backend.qos(prefetch_size, prefetch_count, apply_global)
+
     def cancel(self):
         """Cancel a running :meth:`iterconsume` session."""
         for consumer_tag in self._open_channels:
