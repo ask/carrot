@@ -169,3 +169,11 @@ class BaseBackend(object):
     def close_connection(self, connection):
         """Close the connection."""
         pass
+
+    def flow(self, active):
+        """Enable/disable flow from peer."""
+        pass
+
+    def qos(self, prefetch_size, prefetch_count, apply_global=False):
+        """Request specific Quality of Service."""
+        pass
