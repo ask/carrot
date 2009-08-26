@@ -148,7 +148,7 @@ Creating a connection
     >>> from carrot.connection import BrokerConnection
     >>> conn = BrokerConnection(hostname="localhost", port=5672,
     ...                           userid="test", password="test",
-    ...                           vhost="test")
+    ...                           virtual_host="test")
 
 
     If you're using Django you can use the
