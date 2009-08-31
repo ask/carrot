@@ -10,7 +10,7 @@ from carrot.backends.pystomp import Backend as StompBackend
 from carrot.connection import BrokerConnection
 from carrot.messaging import Publisher, Consumer
 from tests.utils import test_stomp_connection_args, STOMP_QUEUE
-from stomp.frame import Frame
+from stompy.frame import Frame
 from carrot.serialization import encode
 
 

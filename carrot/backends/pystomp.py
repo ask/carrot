@@ -89,7 +89,7 @@ class Backend(BaseBackend):
         conninfo = self.connection
         if not conninfo.port:
             conninfo.port = self.default_port
-        stomp = self.Stomp(conninfo.hostname, conninfo.port, reconnect=True)
+        stomp = self.Stomp(conninfo.hostname, conninfo.port)
         stomp.connect()
         return stomp
 
