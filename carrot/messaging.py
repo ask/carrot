@@ -577,7 +577,7 @@ class Publisher(object):
         Defaults to ``json``. Can be ``json`` (default), ``raw``,
         ``pickle``, ``hessian``, ``yaml``, or any custom serialization
         methods that have been registered with
-        ``carrot.serialization.registry``.
+        :mod:`carrot.serialization.registry`.
 
     """
 
