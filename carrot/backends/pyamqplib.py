@@ -138,20 +138,23 @@ class Backend(BaseBackend):
             warnings.warn(QueueAlreadyExistsWarning(
                 QueueAlreadyExistsWarning.__doc__))
 
-        self.channel.queue_declare(queue=queue, durable=durable,
-                                   exclusive=exclusive,
-                                   auto_delete=auto_delete)
+        return self.channel.queue_declare(queue=queue,
+                                          durable=durable,
+                                          exclusive=exclusive,
+                                          auto_delete=auto_delete)
 
     def exchange_declare(self, exchange, type, durable, auto_delete):
         """Declare an named exchange."""
-        self.channel.exchange_declare(exchange=exchange, type=type,
-                                      durable=durable,
-                                      auto_delete=auto_delete)
+        return self.channel.exchange_declare(exchange=exchange,
+                                             type=type,
+                                             durable=durable,
+                                             auto_delete=auto_delete)
 
     def queue_bind(self, queue, exchange, routing_key):
         """Bind queue to an exchange using a routing key."""
-        self.channel.queue_bind(queue=queue, exchange=exchange,
-                                routing_key=routing_key)
+        return self.channel.queue_bind(queue=queue,
+                                       exchange=exchange,
+                                       routing_key=routing_key)
 
     def message_to_python(self, raw_message):
         """Convert encoded message body back to a Python value."""
@@ -173,10 +176,11 @@ class Backend(BaseBackend):
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
             nowait=False):
         """Declare a consumer."""
-        self.channel.basic_consume(queue=queue, no_ack=no_ack,
-                                   callback=callback,
-                                   consumer_tag=consumer_tag,
-                                   nowait=nowait)
+        return self.channel.basic_consume(queue=queue,
+                                          no_ack=no_ack,
+                                          callback=callback,
+                                          consumer_tag=consumer_tag,
+                                          nowait=nowait)
 
     def consume(self, limit=None):
         """Returns an iterator that waits for one message at a time."""
