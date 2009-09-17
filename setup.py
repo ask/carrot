@@ -15,10 +15,6 @@ from distutils.command.install import INSTALL_SCHEMES
 import sys
 
 import carrot
-# Don't package *.pyc
-#carrot__pyc = os.path.join("carrot", "__init__.pyc")
-#if os.path.exists(carrot__pyc):
-#    os.unlink(carrot__pyc)
 
 packages, data_files = [], []
 root_dir = os.path.dirname(__file__)
@@ -32,11 +28,6 @@ def osx_install_data(install_data):
     def finalize_options(self):
         self.set_undefined_options("install", ("install_lib", "install_dir"))
         install_data.finalize_options(self)
-
-#if sys.platform == "darwin":
-#    cmdclasses = {'install_data': osx_install_data}
-#else:
-#    cmdclasses = {'install_data': install_data}
 
 
 def fullsplit(path, result=None):

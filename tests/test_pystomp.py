@@ -64,7 +64,7 @@ class TestStompMessage(unittest.TestCase):
         if not stompy_or_None():
             return
         b = create_backend()
-        
+
         self.assertTrue(b)
 
         message_body = "George Constanza"

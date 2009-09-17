@@ -461,7 +461,7 @@ class Consumer(object):
     def flow(self, active):
         """This method asks the peer to pause or restart the flow of
         content data.
-        
+
         This is a simple flow-control mechanism that a
         peer can use to avoid oveflowing its queues or otherwise
         finding itself receiving more messages than it can process.
@@ -475,7 +475,7 @@ class Consumer(object):
 
     def qos(self, prefetch_size=0, prefetch_count=0, apply_global=False):
         """Request specific Quality of Service.
-        
+
         This method requests a specific quality of service.  The QoS
         can be specified for the current channel or for all channels
         on the connection.  The particular properties and semantics of
