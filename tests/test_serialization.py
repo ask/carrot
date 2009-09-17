@@ -44,14 +44,6 @@ yaml_data = ('float: 3.1415926500000002\nint: 10\n'
              'unicode: "Th\\xE9 quick brown fox '
              'jumps over th\\xE9 lazy dog"\n')
 
-# Hessian serialization tests
-hessian_data = ('r\x01\x00fB\x00\x03intI\x00\x00\x00\nB\x00\x05float'
-                'D@\t!\xfbS\xc8\xd4\xf1B\x00\x04listVl\x00\x00\x00\x04'
-                'B\x00\x06georgeB\x00\x05jerryB\x00\x06elaineB\x00\x05'
-                'cosmozB\x00\x06stringB\x00+The quick brown fox jumps '
-                'over the lazy dogB\x00\x07unicodeS\x00+Th\xc3\xa9 quick '
-                'brown fox jumps over th\xc3\xa9 lazy dogzz')
-
 
 class TestSerialization(unittest.TestCase):
 
@@ -132,30 +124,6 @@ class TestSerialization(unittest.TestCase):
                               yaml_data,
                               content_type='application/x-yaml',
                               content_encoding='utf-8'))
-    #
-    # def test_hessian_decode(self):
-    #     print '---------'
-    #     print registry.decode(
-    #         hessian_data,
-    #         content_type='application/x-hessian',
-    #         content_encoding='binary')
-    #     print '---------'
-    #     self.assertEquals(py_data,
-    #                       registry.decode(
-    #                           hessian_data,
-    #                           content_type='application/x-hessian',
-    #                           content_encoding='binary'))
-    #
-    # def test_hessian_encode(self):
-    #     self.assertEquals(registry.decode(
-    #                           registry.encode(py_data,
-    #                                           serializer="hessian")[-1],
-    #                           content_type='application/x-hessian',
-    #                           content_encoding='binary'),
-    #                       registry.decode(
-    #                           hessian_data,
-    #                           content_type='application/x-hessian',
-    #                           content_encoding='binary'))
 
     def test_pickle_decode(self):
         self.assertEquals(py_data,
