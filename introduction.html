@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.5.1 documentation</title>
+    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.6.0 documentation</title>
     <link rel="stylesheet" href="static/nature.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.5.1',
+        VERSION:     '0.6.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.5.1 documentation" href="index.html" />
+    <link rel="top" title="Carrot v0.6.0 documentation" href="index.html" />
     <link rel="next" title="Frequently Asked Questions" href="faq.html" />
     <link rel="prev" title="Carrot Documentation" href="index.html" /> 
   </head>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="index.html" title="Carrot Documentation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Carrot v0.5.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.6.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,7 +54,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.5.1</td>
+<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.6.0</td>
 </tr>
 </tbody>
 </table>
@@ -69,8 +69,9 @@ routing, reliability and security.</p>
 providing a high-level interface for producing and consuming messages. At the
 same time it is a goal to re-use what is already available as much as possible.</p>
 <p><cite>carrot</cite> has pluggable messaging back-ends, so it is possible to support
-several messaging systems. At the time of release, the <a class="reference external" href="http://barryp.org/software/py-amqplib/">py-amqplib</a> based
-backend is considered suitable for production use.</p>
+several messaging systems. Currently, there is support for <a class="reference external" href="http://amqp.org">AMQP</a>
+(<a class="reference external" href="http://barryp.org/software/py-amqplib/">py-amqplib</a>) and <a class="reference external" href="http://stomp.codehaus.org">STOMP</a> (<a class="reference external" href="http://bitbucket.org/asksol/python-stomp">python-stomp</a>). There is also a in-memory
+backend for testing purposes that uses the <a class="reference external" href="http://docs.python.org/library/queue.html">Python queue module</a>.</p>
 <p>Several AMQP message broker implementations exists, including <a class="reference external" href="http://www.rabbitmq.com/">RabbitMQ</a>,
 <a class="reference external" href="http://www.zeromq.org/">ZeroMQ</a> and <a class="reference external" href="http://activemq.apache.org/">Apache ActiveMQ</a>. You&#8217;ll need to have one of these installed,
 personally we&#8217;ve been using <a class="reference external" href="http://www.rabbitmq.com/">RabbitMQ</a>.</p>
@@ -179,17 +180,17 @@ routing keys <tt class="docutils literal"><span class="pre">&quot;usd.stock&quot
 <h2>Creating a connection<a class="headerlink" href="#creating-a-connection" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <p>You can set up a connection by creating an instance of
-<tt class="docutils literal"><span class="pre">carrot.messaging.AMQPConnection</span></tt>, with the appropriate options for
-your AMQP server:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.connection</span> <span class="kn">import</span> <span class="n">AMQPConnection</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">amqpconn</span> <span class="o">=</span> <span class="n">AMQPConnection</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mf">5672</span><span class="p">,</span>
+<tt class="docutils literal"><span class="pre">carrot.messaging.BrokerConnection</span></tt>, with the appropriate options for
+your broker:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.connection</span> <span class="kn">import</span> <span class="n">BrokerConnection</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span> <span class="o">=</span> <span class="n">BrokerConnection</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mf">5672</span><span class="p">,</span>
 <span class="gp">... </span>                          <span class="n">userid</span><span class="o">=</span><span class="s">&quot;test&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&quot;test&quot;</span><span class="p">,</span>
-<span class="gp">... </span>                          <span class="n">vhost</span><span class="o">=</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+<span class="gp">... </span>                          <span class="n">virtual_host</span><span class="o">=</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If you&#8217;re using Django you can use the
-<tt class="docutils literal"><span class="pre">carrot.connection.DjangoAMQPConnection</span></tt> class instead, which loads the
-connection settings from your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
+<tt class="docutils literal"><span class="pre">carrot.connection.DjangoBrokerConnection</span></tt> class instead, which loads
+the connection settings from your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">AMQP_SERVER</span> <span class="o">=</span> <span class="s">&quot;localhost&quot;</span>
 <span class="n">AMQP_PORT</span> <span class="o">=</span> <span class="mf">5672</span>
 <span class="n">AMQP_USER</span> <span class="o">=</span> <span class="s">&quot;test&quot;</span>
@@ -198,8 +199,8 @@ connection settings from your <tt class="docutils literal"><span class="pre">set
 </pre></div>
 </div>
 <p>Then create a connection by doing:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.connection</span> <span class="kn">import</span> <span class="n">DjangoAMQPConnection</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">amqpconn</span> <span class="o">=</span> <span class="n">DjangoAMQPConnection</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.connection</span> <span class="kn">import</span> <span class="n">DjangoBrokerConnection</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span> <span class="o">=</span> <span class="n">DjangoBrokerConnection</span><span class="p">()</span>
 </pre></div>
 </div>
 </blockquote>
@@ -213,7 +214,7 @@ the routing key <tt class="docutils literal"><span class="pre">&quot;importer&qu
 mode, where it continuously polls the queue for new messages, and when a
 message is received it passes the message to all registered callbacks.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Consumer</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span>
 <span class="gp">... </span>                    <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">import_feed_callback</span><span class="p">(</span><span class="n">message_data</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">feed_url</span> <span class="o">=</span> <span class="n">message_data</span><span class="p">[</span><span class="s">&quot;import_feed&quot;</span><span class="p">]</span>
@@ -231,7 +232,7 @@ message is received it passes the message to all registered callbacks.</p>
 <p>Then we open up another Python shell to send some messages to the consumer
 defined in the last section.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span>
 <span class="gp">... </span>                      <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s">&quot;import_feed&quot;</span><span class="p">:</span> <span class="s">&quot;http://cnn.com/rss/edition.rss&quot;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -286,7 +287,7 @@ use one of the following options.</p>
 <ol class="arabic">
 <li><p class="first">Set the serialization option on a per-Publisher basis:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span>
 <span class="gp">... </span>                      <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">,</span>
 <span class="gp">... </span>                      <span class="n">serializer</span><span class="o">=</span><span class="s">&quot;yaml&quot;</span><span class="p">)</span>
 </pre></div>
@@ -294,7 +295,7 @@ use one of the following options.</p>
 </li>
 <li><p class="first">Set the serialization option on a per-call basis</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span>
 <span class="gp">... </span>                      <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s">&quot;import_feed&quot;</span><span class="p">:</span> <span class="s">&quot;http://cnn.com/rss/edition.rss&quot;</span><span class="p">},</span>
 <span class="gp">... </span>               <span class="n">serializer</span><span class="o">=</span><span class="s">&quot;pickle&quot;</span><span class="p">)</span>
@@ -316,7 +317,7 @@ not waste cycles serializing/deserializing the data.</p>
 <p>You can optionally specify a <tt class="docutils literal"><span class="pre">content_type</span></tt> and <tt class="docutils literal"><span class="pre">content_encoding</span></tt>
 for the raw data:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Publisher</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span>
 <span class="gp">... </span>                      <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span>
 <span class="go">                          routing_key=&quot;import_pictures&quot;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">&#39;~/my_picture.jpg&#39;</span><span class="p">,</span><span class="s">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span>
@@ -334,7 +335,7 @@ for the raw data:</p>
 This method returns a <tt class="docutils literal"><span class="pre">Message</span></tt> object, from where you can get the
 message body, de-serialize the body to get the data, acknowledge, reject or
 re-queue the message.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span>
 <span class="gp">... </span>                    <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;feed&quot;</span><span class="p">,</span> <span class="n">routing_key</span><span class="o">=</span><span class="s">&quot;importer&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">message</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">message</span><span class="p">:</span>
@@ -378,12 +379,12 @@ can define the above publisher and consumer like so:</p>
 <span class="gp">... </span>            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Unknown action: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">action</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">FeedPublisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span> <span class="o">=</span> <span class="n">FeedPublisher</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">import_feed</span><span class="p">(</span><span class="s">&quot;http://cnn.com/rss/edition.rss&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">publisher</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">FeedConsumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">amqpconn</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">FeedConsumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span> <span class="c"># Go into the consumer loop.</span>
 </pre></div>
 </div>
@@ -493,12 +494,12 @@ file in the top distribution directory for the full license text.</p>
         <li class="right" >
           <a href="index.html" title="Carrot Documentation"
              >previous</a> |</li>
-        <li><a href="index.html">Carrot v0.5.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.6.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
       &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
     </div>
   </body>
 </html>

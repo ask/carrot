@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Change history &mdash; Carrot v0.5.1 documentation</title>
+    <title>Change history &mdash; Carrot v0.6.0 documentation</title>
     <link rel="stylesheet" href="static/nature.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.5.1',
+        VERSION:     '0.6.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.5.1 documentation" href="index.html" />
+    <link rel="top" title="Carrot v0.6.0 documentation" href="index.html" />
     <link rel="prev" title="carrot.serialization" href="reference/carrot.serialization.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="reference/carrot.serialization.html" title="carrot.serialization"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Carrot v0.5.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.6.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -47,7 +47,85 @@
   <div class="section" id="change-history">
 <h1>Change history<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="p-m-cet">
-<h2>0.5.1 [2009-07-19 06:19 P.M CET]<a class="headerlink" href="#p-m-cet" title="Permalink to this headline">¶</a></h2>
+<h2>0.6.0 [2009-09-17 16:41 P.M CET]<a class="headerlink" href="#p-m-cet" title="Permalink to this headline">¶</a></h2>
+<p><strong>BACKWARD INCOMPATIBLE CHANGES</strong></p>
+<ul>
+<li><dl class="first docutils">
+<dt>AMQPConnection renamed to BrokerConnection with AMQPConnection remaining</dt>
+<dd><p class="first last">an alias for backwards compatability. Similarly DjangoAMQPConnection is
+renamed to DjangoBrokerConnection.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>AMQPConnection renamed to BrokerConnection</dt>
+<dd><p class="first last">DjangoAMQPConnection renamed to DjangoBrokerConnection
+(The previous names are still available but will be deprecated in 1.0)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>The connection is now lazy, requested only when it&#8217;s needed.</dt>
+<dd><p class="first">To explicitly connect you have to evaluate the BrokerConnections
+<tt class="docutils literal"><span class="pre">connection</span></tt> attribute.</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connection</span> <span class="o">=</span> <span class="n">BrokerConnection</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="c"># Not connected yet.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">connection</span><span class="o">.</span><span class="n">connection</span><span class="p">;</span> <span class="c"># Now it&#39;s connected</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first">A channel is now lazy, requested only when it&#8217;s needed.</p>
+</li>
+<li><p class="first">pyamqplib.Message.amqp_message is now a private attribute</p>
+</li>
+</ul>
+<p><strong>NEW FEATURES</strong></p>
+<ul>
+<li><dl class="first docutils">
+<dt>Basic support for STOMP using the stompy library.</dt>
+<dd><p class="first last">(Available at <a class="reference external" href="http://bitbucket.org/benjaminws/python-stomp/overview/">http://bitbucket.org/benjaminws/python-stomp/overview/</a>)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Implements <tt class="xref docutils literal"><span class="pre">Consumer.qos()</span></tt> and <tt class="xref docutils literal"><span class="pre">Consumer.flow()</span></tt> for setting</dt>
+<dd><p class="first last">quality of service and flow control.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>NEWS</strong></p>
+<ul>
+<li><dl class="first docutils">
+<dt>The current Message class is now available as an attribute on the</dt>
+<dd><p class="first last">Backend.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Default port is now handled by the backend and all AMQP_* settings to the</dt>
+<dd><p class="first last">DjangoBrokerConnection is now optional</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Backend is now initialized in the connection instead of Consumer/Publisher,</dt>
+<dd><p class="first last">so backend_cls now has to be sent to AMQPConnection if you want to
+explicitly set it.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Specifying utf-8 as the content type when forcing unicode into a string.</dt>
+<dd><p class="first last">This removes the reference to the unbound content_type variable.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>0.5.1 [2009-07-19 06:19 P.M CET]<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>Handle messages without content_encoding attribute set.</li>
@@ -56,8 +134,8 @@
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id1">
-<h2>0.5.0 [2009-06-25 08:16 P.M CET]<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>0.5.0 [2009-06-25 08:16 P.M CET]<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p><strong>BACKWARD-INCOMPATIBLE CHANGES</strong></p>
 <blockquote>
 <ul>
@@ -98,8 +176,8 @@ the default <tt class="docutils literal"><span class="pre">JSON</span></tt> seri
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id2">
-<h2>0.4.5 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>0.4.5 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p><strong>BACKWARD-INCOMPATIBLE CHANGES</strong></p>
 <blockquote>
 <ul>
@@ -120,24 +198,24 @@ the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id3">
-<h2>0.4.4 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>0.4.4 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>__init__.pyc was included in the distribution by error.</li>
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id4">
-<h2>0.4.3 [2009-06-13 09:26 P.M CET]<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>0.4.3 [2009-06-13 09:26 P.M CET]<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>Fix typo with long_description in <tt class="docutils literal"><span class="pre">setup.py</span></tt>.</li>
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id5">
-<h2>0.4.2 [2009-06-13 08:30 P.M CET]<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h2>0.4.2 [2009-06-13 08:30 P.M CET]<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul>
 <li><dl class="first docutils">
@@ -155,8 +233,8 @@ the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id6">
-<h2>0.4.1 [2009-06-08 04:21 P.M CET]<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h2>0.4.1 [2009-06-08 04:21 P.M CET]<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><dl class="first docutils">
 <dt>Consumer/Publisher now correctly sets the encoder/decoder if they</dt>
@@ -166,8 +244,8 @@ the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the
 </li>
 </ul>
 </div>
-<div class="section" id="id7">
-<h2>0.4.0 [2009-06-06 01:39 P.M CET]<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h2>0.4.0 [2009-06-06 01:39 P.M CET]<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <p><strong>IMPORTANT</strong> Please don&#8217;t use <tt class="docutils literal"><span class="pre">Consumer.wait</span></tt> in production. Use either
 of <tt class="docutils literal"><span class="pre">Consumer.iterconsume</span></tt> or <tt class="docutils literal"><span class="pre">Consumer.iterqueue</span></tt>.</p>
 <p><strong>IMPORTANT</strong> The <tt class="docutils literal"><span class="pre">ack</span></tt> argument to <tt class="docutils literal"><span class="pre">Consumer.process_next</span></tt> has been
@@ -344,16 +422,16 @@ by registering callbacks by using <tt class="docutils literal"><span class="pre"
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id8">
-<h2>0.3.9 [2009-05-18 04:49 P.M CET]<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h2>0.3.9 [2009-05-18 04:49 P.M CET]<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>Consumer.wait() now works properly again. Thanks Alexander Solovyov!</li>
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id9">
-<h2>0.3.8 [2009-05-11 02:14 P.M CET]<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id10">
+<h2>0.3.8 [2009-05-11 02:14 P.M CET]<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul>
 <li><dl class="first docutils">
@@ -381,8 +459,8 @@ it to consumers/publishers. e.g before when you did</p>
 publisher/consumer.</p>
 </blockquote>
 </div>
-<div class="section" id="id10">
-<h2>0.2.1 [2009-03-24 05:48 P.M CET]<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id11">
+<h2>0.2.1 [2009-03-24 05:48 P.M CET]<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Fix typo &#8220;package&#8221; -&gt; &#8220;packages&#8221; in setup.py</li>
 </ul>
@@ -393,8 +471,8 @@ publisher/consumer.</p>
 <li>hasty bugfix release, fixed syntax errors.</li>
 </ul>
 </div>
-<div class="section" id="id11">
-<h2>0.1.0 [2009-03-24 05:16 P.M ]`<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id12">
+<h2>0.1.0 [2009-03-24 05:16 P.M ]`<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>Initial release</li>
@@ -412,24 +490,25 @@ publisher/consumer.</p>
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
 <li><a class="reference external" href="">Change history</a><ul>
-<li><a class="reference external" href="#p-m-cet">0.5.1 [2009-07-19 06:19 P.M CET]</a></li>
-<li><a class="reference external" href="#id1">0.5.0 [2009-06-25 08:16 P.M CET]</a></li>
-<li><a class="reference external" href="#id2">0.4.5 [2009-06-15 01:58 P.M CET]</a></li>
-<li><a class="reference external" href="#id3">0.4.4 [2009-06-15 01:58 P.M CET]</a></li>
-<li><a class="reference external" href="#id4">0.4.3 [2009-06-13 09:26 P.M CET]</a></li>
-<li><a class="reference external" href="#id5">0.4.2 [2009-06-13 08:30 P.M CET]</a></li>
-<li><a class="reference external" href="#id6">0.4.1 [2009-06-08 04:21 P.M CET]</a></li>
-<li><a class="reference external" href="#id7">0.4.0 [2009-06-06 01:39 P.M CET]</a></li>
+<li><a class="reference external" href="#p-m-cet">0.6.0 [2009-09-17 16:41 P.M CET]</a></li>
+<li><a class="reference external" href="#id1">0.5.1 [2009-07-19 06:19 P.M CET]</a></li>
+<li><a class="reference external" href="#id2">0.5.0 [2009-06-25 08:16 P.M CET]</a></li>
+<li><a class="reference external" href="#id3">0.4.5 [2009-06-15 01:58 P.M CET]</a></li>
+<li><a class="reference external" href="#id4">0.4.4 [2009-06-15 01:58 P.M CET]</a></li>
+<li><a class="reference external" href="#id5">0.4.3 [2009-06-13 09:26 P.M CET]</a></li>
+<li><a class="reference external" href="#id6">0.4.2 [2009-06-13 08:30 P.M CET]</a></li>
+<li><a class="reference external" href="#id7">0.4.1 [2009-06-08 04:21 P.M CET]</a></li>
+<li><a class="reference external" href="#id8">0.4.0 [2009-06-06 01:39 P.M CET]</a></li>
 <li><a class="reference external" href="#pre7-2009-06-03-05-08-p-m-cet">0.4.0-pre7 [2009-06-03 05:08 P.M CET]</a></li>
 <li><a class="reference external" href="#pre6-2009-06-03-04-55-p-m-cet">0.4.0-pre6 [2009-06-03 04:55 P.M CET]</a></li>
 <li><a class="reference external" href="#pre3-2009-05-29-02-27-p-m-cet">0.4.0-pre3 [2009-05-29 02:27 P.M CET]</a></li>
 <li><a class="reference external" href="#pre2-2009-05-29-02-27-p-m-cet">0.4.0-pre2 [2009-05-29 02:27 P.M CET]</a></li>
 <li><a class="reference external" href="#pre1-2009-05-27-04-27-p-m-cet">0.4.0-pre1 [2009-05-27 04:27 P.M CET]</a></li>
-<li><a class="reference external" href="#id8">0.3.9 [2009-05-18 04:49 P.M CET]</a></li>
-<li><a class="reference external" href="#id9">0.3.8 [2009-05-11 02:14 P.M CET]</a></li>
-<li><a class="reference external" href="#id10">0.2.1 [2009-03-24 05:48 P.M CET]</a></li>
+<li><a class="reference external" href="#id9">0.3.9 [2009-05-18 04:49 P.M CET]</a></li>
+<li><a class="reference external" href="#id10">0.3.8 [2009-05-11 02:14 P.M CET]</a></li>
+<li><a class="reference external" href="#id11">0.2.1 [2009-03-24 05:48 P.M CET]</a></li>
 <li><a class="reference external" href="#p-m">0.2.0 [2009-03-24 05:23 P.M ]`</a></li>
-<li><a class="reference external" href="#id11">0.1.0 [2009-03-24 05:16 P.M ]`</a></li>
+<li><a class="reference external" href="#id12">0.1.0 [2009-03-24 05:16 P.M ]`</a></li>
 </ul>
 </li>
 </ul>
@@ -471,12 +550,12 @@ publisher/consumer.</p>
         <li class="right" >
           <a href="reference/carrot.serialization.html" title="carrot.serialization"
              >previous</a> |</li>
-        <li><a href="index.html">Carrot v0.5.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.6.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
       &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
     </div>
   </body>
 </html>

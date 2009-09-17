@@ -13,5 +13,6 @@
     carrot.backends
     carrot.backends.base
     carrot.backends.pyamqplib
+    carrot.backends.pystomp
     carrot.backends.queue
     carrot.serialization

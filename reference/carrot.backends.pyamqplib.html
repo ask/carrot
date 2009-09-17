@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.backends.pyamqplib &mdash; Carrot v0.5.1 documentation</title>
+    <title>carrot.backends.pyamqplib &mdash; Carrot v0.6.0 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.5.1',
+        VERSION:     '0.6.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.5.1 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.6.0 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends.queue" href="carrot.backends.queue.html" />
     <link rel="prev" title="carrot.backends.base" href="carrot.backends.base.html" /> 
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="carrot.backends.base.html" title="carrot.backends.base"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.5.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -55,8 +55,7 @@
 <p><a class="reference external" href="http://barryp.org/software/py-amqplib/">amqplib</a> backend for carrot.</p>
 <dl class="class">
 <dt id="carrot.backends.pyamqplib.Backend">
-<em class="property">
-class </em><tt class="descclassname">carrot.backends.pyamqplib.</tt><tt class="descname">Backend</tt><big>(</big><em>connection</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">carrot.backends.pyamqplib.</tt><tt class="descname">Backend</tt><big>(</big><em>connection</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend" title="Permalink to this definition">¶</a></dt>
 <dd><p>amqplib backend</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -71,42 +70,99 @@ class </em><tt class="descclassname">carrot.backends.pyamqplib.</tt><tt class="d
 <tt class="descname">connection</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.connection" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>A <a title="carrot.connection.AMQPConnection" class="reference external" href="carrot.connection.html#carrot.connection.AMQPConnection"><tt class="xref docutils literal"><span class="pre">carrot.connection.AMQPConnection</span></tt></a> instance. An established
-connection to the AMQP server.</p>
+<p>A <a title="carrot.connection.BrokerConnection" class="reference external" href="carrot.connection.html#carrot.connection.BrokerConnection"><tt class="xref docutils literal"><span class="pre">carrot.connection.BrokerConnection</span></tt></a> instance. An established
+connection to the broker.</p>
+<dl class="class">
+<dt id="carrot.backends.pyamqplib.Backend.Message">
+<em class="property">class </em><tt class="descname">Message</tt><big>(</big><em>backend</em>, <em>amqp_message</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.Message" title="Permalink to this definition">¶</a></dt>
+<dd><p>A message received by the broker.</p>
+<p>Usually you don&#8217;t insantiate message objects yourself, but receive
+them using a <a title="carrot.messaging.Consumer" class="reference external" href="carrot.messaging.html#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">carrot.messaging.Consumer</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>backend</em> &#8211; see <a title="carrot.backends.pyamqplib.Backend.Message.backend" class="reference internal" href="#carrot.backends.pyamqplib.Backend.Message.backend"><tt class="xref docutils literal"><span class="pre">backend</span></tt></a>.</li>
+<li><em>amqp_message</em> &#8211; see <a title="carrot.backends.pyamqplib.Backend.Message._amqp_message" class="reference internal" href="#carrot.backends.pyamqplib.Backend.Message._amqp_message"><tt class="xref docutils literal"><span class="pre">_amqp_message</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="carrot.backends.pyamqplib.Backend.Message.body">
+<tt class="descname">body</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.Message.body" title="Permalink to this definition">¶</a></dt>
+<dd>The message body.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.backends.pyamqplib.Backend.Message.delivery_tag">
+<tt class="descname">delivery_tag</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.Message.delivery_tag" title="Permalink to this definition">¶</a></dt>
+<dd>The message delivery tag, uniquely identifying this message.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.backends.pyamqplib.Backend.Message.backend">
+<tt class="descname">backend</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.Message.backend" title="Permalink to this definition">¶</a></dt>
+<dd>The message backend used.
+A subclass of <a title="carrot.backends.base.BaseBackend" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseBackend"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseBackend</span></tt></a>.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.backends.pyamqplib.Backend.Message._amqp_message">
+<tt class="descname">_amqp_message</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.Message._amqp_message" title="Permalink to this definition">¶</a></dt>
+<dd>A <tt class="xref docutils literal"><span class="pre">amqplib.client_0_8.basic_message.Message</span></tt> instance.
+This is a private attribute and should not be accessed by
+production code.</dd></dl>
+
+</dd></dl>
+
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.ack">
-<tt class="descname">ack</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.ack" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">ack</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.ack" title="Permalink to this definition">¶</a></dt>
 <dd>Acknowledge a message by delivery tag.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.cancel">
-<tt class="descname">cancel</tt><big>(</big><em>consumer_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.cancel" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">cancel</tt><big>(</big><em>consumer_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.cancel" title="Permalink to this definition">¶</a></dt>
 <dd>Cancel a channel by consumer tag.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.backends.pyamqplib.Backend.channel">
+<tt class="descclassname">Backend.</tt><tt class="descname">channel</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.channel" title="Permalink to this definition">¶</a></dt>
+<dd>If no channel exists, a new one is requested.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.close">
-<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.close" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.close" title="Permalink to this definition">¶</a></dt>
 <dd>Close the channel if open.</dd></dl>
 
 <dl class="method">
+<dt id="carrot.backends.pyamqplib.Backend.close_connection">
+<tt class="descclassname">Backend.</tt><tt class="descname">close_connection</tt><big>(</big><em>connection</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.close_connection" title="Permalink to this definition">¶</a></dt>
+<dd>Close the AMQP broker connection.</dd></dl>
+
+<dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.consume">
-<tt class="descname">consume</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.consume" title="Permalink to this definition">¶</a></dt>
-<dd>Returns an iterator that waits for one message at a time,
-calling the callback when messages arrive.</dd></dl>
+<tt class="descclassname">Backend.</tt><tt class="descname">consume</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.consume" title="Permalink to this definition">¶</a></dt>
+<dd>Returns an iterator that waits for one message at a time.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.declare_consumer">
-<tt class="descname">declare_consumer</tt><big>(</big><em>queue</em>, <em>no_ack</em>, <em>callback</em>, <em>consumer_tag</em>, <em>nowait=False</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.declare_consumer" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">declare_consumer</tt><big>(</big><em>queue</em>, <em>no_ack</em>, <em>callback</em>, <em>consumer_tag</em>, <em>nowait=False</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.declare_consumer" title="Permalink to this definition">¶</a></dt>
 <dd>Declare a consumer.</dd></dl>
 
 <dl class="method">
+<dt id="carrot.backends.pyamqplib.Backend.establish_connection">
+<tt class="descclassname">Backend.</tt><tt class="descname">establish_connection</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.establish_connection" title="Permalink to this definition">¶</a></dt>
+<dd>Establish connection to the AMQP broker.</dd></dl>
+
+<dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.exchange_declare">
-<tt class="descname">exchange_declare</tt><big>(</big><em>exchange</em>, <em>type</em>, <em>durable</em>, <em>auto_delete</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.exchange_declare" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">exchange_declare</tt><big>(</big><em>exchange</em>, <em>type</em>, <em>durable</em>, <em>auto_delete</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.exchange_declare" title="Permalink to this definition">¶</a></dt>
 <dd>Declare an named exchange.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.get">
-<tt class="descname">get</tt><big>(</big><em>queue</em>, <em>no_ack=False</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.get" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">get</tt><big>(</big><em>queue</em>, <em>no_ack=False</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Receive a message from a declared queue by name.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -122,32 +178,32 @@ there was no messages waiting on the queue.</td>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.message_to_python">
-<tt class="descname">message_to_python</tt><big>(</big><em>raw_message</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.message_to_python" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">message_to_python</tt><big>(</big><em>raw_message</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.message_to_python" title="Permalink to this definition">¶</a></dt>
 <dd>Convert encoded message body back to a Python value.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.prepare_message">
-<tt class="descname">prepare_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode</em>, <em>priority=None</em>, <em>content_type=None</em>, <em>content_encoding=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.prepare_message" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">prepare_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode</em>, <em>priority=None</em>, <em>content_type=None</em>, <em>content_encoding=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.prepare_message" title="Permalink to this definition">¶</a></dt>
 <dd>Encapsulate data into a AMQP message.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.publish">
-<tt class="descname">publish</tt><big>(</big><em>message</em>, <em>exchange</em>, <em>routing_key</em>, <em>mandatory=None</em>, <em>immediate=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.publish" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">publish</tt><big>(</big><em>message</em>, <em>exchange</em>, <em>routing_key</em>, <em>mandatory=None</em>, <em>immediate=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.publish" title="Permalink to this definition">¶</a></dt>
 <dd>Publish a message to a named exchange.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.queue_bind">
-<tt class="descname">queue_bind</tt><big>(</big><em>queue</em>, <em>exchange</em>, <em>routing_key</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.queue_bind" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">queue_bind</tt><big>(</big><em>queue</em>, <em>exchange</em>, <em>routing_key</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.queue_bind" title="Permalink to this definition">¶</a></dt>
 <dd>Bind queue to an exchange using a routing key.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.queue_declare">
-<tt class="descname">queue_declare</tt><big>(</big><em>queue</em>, <em>durable</em>, <em>exclusive</em>, <em>auto_delete</em>, <em>warn_if_exists=False</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.queue_declare" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">queue_declare</tt><big>(</big><em>queue</em>, <em>durable</em>, <em>exclusive</em>, <em>auto_delete</em>, <em>warn_if_exists=False</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.queue_declare" title="Permalink to this definition">¶</a></dt>
 <dd>Declare a named queue.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.queue_exists">
-<tt class="descname">queue_exists</tt><big>(</big><em>queue</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.queue_exists" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">queue_exists</tt><big>(</big><em>queue</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.queue_exists" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if a queue has been declared.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -161,26 +217,25 @@ there was no messages waiting on the queue.</td>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.queue_purge">
-<tt class="descname">queue_purge</tt><big>(</big><em>queue</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.queue_purge" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">queue_purge</tt><big>(</big><em>queue</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.queue_purge" title="Permalink to this definition">¶</a></dt>
 <dd>Discard all messages in the queue. This will delete the messages
 and results in an empty queue.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.reject">
-<tt class="descname">reject</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.reject" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">reject</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.reject" title="Permalink to this definition">¶</a></dt>
 <dd>Reject a message by deliver tag.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.requeue">
-<tt class="descname">requeue</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.requeue" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">Backend.</tt><tt class="descname">requeue</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.requeue" title="Permalink to this definition">¶</a></dt>
 <dd>Reject and requeue a message by delivery tag.</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="carrot.backends.pyamqplib.Message">
-<em class="property">
-class </em><tt class="descclassname">carrot.backends.pyamqplib.</tt><tt class="descname">Message</tt><big>(</big><em>backend</em>, <em>amqp_message</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Message" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">carrot.backends.pyamqplib.</tt><tt class="descname">Message</tt><big>(</big><em>backend</em>, <em>amqp_message</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Message" title="Permalink to this definition">¶</a></dt>
 <dd><p>A message received by the broker.</p>
 <p>Usually you don&#8217;t insantiate message objects yourself, but receive
 them using a <a title="carrot.messaging.Consumer" class="reference external" href="carrot.messaging.html#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">carrot.messaging.Consumer</span></tt></a>.</p>
@@ -190,8 +245,7 @@ them using a <a title="carrot.messaging.Consumer" class="reference external" hre
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><em>backend</em> &#8211; see <a title="carrot.backends.pyamqplib.Message.backend" class="reference internal" href="#carrot.backends.pyamqplib.Message.backend"><tt class="xref docutils literal"><span class="pre">backend</span></tt></a>.</li>
-<li><em>amqp_message</em> &#8211; see <a title="carrot.backends.pyamqplib.Message.amqp_message" class="reference internal" href="#carrot.backends.pyamqplib.Message.amqp_message"><tt class="xref docutils literal"><span class="pre">amqp_message</span></tt></a>.</li>
-<li><em>channel</em> &#8211; see <a title="carrot.backends.pyamqplib.Message.channel" class="reference internal" href="#carrot.backends.pyamqplib.Message.channel"><tt class="xref docutils literal"><span class="pre">channel</span></tt></a>.</li>
+<li><em>amqp_message</em> &#8211; see <a title="carrot.backends.pyamqplib.Message._amqp_message" class="reference internal" href="#carrot.backends.pyamqplib.Message._amqp_message"><tt class="xref docutils literal"><span class="pre">_amqp_message</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -200,9 +254,7 @@ them using a <a title="carrot.messaging.Consumer" class="reference external" hre
 <dl class="attribute">
 <dt id="carrot.backends.pyamqplib.Message.body">
 <tt class="descname">body</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Message.body" title="Permalink to this definition">¶</a></dt>
-<dd>The message body. This data is serialized,
-so you probably want to deserialize it using
-<a title="carrot.backends.base.BaseMessage.decode" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage.decode"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage.decode()</span></tt></a>.</dd></dl>
+<dd>The message body.</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.backends.pyamqplib.Message.delivery_tag">
@@ -216,22 +268,17 @@ so you probably want to deserialize it using
 A subclass of <a title="carrot.backends.base.BaseBackend" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseBackend"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseBackend</span></tt></a>.</dd></dl>
 
 <dl class="attribute">
-<dt id="carrot.backends.pyamqplib.Message.amqp_message">
-<tt class="descname">amqp_message</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Message.amqp_message" title="Permalink to this definition">¶</a></dt>
-<dd>A <tt class="xref docutils literal"><span class="pre">amqplib.client_0_8.basic_message.Message</span></tt> instance.</dd></dl>
-
-<dl class="attribute">
-<dt id="carrot.backends.pyamqplib.Message.channel">
-<tt class="descname">channel</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Message.channel" title="Permalink to this definition">¶</a></dt>
-<dd>The AMQP channel. A <tt class="xref docutils literal"><span class="pre">amqplib.client_0_8.channel.Channel</span></tt>
-instance.</dd></dl>
+<dt id="carrot.backends.pyamqplib.Message._amqp_message">
+<tt class="descname">_amqp_message</tt><a class="headerlink" href="#carrot.backends.pyamqplib.Message._amqp_message" title="Permalink to this definition">¶</a></dt>
+<dd>A <tt class="xref docutils literal"><span class="pre">amqplib.client_0_8.basic_message.Message</span></tt> instance.
+This is a private attribute and should not be accessed by
+production code.</dd></dl>
 
 </dd></dl>
 
 <dl class="exception">
 <dt id="carrot.backends.pyamqplib.QueueAlreadyExistsWarning">
-<em class="property">
-exception </em><tt class="descclassname">carrot.backends.pyamqplib.</tt><tt class="descname">QueueAlreadyExistsWarning</tt><a class="headerlink" href="#carrot.backends.pyamqplib.QueueAlreadyExistsWarning" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><tt class="descclassname">carrot.backends.pyamqplib.</tt><tt class="descname">QueueAlreadyExistsWarning</tt><a class="headerlink" href="#carrot.backends.pyamqplib.QueueAlreadyExistsWarning" title="Permalink to this definition">¶</a></dt>
 <dd>A queue with that name already exists, so a recently changed
 <tt class="docutils literal"><span class="pre">routing_key</span></tt> or other settings might be ignored unless you
 rename the queue or restart the broker.</dd></dl>
@@ -287,13 +334,13 @@ rename the queue or restart the broker.</dd></dl>
         <li class="right" >
           <a href="carrot.backends.base.html" title="carrot.backends.base"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.5.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
       &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
     </div>
   </body>
 </html>
