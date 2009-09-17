@@ -2,6 +2,54 @@
  Change history
 ================
 
+0.6.0 [2009-09-17 16:41 P.M CET]
+------------------------------------------------------------------
+
+**BACKWARD INCOMPATIBLE CHANGES**
+
+* AMQPConnection renamed to BrokerConnection with AMQPConnection remaining
+	an alias for backwards compatability. Similarly DjangoAMQPConnection is
+	renamed to DjangoBrokerConnection.
+
+* AMQPConnection renamed to BrokerConnection
+	DjangoAMQPConnection renamed to DjangoBrokerConnection
+	(The previous names are still available but will be deprecated in 1.0)
+
+* The connection is now lazy, requested only when it's needed.
+	To explicitly connect you have to evaluate the BrokerConnections
+	``connection`` attribute.
+
+		>>> connection = BrokerConnection(...) # Not connected yet.
+		>>> connection.connection; # Now it's connected
+
+* A channel is now lazy, requested only when it's needed.
+
+* pyamqplib.Message.amqp_message is now a private attribute
+
+**NEW FEATURES**
+
+* Basic support for STOMP using the stompy library.
+	(Available at http://bitbucket.org/benjaminws/python-stomp/overview/)
+
+* Implements :meth:`Consumer.qos` and :meth:`Consumer.flow` for setting
+	quality of service and flow control.
+
+**NEWS**
+
+* The current Message class is now available as an attribute on the
+	Backend.
+
+* Default port is now handled by the backend and all AMQP_* settings to the
+	DjangoBrokerConnection is now optional
+
+* Backend is now initialized in the connection instead of Consumer/Publisher,
+	so backend_cls now has to be sent to AMQPConnection if you want to
+	explicitly set it.
+
+* Specifying utf-8 as the content type when forcing unicode into a string.
+	This removes the reference to the unbound content_type variable.
+
+
 0.5.1 [2009-07-19 06:19 P.M CET]
 ------------------------------------------------------------------
 
