@@ -2,13 +2,12 @@
 Centralized support for encoding/decoding of data structures.
 Requires a json library (`cjson`_, `simplejson`_, or `Python 2.6+`_).
 
-Optionally installs support for ``Hessian 1.0`` and ``YAML`` if the necessary
-libraries are installed (`HessianPy`_ and `PyYAML`_, respectively).
+Optionally installs support for ``YAML`` if the necessary
+PyYAML is installed.
 
 .. _`cjson`: http://pypi.python.org/pypi/python-cjson/
 .. _`simplejson`: http://code.google.com/p/simplejson/
 .. _`Python 2.6+`: http://docs.python.org/library/json.html
-.. _`HessianPy`: http://hessianpy.sourceforge.net/
 .. _`PyYAML`: http://pyyaml.org/
 
 """
@@ -215,38 +214,6 @@ def register_json():
                       content_encoding='utf-8')
 
 
-# def register_hessian():
-#     """Register a encoder/decoder for HessianPy-based serialization"""
-#
-#     try:
-#         from hessian import hessian
-#
-#         def h_encode(body):
-#             sio = StringIO()
-#             hessian.Reply().write(
-#                           hessian.WriteContext(sio),
-#                           ({}, '', body))
-#             return sio.getvalue()
-#
-#         def h_decode(body):
-#             payload = StringIO(body)
-#             ctx = hessian.ParseContext(payload)
-#             (method, headers, params) = hessian.Call().read(ctx, ctx.read(1))
-#             print (method, headers, params)
-#             return params
-#
-#         registry.register('hessian', h_encode, h_decode,
-#                           content_type='application/x-hessian',
-#                           content_encoding='binary')
-#     except ImportError:
-#         def not_available(*args, **kwargs):
-#             raise SerializerNotInstalled(
-#                 "No decoder installed for Hessian."
-#                 "Install the HessianPy library")
-#         registry.register('hessian', None, not_available,
-#                           'application/x-hessian')
-
-
 def register_yaml():
     """Register a encoder/decoder for YAML serialization.
 
@@ -280,7 +247,6 @@ def register_pickle():
 register_json()
 register_pickle()
 register_yaml()
-#register_hessian()
 
 # JSON is assumed to always be available, so is the default.
 # (this matches the historical use of carrot.)
