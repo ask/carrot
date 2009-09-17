@@ -5,13 +5,39 @@ import uuid
 sys.path.insert(0, os.pardir)
 sys.path.append(os.getcwd())
 
-from carrot.backends.pystomp import Message as StompMessage
-from carrot.backends.pystomp import Backend as StompBackend
+try:
+    import stompy
+except ImportError:
+    stompy = None
+    Frame = StompMessage = StompBackend = object
+
+else:
+    from carrot.backends.pystomp import Message as StompMessage
+    from carrot.backends.pystomp import Backend as StompBackend
+    from stompy.frame import Frame
+
 from carrot.connection import BrokerConnection
 from carrot.messaging import Publisher, Consumer
 from tests.utils import test_stomp_connection_args, STOMP_QUEUE
-from stompy.frame import Frame
 from carrot.serialization import encode
+
+_no_stompy_msg = "* stompy (python-stomp) not installed. " \
+               + "Will not execute related tests."
+_no_stompy_msg_emitted = False
+
+
+def stompy_or_None():
+
+    def emit_no_stompy_msg():
+        global _no_stompy_msg_emitted
+        if not _no_stompy_msg_emitted:
+            sys.stderr.write("\n" + _no_stompy_msg + "\n")
+            _no_stompy_msg_emitted = True
+
+    if stompy is None:
+        emit_no_stompy_msg()
+        return None
+    return stompy
 
 
 def create_connection():
@@ -35,7 +61,10 @@ class MockFrame(Frame):
 class TestStompMessage(unittest.TestCase):
 
     def test_message(self):
+        if not stompy_or_None():
+            return
         b = create_backend()
+        
         self.assertTrue(b)
 
         message_body = "George Constanza"
@@ -61,7 +90,8 @@ class TestStompMessage(unittest.TestCase):
 class TestPyStompMessaging(unittest.TestCase):
 
     def setUp(self):
-        self.conn = create_connection()
+        if stompy_or_None():
+            self.conn = create_connection()
         self.queue = STOMP_QUEUE
         self.exchange = STOMP_QUEUE
         self.routing_key = STOMP_QUEUE
@@ -77,6 +107,8 @@ class TestPyStompMessaging(unittest.TestCase):
                 routing_key=self.routing_key, **options)
 
     def test_backend(self):
+        if not stompy_or_None():
+            return
         publisher = self.create_publisher()
         consumer = self.create_consumer()
         for i in range(100):
