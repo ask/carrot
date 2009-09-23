@@ -292,6 +292,53 @@ class BackendMessagingCase(unittest.TestCase):
         consumer.close()
         publisher.close()
 
+    def test_backend_survives_channel_close_regr17(self):
+        """
+        test that a backend instance is still functional after
+        a method that results in a channel closure.
+        """
+        backend = self.create_publisher().backend
+        assert not backend.queue_exists('notaqueue')
+        # after calling this once, the channel seems to close, but the
+        # backend may be holding a reference to it...
+        assert not backend.queue_exists('notaqueue')
+
+    def test_publisher_mandatory_flag_regr16(self):
+        """
+        Test that the publisher "mandatory" flag
+        raises exceptions at appropriate times.
+        """
+        routing_key = 'black_hole'
+
+        assert self.conn.connection is not None
+
+        message = {'foo': 'mandatory'}
+
+        # sanity check cleanup from last test
+        assert not self.create_consumer().backend.queue_exists(routing_key)
+
+        publisher = self.create_publisher()
+
+        # this should just get discarded silently, it's not mandatory
+        publisher.send(message, routing_key=routing_key, mandatory=False)
+
+        # This raises an unspecified exception because there is no queue to
+        # deliver to
+        self.assertRaises(Exception, publisher.send, message,
+                          routing_key=routing_key, mandatory=True)
+
+        # now bind a queue to it
+        consumer = Consumer(connection=self.conn,
+                            queue=routing_key, exchange=self.exchange,
+                            routing_key=routing_key, durable=False,
+                            exclusive=True)
+
+        # check that it exists
+        assert self.create_consumer().backend.queue_exists(routing_key)
+
+        # this should now get routed to our consumer with no exception
+        publisher.send(message, routing_key=routing_key, mandatory=True)
+
     def test_consumer_auto_ack(self):
         consumer = self.create_consumer(auto_ack=True)
         publisher = self.create_publisher()
@@ -340,7 +387,6 @@ class BackendMessagingCase(unittest.TestCase):
             consumer.register_callback(callback)
             consumer.discard_all()
             scratchpad = {}
-
 
             # Test limits
             it = consumer.iterconsume(limit=4)
