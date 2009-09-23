@@ -10,6 +10,7 @@ from amqplib.client_0_8.exceptions import AMQPChannelException
 from carrot.backends.base import BaseMessage, BaseBackend
 from itertools import count
 import warnings
+import weakref
 
 DEFAULT_PORT = 5672
 
@@ -84,13 +85,17 @@ class Backend(BaseBackend):
     def __init__(self, connection, **kwargs):
         self.connection = connection
         self.default_port = kwargs.get("default_port", self.default_port)
-        self._channel = None
+        self._channel_ref = None
+
+    @property
+    def _channel(self):
+        return callable(self._channel_ref) and self._channel_ref()
 
     @property
     def channel(self):
         """If no channel exists, a new one is requested."""
         if not self._channel:
-            self._channel = self.connection.get_channel()
+            self._channel_ref = weakref.ref(self.connection.get_channel())
         return self._channel
 
     def establish_connection(self):
@@ -120,8 +125,6 @@ class Backend(BaseBackend):
             self.channel.queue_declare(queue=queue, passive=True)
         except AMQPChannelException, e:
             if e.amqp_reply_code == 404:
-                # Remove reference to channel as it's not closed.
-                self._channel = None
                 return False
             raise e
         else:
@@ -200,9 +203,9 @@ class Backend(BaseBackend):
 
     def close(self):
         """Close the channel if open."""
-        if getattr(self, "_channel") and self.channel.is_open:
-            self.channel.close()
-            self._channel = None
+        if self._channel and self._channel.is_open:
+            self._channel.close()
+        self._channel_ref = None
 
     def ack(self, delivery_tag):
         """Acknowledge a message by delivery tag."""

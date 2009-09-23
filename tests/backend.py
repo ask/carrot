@@ -8,6 +8,7 @@ sys.path.append(os.getcwd())
 
 from carrot.messaging import Consumer, Publisher, ConsumerSet
 from carrot import serialization
+from tests.utils import establish_test_connection
 
 
 class AdvancedDataType(object):
