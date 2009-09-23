@@ -120,6 +120,8 @@ class Backend(BaseBackend):
             self.channel.queue_declare(queue=queue, passive=True)
         except AMQPChannelException, e:
             if e.amqp_reply_code == 404:
+                # Remove reference to channel as it's not closed.
+                self._channel = None
                 return False
             raise e
         else:
@@ -200,6 +202,7 @@ class Backend(BaseBackend):
         """Close the channel if open."""
         if getattr(self, "channel") and self.channel.is_open:
             self.channel.close()
+            self._channel = None
 
     def ack(self, delivery_tag):
         """Acknowledge a message by delivery tag."""
