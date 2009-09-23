@@ -24,6 +24,7 @@ class Consumer(object):
     :keyword exchange_type: see :attr:`exchange_type`.
     :keyword auto_ack: see :attr:`auto_ack`.
     :keyword no_ack: see :attr:`no_ack`.
+    :keyword auto_declare: see :attr:`auto_declare`.
 
 
     .. attribute:: connection
@@ -156,6 +157,16 @@ class Consumer(object):
         reliability. Messages can get lost if a client dies before it can
         deliver them to the application.
 
+    .. attribute auto_declare
+
+        If this is ``True`` the following will be automatically declared:
+
+            * The queue if :attr:`queue` is set.
+            * The exchange if :attr:`exchange` is set.
+            * The :attr:`queue` will be bound to the :attr:`exchange`.
+
+        This is the default behaviour.
+
 
     :raises `amqplib.client_0_8.channel.AMQPChannelException`: if the queue is
         exclusive and the queue already exists and is owned by another
@@ -182,6 +193,7 @@ class Consumer(object):
     exchange_type = "direct"
     channel_open = False
     warn_if_exists = False
+    auto_declare = True
     auto_ack = False
     no_ack = False
     _closed = True
@@ -205,17 +217,19 @@ class Consumer(object):
         self.exclusive = kwargs.get("exclusive", self.exclusive)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
-
         self.warn_if_exists = kwargs.get("warn_if_exists",
                                          self.warn_if_exists)
         self.auto_ack = kwargs.get("auto_ack", self.auto_ack)
+        self.auto_declare = kwargs.get("auto_declare", self.auto_declare)
 
         # exclusive implies auto-delete.
         if self.exclusive:
             self.auto_delete = True
 
         self.consumer_tag = self._generate_consumer_tag()
-        self._declare_queue()
+
+        if self.auto_declare:
+            self.declare()
 
     def __enter__(self):
         return self
@@ -240,8 +254,9 @@ class Consumer(object):
                 self.__class__.__name__,
                 str(uuid.uuid4()))
 
-    def _declare_queue(self):
-        """Declare the AMQP channel."""
+    def declare(self):
+        """Declares the queue, the exchange and binds the queue to
+        the exchange."""
         if self.queue:
             self.backend.queue_declare(queue=self.queue, durable=self.durable,
                                        exclusive=self.exclusive,
@@ -524,6 +539,7 @@ class Publisher(object):
     :keyword durable: see :attr:`Consumer.durable`.
     :keyword auto_delete: see :attr:`Consumer.auto_delete`.
     :keyword serializer: see :attr:`serializer`.
+    :keyword auto_declare: See :attr:`auto_declare`.
 
 
     .. attribute:: connection
@@ -571,6 +587,15 @@ class Publisher(object):
 
         See :attr:`Consumer.auto_delete`.
 
+    .. attribute:: auto_declare
+
+        If this is ``True`` and the :attr:`exchange` name is set, the exchange
+        will be automatically declared at instantiation.
+        You can manually the declare the exchange by using the :meth:`declare`
+        method.
+
+        Auto declare is on by default.
+
     .. attribute:: serializer
 
         A string identifying the default serialization method to use.
@@ -588,6 +613,7 @@ class Publisher(object):
     exchange_type = "direct"
     durable = True
     auto_delete = False
+    auto_declare = True
     serializer = None
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
@@ -600,13 +626,20 @@ class Publisher(object):
         self.durable = kwargs.get("durable", self.durable)
         self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
         self.serializer = kwargs.get("serializer", self.serializer)
-        self._declare_exchange()
+        self.auto_declare = kwargs.get("auto_declare", self.auto_declare)
         self._closed = False
 
-    def _declare_exchange(self):
-        if self.exchange:
-            self.backend.exchange_declare(exchange=self.exchange,
-                                          type=self.exchange_type,
+        if self.auto_declare and self.exchange:
+            self.declare()
+
+    def declare(self):
+        """Declare the exchange.
+
+        Creates the exchange on the broker.
+
+        """
+        self.backend.exchange_declare(exchange=self.exchange,
+                                        type=self.exchange_type,
                                           durable=self.durable,
                                           auto_delete=self.auto_delete)
 
