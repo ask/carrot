@@ -200,7 +200,7 @@ class Backend(BaseBackend):
 
     def close(self):
         """Close the channel if open."""
-        if getattr(self, "channel") and self.channel.is_open:
+        if getattr(self, "_channel") and self.channel.is_open:
             self.channel.close()
             self._channel = None
 
@@ -229,6 +229,7 @@ class Backend(BaseBackend):
             immediate=None):
         """Publish a message to a named exchange."""
         return self.channel.basic_publish(message, exchange=exchange,
-                                          routing_key=routing_key,
-                                          mandatory=mandatory,
-                                          immediate=immediate)
+                                         routing_key=routing_key,
+                                         mandatory=mandatory,
+                                         immediate=immediate)
+
