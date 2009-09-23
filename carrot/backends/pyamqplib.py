@@ -228,8 +228,9 @@ class Backend(BaseBackend):
     def publish(self, message, exchange, routing_key, mandatory=None,
             immediate=None):
         """Publish a message to a named exchange."""
-        return self.channel.basic_publish(message, exchange=exchange,
+        ret = self.channel.basic_publish(message, exchange=exchange,
                                          routing_key=routing_key,
                                          mandatory=mandatory,
                                          immediate=immediate)
-
+        if mandatory or immediate:
+            self.close()
