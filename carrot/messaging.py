@@ -854,7 +854,7 @@ class ConsumerSet(object):
         self.from_dict = from_dict or {}
         self.consumers = consumers or []
         self.callbacks = callbacks or []
-        self._open_channels = []
+        self._open_consumers = []
 
         self.backend = self.connection.create_backend()
 
@@ -906,7 +906,7 @@ class ConsumerSet(object):
                                       nowait=nowait,
                                       callback=callback,
                                       consumer_tag=consumer.consumer_tag)
-        self._open_channels.append(consumer.consumer_tag)
+        self._open_consumers.append(consumer.consumer_tag)
 
     def iterconsume(self, limit=None):
         """Cycle between all consumers in consume mode.
@@ -946,12 +946,12 @@ class ConsumerSet(object):
 
     def cancel(self):
         """Cancel a running :meth:`iterconsume` session."""
-        for consumer_tag in self._open_channels:
+        for consumer_tag in self._open_consumers:
             try:
                 self.backend.cancel(consumer_tag)
             except KeyError:
                 pass
-        self._open_channels = []
+        self._open_consumers = []
 
     def close(self):
         """Close all consumers."""
