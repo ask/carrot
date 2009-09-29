@@ -237,3 +237,13 @@ class Backend(BaseBackend):
                                          immediate=immediate)
         if mandatory or immediate:
             self.close()
+
+        def qos(self, prefetch_size, prefetch_count, apply_global=False):
+            """Request specific Quality of Service."""
+            self.channel.basic_qos(prefetch_size, prefetch_count,
+                                   apply_global)
+
+        def flow(self, active):
+            """Enable/disable flow from peer."""
+            self.channel.flow(active)
+
