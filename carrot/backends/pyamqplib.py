@@ -246,4 +246,3 @@ class Backend(BaseBackend):
         def flow(self, active):
             """Enable/disable flow from peer."""
             self.channel.flow(active)
-
