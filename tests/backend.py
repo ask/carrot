@@ -304,7 +304,7 @@ class BackendMessagingCase(unittest.TestCase):
         # backend may be holding a reference to it...
         assert not backend.queue_exists('notaqueue')
 
-    def test_publisher_mandatory_flag_regr16(self):
+    def disabled_publisher_mandatory_flag_regr16(self):
         """
         Test that the publisher "mandatory" flag
         raises exceptions at appropriate times.
