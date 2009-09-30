@@ -2,6 +2,32 @@
  Change history
 ================
 
+0.6.1 [2009-09-30 12:29 P.M CET]
+------------------------------------------------------------------
+
+* Forgot to implement qos/flow in the pyamqplib backend (doh).
+	Big thanks to stevvooe! See issue `#18`_
+
+* Renamed ConsumerSet._open_channels -> _open_consumers
+
+* Channel is now a weak reference so it's collected on channel exception.
+	See issue `#17`_. Thanks to ltucker.
+
+* Publisher.auto_declare/Consumer.auto_declare: Can now disable the default
+  behaviour of automatically declaring the queue, exchange and queue binding.
+
+* Need to close the connection to receive mandatory/immediate errors
+	(related to issue `#16`_). Thanks to ltucker.
+
+* pyamqplib backend close didn't work properly, typo channel -> _channel
+
+* Adds carrot.backends.pystomp to the reference documentation.
+
+.. _`#18`: http://github.com/ask/carrot/issues#issue/18
+.. _`#17`: http://github.com/ask/carrot/issues#issue/17
+.. _`#16`: http://github.com/ask/carrot/issues#issue/16
+
+
 0.6.0 [2009-09-17 16:41 P.M CET]
 ------------------------------------------------------------------
 
