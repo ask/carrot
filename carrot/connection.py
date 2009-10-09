@@ -181,22 +181,20 @@ class DjangoBrokerConnection(BrokerConnection):
         the default is ``5672`` (amqp).
 
     """
+    arg_to_django_setting = {
+            "backend_cls": "CARROT_BACKEND",
+            "hostname": "AMQP_SERVER",
+            "userid": "AMQP_USER",
+            "password": "AMQP_PASSWORD",
+            "virtual_host": "AMQP_VHOST",
+            "port": "AMQP_PORT",
+    }
 
     def __init__(self, *args, **kwargs):
-        from django.conf import settings
-        if not kwargs.get("backend_cls"):
-            if hasattr(settings, "CARROT_BACKEND"):
-                kwargs["backend_cls"] = settings.CARROT_BACKEND
-        kwargs["hostname"] = kwargs.get("hostname",
-                getattr(settings, "AMQP_SERVER", None))
-        kwargs["userid"] = kwargs.get("userid",
-                getattr(settings, "AMQP_USER", None))
-        kwargs["password"] = kwargs.get("password",
-                getattr(settings, "AMQP_PASSWORD", None))
-        kwargs["virtual_host"] = kwargs.get("virtual_host",
-                getattr(settings, "AMQP_VHOST", None))
-        kwargs["port"] = kwargs.get("port",
-                getattr(settings, "AMQP_PORT", None))
+        from django.conf import settings as django_settings
+        for arg_name, setting_name in self.arg_to_django_setting.items():
+            kwargs.setdefault(arg_name,
+                    getattr(django_settings, setting_name, None))
 
         super(DjangoBrokerConnection, self).__init__(*args, **kwargs)
 

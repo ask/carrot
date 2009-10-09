@@ -11,6 +11,8 @@ from tests.utils import AMQP_HOST, AMQP_PORT, AMQP_VHOST, \
 from carrot.connection import DjangoBrokerConnection, BrokerConnection
 from UserDict import UserDict
 
+CARROT_BACKEND = "amqp"
+
 
 class DictWrapper(UserDict):
 
@@ -18,7 +20,11 @@ class DictWrapper(UserDict):
         self.data = data
 
     def __getattr__(self, key):
-        return self.data[key]
+        try:
+            return self.data[key]
+        except KeyError:
+            raise AttributeError("'%s' object has no attribute '%s'" % (
+                self.__class__.__name__, key))
 
 
 def configured_or_configure(settings, **conf):
@@ -40,6 +46,7 @@ class TestDjangoSpecific(unittest.TestCase):
                 Not testing django specific features.\n")
             return
         configured_or_configure(settings,
+                CARROT_BACKEND=CARROT_BACKEND,
                 AMQP_SERVER=AMQP_HOST,
                 AMQP_PORT=AMQP_PORT,
                 AMQP_VHOST=AMQP_VHOST,
@@ -47,6 +54,7 @@ class TestDjangoSpecific(unittest.TestCase):
                 AMQP_PASSWORD=AMQP_PASSWORD)
 
         expected_values = {
+            "backend_cls": CARROT_BACKEND,
             "hostname": AMQP_HOST,
             "port": AMQP_PORT,
             "virtual_host": AMQP_VHOST,
