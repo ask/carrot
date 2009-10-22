@@ -6,6 +6,7 @@ Getting a connection to the AMQP server.
 from amqplib import client_0_8 as amqp
 from amqplib.client_0_8.connection import AMQPConnectionException
 from carrot.backends import get_backend_cls
+import warnings
 import socket
 
 DEFAULT_CONNECT_TIMEOUT = 5 # seconds
@@ -162,7 +163,7 @@ class DjangoBrokerConnection(BrokerConnection):
     from the Django ``settings.py`` module.
 
     :keyword hostname: The hostname of the AMQP server to connect to,
-        if not provided this is taken from ``settings.AMQP_SERVER``.
+        if not provided this is taken from ``settings.AMQP_HOST``.
 
     :keyword userid: The username of the user to authenticate to the server
         as. If not provided this is taken from ``settings.AMQP_USER``.
@@ -183,7 +184,7 @@ class DjangoBrokerConnection(BrokerConnection):
     """
     arg_to_django_setting = {
             "backend_cls": "CARROT_BACKEND",
-            "hostname": "AMQP_SERVER",
+            "hostname": "AMQP_HOST",
             "userid": "AMQP_USER",
             "password": "AMQP_PASSWORD",
             "virtual_host": "AMQP_VHOST",
@@ -195,6 +196,14 @@ class DjangoBrokerConnection(BrokerConnection):
         for arg_name, setting_name in self.arg_to_django_setting.items():
             kwargs.setdefault(arg_name,
                     getattr(django_settings, setting_name, None))
+
+        if not kwargs.get("hostname"):
+            if hasattr(settings, "AMQP_SERVER"):
+                kwargs["hostname"] = settings.AMQP_SERVER
+                warnings.warn(DeprecationWarning(
+                    "AMQP_SERVER has been renamed to AMQP_HOST and will be "
+                    "unsupported in version 1.0."))
+
 
         super(DjangoBrokerConnection, self).__init__(*args, **kwargs)
 

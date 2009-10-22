@@ -47,7 +47,7 @@ class TestDjangoSpecific(unittest.TestCase):
             return
         configured_or_configure(settings,
                 CARROT_BACKEND=CARROT_BACKEND,
-                AMQP_SERVER=AMQP_HOST,
+                AMQP_HOST=AMQP_HOST,
                 AMQP_PORT=AMQP_PORT,
                 AMQP_VHOST=AMQP_VHOST,
                 AMQP_USER=AMQP_USER,
