@@ -22,9 +22,6 @@ import os
 sys.path.insert(0, "../")
 import carrot
 
-from django.conf import settings
-if not settings.configured:
-    settings.configure()
 
 # General configuration
 # ---------------------
