@@ -198,8 +198,8 @@ class DjangoBrokerConnection(BrokerConnection):
                     getattr(django_settings, setting_name, None))
 
         if not kwargs.get("hostname"):
-            if hasattr(settings, "AMQP_SERVER"):
-                kwargs["hostname"] = settings.AMQP_SERVER
+            if hasattr(django_settings, "AMQP_SERVER"):
+                kwargs["hostname"] = django_settings.AMQP_SERVER
                 warnings.warn(DeprecationWarning(
                     "AMQP_SERVER has been renamed to AMQP_HOST and will be "
                     "unsupported in version 1.0."))
