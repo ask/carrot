@@ -172,7 +172,7 @@ class Backend(BaseBackend):
     def cancel(self, consumer_tag):
         if not self._channel or consumer_tag not in self._consumers:
             return
-        queue = self._consumers[consumer_tag]
+        queue = self._consumers.pop(consumer_tag)
         self.channel.unsubscribe(queue)
 
     def close(self):
