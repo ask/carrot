@@ -6,39 +6,46 @@ Working with Backends.
 import sys
 from functools import partial
 
-DEFAULT_BACKEND = "pyamqplib"
-
+DEFAULT_BACKEND = "carrot.backends.pyamqplib.Backend"
 
 BACKEND_ALIASES = {
-    "amqp": "pyamqplib",
-    "amqplib": "pyamqplib",
-    "stomp": "pystomp",
-    "stompy": "pystomp",
-    "memory": "queue",
-    "mem": "queue",
+    "amqp": "carrot.backends.pyamqplib.Backend",
+    "amqplib": "carrot.backends.pyamqplib.Backend",
+    "stomp": "carrot.backends.pystomp.Backend",
+    "stompy": "carrot.backends.pystomp.Backend",
+    "memory": "carrot.backends.queue.Backend",
+    "mem": "carrot.backends.queue.Backend",
 }
+
+_backend_cache = {}
+
 
 
 def resolve_backend(backend=None):
-    backend = backend or DEFAULT_BACKEND
-    backend, _, extra_options = backend.partition("!")
-    extra_options = extra_options or None # partition returns str.
-    if "." not in backend:
-        backend = "carrot.backends.%s" % (
-                        BACKEND_ALIASES.get(backend.lower(), backend))
-    return backend, extra_options
+    backend_module_name, _, backend_cls_name = backend.rpartition(".")
+    return backend_module_name, backend_cls_name
+
+
+def _get_backend_cls(backend=None):
+    backend_module_name, backend_cls_name = resolve_backend(backend)
+
+    __import__(backend_module_name)
+    backend_module = sys.modules[backend_module_name]
+    return getattr(backend_module, backend_cls_name)
 
 
 def get_backend_cls(backend=None):
     """Get backend class by name.
 
+    The backend string is the full path to a backend class, e.g.::
+
+        "carrot.backends.pyamqplib.Backend"
+
     If the name does not include "``.``" (is not fully qualified),
-    ``"carrot.backends."`` will be prepended to the name. e.g.
-    ``"pyqueue"`` becomes ``"carrot.backends.pyqueue"``.
+    the alias table will be consulted.
 
     """
-    backend, extra_options = resolve_backend(backend)
-
-    __import__(backend)
-    backend_module = sys.modules[backend]
-    return getattr(backend_module, "Backend"), extra_options
+    backend = backend or DEFAULT_BACKEND
+    if backend not in _backend_cache:
+        _backend_cache[backend] = _get_backend_cls(backend)
+    return _backend_cache[backend]
