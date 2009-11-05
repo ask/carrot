@@ -24,8 +24,8 @@ def resolve_backend(backend=None):
     backend, _, extra_options = backend.partition("!")
     extra_options = extra_options or None # partition returns str.
     if "." not in backend:
-        return "carrot.backends.%s" % (
-                    BACKEND_ALIASES.get(backend.lower(), backend))
+        backend = "carrot.backends.%s" % (
+                        BACKEND_ALIASES.get(backend.lower(), backend))
     return backend, extra_options
 
 
