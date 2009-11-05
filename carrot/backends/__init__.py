@@ -21,10 +21,12 @@ BACKEND_ALIASES = {
 
 def resolve_backend(backend=None):
     backend = backend or DEFAULT_BACKEND
+    backend, _, extra_options = backend.partition("!")
+    extra_options = extra_options or None # partition returns str.
     if "." not in backend:
         return "carrot.backends.%s" % (
                     BACKEND_ALIASES.get(backend.lower(), backend))
-    return backend
+    return backend, extra_options
 
 
 def get_backend_cls(backend=None):
@@ -35,8 +37,8 @@ def get_backend_cls(backend=None):
     ``"pyqueue"`` becomes ``"carrot.backends.pyqueue"``.
 
     """
-    backend = resolve_backend(backend)
+    backend, extra_options = resolve_backend(backend)
 
     __import__(backend)
     backend_module = sys.modules[backend]
-    return getattr(backend_module, "Backend")
+    return getattr(backend_module, "Backend"), extra_options

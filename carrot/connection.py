@@ -125,15 +125,16 @@ class BrokerConnection(object):
     def get_backend_cls(self):
         """Get the currently used backend class."""
         backend_cls = self.backend_cls
+        extra_options = None
         if not backend_cls or isinstance(backend_cls, basestring):
-            backend_cls = get_backend_cls(backend_cls)
-        return backend_cls
+            backend_cls, extra_options = get_backend_cls(backend_cls)
+        return backend_cls, extra_options
 
     def create_backend(self):
         """Create a new instance of the current backend in
         :attr:`backend_cls`."""
-        backend_cls = self.get_backend_cls()
-        return backend_cls(connection=self)
+        backend_cls, extra_options = self.get_backend_cls()
+        return backend_cls(connection=self, extra_options=extra_options)
 
     def get_channel(self):
         """Request a new AMQP channel."""
