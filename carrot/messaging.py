@@ -4,8 +4,8 @@ Sending/Receiving Messages.
 
 """
 from itertools import count, ifilter, islice
+from carrot.utils import gen_unique_id
 import warnings
-import uuid
 
 from carrot import serialization
 
@@ -252,7 +252,7 @@ class Consumer(object):
         return "%s.%s-%s" % (
                 self.__class__.__module__,
                 self.__class__.__name__,
-                str(uuid.uuid4()))
+                gen_unique_id())
 
     def declare(self):
         """Declares the queue, the exchange and binds the queue to

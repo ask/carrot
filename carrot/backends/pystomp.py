@@ -1,7 +1,6 @@
 from stompy import Client
 from stompy import Empty as QueueEmpty
 from carrot.backends.base import BaseMessage, BaseBackend
-from uuid import uuid4 as gen_unique_id
 from itertools import count
 import time
 import socket
