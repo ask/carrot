@@ -21,13 +21,14 @@ _backend_cache = {}
 
 
 def resolve_backend(backend=None):
+    backend = BACKEND_ALIASES.get(backend, backend)
     backend_module_name, _, backend_cls_name = backend.rpartition(".")
     return backend_module_name, backend_cls_name
 
 
 def _get_backend_cls(backend=None):
     backend_module_name, backend_cls_name = resolve_backend(backend)
-
+    print("backend_module_name: %s" % (backend_module_name))
     __import__(backend_module_name)
     backend_module = sys.modules[backend_module_name]
     return getattr(backend_module, backend_cls_name)
