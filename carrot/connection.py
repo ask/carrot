@@ -208,7 +208,7 @@ class DjangoBrokerConnection(BrokerConnection):
     :keyword password: The users password. If not provided this is taken
         from ``settings.BROKER_PASSWORD``.
 
-    :keyword vhost: The name of the virtual host to work with.
+    :keyword virtual_host: The name of the virtual host to work with.
         This virtual host must exist on the server, and the user must
         have access to it. Consult your brokers manual for help with
         creating, and mapping users to virtual hosts. If not provided
