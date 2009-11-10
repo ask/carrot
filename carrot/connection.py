@@ -9,6 +9,17 @@ import warnings
 import socket
 
 DEFAULT_CONNECT_TIMEOUT = 5 # seconds
+SETTING_PREFIX = "BROKER"
+COMPAT_SETTING_PREFIX = "AMQP"
+ARG_TO_DJANGO_SETTING = {
+        "hostname": "HOST",
+        "userid": "USER",
+        "password": "PASSWORD",
+        "virtual_host": "VHOST",
+        "port": "PORT",
+}
+SETTING_DEPRECATED_FMT = "Setting %s has been renamed to %s and is " \
+                         "scheduled for removal in version 1.0."
 
 
 class BrokerConnection(object):
@@ -157,6 +168,33 @@ class BrokerConnection(object):
 AMQPConnection = BrokerConnection
 
 
+def get_django_conninfo():
+    # FIXME can't wait to remove this mess in 1.0 [askh]
+    ci = {}
+    from django.conf import settings as django_settings
+
+    ci["backend_cls"] = getattr(django_settings, "CARROT_BACKEND", None)
+
+    for arg_name, setting_name in ARG_TO_DJANGO_SETTING.items():
+        setting = "%s_%s" % (SETTING_PREFIX, setting_name)
+        compat_setting = "%s_%s" % (COMPAT_SETTING_PREFIX, setting_name)
+        if hasattr(django_settings, setting):
+            ci[arg_name] = getattr(django_settings, setting, None)
+        elif hasattr(django_settings, compat_setting):
+            ci[arg_name] = getattr(django_settings, compat_setting, None)
+            warnings.warn(DeprecationWarning(SETTING_DEPRECATED_FMT % (
+                compat_setting, setting)))
+
+    if "hostname" not in ci:
+        if hasattr(django_settings, "AMQP_SERVER"):
+            ci["hostname"] = django_settings.AMQP_SERVER
+            warnings.warn(DeprecationWarning(
+                "AMQP_SERVER has been renamed to BROKER_HOST and is"
+                "scheduled for removal in version 1.0."))
+
+    return ci
+
+
 class DjangoBrokerConnection(BrokerConnection):
     """A version of :class:`BrokerConnection` that takes configuration
     from the Django ``settings.py`` module.
@@ -181,45 +219,10 @@ class DjangoBrokerConnection(BrokerConnection):
         the default is ``5672`` (amqp).
 
     """
-    setting_prefix = "BROKER"
-    compat_setting_prefix = "AMQP"
-    arg_to_django_setting = {
-            "hostname": "HOST",
-            "userid": "USER",
-            "password": "PASSWORD",
-            "virtual_host": "VHOST",
-            "port": "PORT",
-    }
 
 
     def __init__(self, *args, **kwargs):
-        from django.conf import settings as django_settings
-        kwargs.setdefault("backend_cls",
-                getattr(django_settings, "CARROT_BACKEND", None))
-
-        for arg_name, setting_name in self.arg_to_django_setting.items():
-            setting = "%s_%s" % (self.setting_prefix, setting_name)
-            compat_setting = "%s_%s" % (self.compat_setting_prefix,
-                                        setting_name)
-            if hasattr(django_settings, setting):
-                kwargs.setdefault(arg_name,
-                        getattr(django_settings, setting, None))
-            elif hasattr(django_settings, compat_setting):
-                warnings.warn(DeprecationWarning(
-                    "Setting %s has been renamed to %s " % (
-                        compat_setting, setting) 
-                  + "and is scheduled for removal in version 1.0."))
-                kwargs.setdefault(arg_name,
-                        getattr(django_settings, compat_setting, None))
-
-        if not kwargs.get("hostname"):
-            if hasattr(django_settings, "AMQP_SERVER"):
-                kwargs["hostname"] = django_settings.AMQP_SERVER
-                warnings.warn(DeprecationWarning(
-                    "AMQP_SERVER has been renamed to BROKER_HOST and is"
-                    "scheduled for removal in version 1.0."))
-
-
+        kwargs = dict(get_django_conninfo(), **kwargs)
         super(DjangoBrokerConnection, self).__init__(*args, **kwargs)
 
 # For backwards compatability.
