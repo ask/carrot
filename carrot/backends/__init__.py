@@ -4,7 +4,6 @@ Working with Backends.
 
 """
 import sys
-from functools import partial
 
 DEFAULT_BACKEND = "carrot.backends.pyamqplib.Backend"
 

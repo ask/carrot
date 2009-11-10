@@ -3,7 +3,6 @@
 Getting a connection to the AMQP server.
 
 """
-from amqplib import client_0_8 as amqp
 from amqplib.client_0_8.connection import AMQPConnectionException
 from carrot.backends import get_backend_cls
 import warnings

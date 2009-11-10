@@ -3,7 +3,7 @@
 Sending/Receiving Messages.
 
 """
-from itertools import count, ifilter, islice
+from itertools import count
 from carrot.utils import gen_unique_id
 import warnings
 
@@ -452,7 +452,6 @@ class Consumer(object):
 
         """
         for items_since_start in count():
-            import sys
             item = self.fetch()
             if (not infinite and item is None) or \
                     (limit and items_since_start >= limit):

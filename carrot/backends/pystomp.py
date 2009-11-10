@@ -2,7 +2,6 @@ from stompy import Client
 from stompy import Empty as QueueEmpty
 from carrot.backends.base import BaseMessage, BaseBackend
 from itertools import count
-import time
 import socket
 
 DEFAULT_PORT = 61613
