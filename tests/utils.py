@@ -3,11 +3,11 @@ import os
 from carrot.connection import BrokerConnection
 
 
-AMQP_HOST = os.environ.get('AMQP_HOST', "localhost")
-AMQP_PORT = os.environ.get('AMQP_PORT', 5672)
-AMQP_VHOST = os.environ.get('AMQP_VHOST', "/")
-AMQP_USER = os.environ.get('AMQP_USER', "guest")
-AMQP_PASSWORD = os.environ.get('AMQP_PASSWORD', "guest")
+BROKER_HOST = os.environ.get('BROKER_HOST', "localhost")
+BROKER_PORT = os.environ.get('BROKER_PORT', 5672)
+BROKER_VHOST = os.environ.get('BROKER_VHOST', "/")
+BROKER_USER = os.environ.get('BROKER_USER', "guest")
+BROKER_PASSWORD = os.environ.get('BROKER_PASSWORD', "guest")
 
 STOMP_HOST = os.environ.get('STOMP_HOST', 'localhost')
 STOMP_PORT = os.environ.get('STOMP_PORT', 61613)
@@ -15,9 +15,9 @@ STOMP_QUEUE = os.environ.get('STOMP_QUEUE', '/queue/testcarrot')
 
 
 def test_connection_args():
-    return {"hostname": AMQP_HOST, "port": AMQP_PORT,
-            "virtual_host": AMQP_VHOST, "userid": AMQP_USER,
-            "password": AMQP_PASSWORD}
+    return {"hostname": BROKER_HOST, "port": BROKER_PORT,
+            "virtual_host": BROKER_VHOST, "userid": BROKER_USER,
+            "password": BROKER_PASSWORD}
 
 
 def test_stomp_connection_args():

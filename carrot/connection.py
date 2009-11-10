@@ -162,46 +162,62 @@ class DjangoBrokerConnection(BrokerConnection):
     from the Django ``settings.py`` module.
 
     :keyword hostname: The hostname of the AMQP server to connect to,
-        if not provided this is taken from ``settings.AMQP_HOST``.
+        if not provided this is taken from ``settings.BROKER_HOST``.
 
     :keyword userid: The username of the user to authenticate to the server
-        as. If not provided this is taken from ``settings.AMQP_USER``.
+        as. If not provided this is taken from ``settings.BROKER_USER``.
 
     :keyword password: The users password. If not provided this is taken
-        from ``settings.AMQP_PASSWORD``.
+        from ``settings.BROKER_PASSWORD``.
 
     :keyword vhost: The name of the virtual host to work with.
         This virtual host must exist on the server, and the user must
         have access to it. Consult your brokers manual for help with
         creating, and mapping users to virtual hosts. If not provided
-        this is taken from ``settings.AMQP_VHOST``.
+        this is taken from ``settings.BROKER_VHOST``.
 
     :keyword port: The port the AMQP server is running on. If not provided
-        this is taken from ``settings.AMQP_PORT``, or if that is not set,
+        this is taken from ``settings.BROKER_PORT``, or if that is not set,
         the default is ``5672`` (amqp).
 
     """
+    setting_prefix = "BROKER"
+    compat_setting_prefix = "AMQP"
     arg_to_django_setting = {
-            "backend_cls": "CARROT_BACKEND",
-            "hostname": "AMQP_HOST",
-            "userid": "AMQP_USER",
-            "password": "AMQP_PASSWORD",
-            "virtual_host": "AMQP_VHOST",
-            "port": "AMQP_PORT",
+            "hostname": "HOST",
+            "userid": "USER",
+            "password": "PASSWORD",
+            "virtual_host": "VHOST",
+            "port": "PORT",
     }
+
 
     def __init__(self, *args, **kwargs):
         from django.conf import settings as django_settings
+        kwargs.setdefault("backend_cls",
+                getattr(django_settings, "CARROT_BACKEND", None))
+
         for arg_name, setting_name in self.arg_to_django_setting.items():
-            kwargs.setdefault(arg_name,
-                    getattr(django_settings, setting_name, None))
+            setting = "%s_%s" % (self.setting_prefix, setting_name)
+            compat_setting = "%s_%s" % (self.compat_setting_prefix,
+                                        setting_name)
+            if hasattr(django_settings, setting):
+                kwargs.setdefault(arg_name,
+                        getattr(django_settings, setting, None))
+            elif hasattr(django_settings, compat_setting):
+                warnings.warn(DeprecationWarning(
+                    "Setting %s has been renamed to %s " % (
+                        compat_setting, setting) 
+                  + "and is scheduled for removal in version 1.0."))
+                kwargs.setdefault(arg_name,
+                        getattr(django_settings, compat_setting, None))
 
         if not kwargs.get("hostname"):
             if hasattr(django_settings, "AMQP_SERVER"):
                 kwargs["hostname"] = django_settings.AMQP_SERVER
                 warnings.warn(DeprecationWarning(
-                    "AMQP_SERVER has been renamed to AMQP_HOST and will be "
-                    "unsupported in version 1.0."))
+                    "AMQP_SERVER has been renamed to BROKER_HOST and is"
+                    "scheduled for removal in version 1.0."))
 
 
         super(DjangoBrokerConnection, self).__init__(*args, **kwargs)

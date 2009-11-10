@@ -6,8 +6,8 @@ import time
 sys.path.insert(0, os.pardir)
 sys.path.append(os.getcwd())
 
-from tests.utils import AMQP_HOST, AMQP_PORT, AMQP_VHOST, \
-                        AMQP_USER, AMQP_PASSWORD
+from tests.utils import BROKER_HOST, BROKER_PORT, BROKER_VHOST, \
+                        BROKER_USER, BROKER_PASSWORD
 from carrot.connection import DjangoBrokerConnection, BrokerConnection
 from UserDict import UserDict
 
@@ -47,19 +47,19 @@ class TestDjangoSpecific(unittest.TestCase):
             return
         configured_or_configure(settings,
                 CARROT_BACKEND=CARROT_BACKEND,
-                AMQP_HOST=AMQP_HOST,
-                AMQP_PORT=AMQP_PORT,
-                AMQP_VHOST=AMQP_VHOST,
-                AMQP_USER=AMQP_USER,
-                AMQP_PASSWORD=AMQP_PASSWORD)
+                BROKER_HOST=BROKER_HOST,
+                BROKER_PORT=BROKER_PORT,
+                BROKER_VHOST=BROKER_VHOST,
+                BROKER_USER=BROKER_USER,
+                BROKER_PASSWORD=BROKER_PASSWORD)
 
         expected_values = {
             "backend_cls": CARROT_BACKEND,
-            "hostname": AMQP_HOST,
-            "port": AMQP_PORT,
-            "virtual_host": AMQP_VHOST,
-            "userid": AMQP_USER,
-            "password": AMQP_PASSWORD}
+            "hostname": BROKER_HOST,
+            "port": BROKER_PORT,
+            "virtual_host": BROKER_VHOST,
+            "userid": BROKER_USER,
+            "password": BROKER_PASSWORD}
 
         conn = DjangoBrokerConnection()
         self.assertTrue(isinstance(conn, BrokerConnection))
