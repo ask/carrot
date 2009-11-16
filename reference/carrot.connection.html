@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.connection &mdash; Carrot v0.6.0 documentation</title>
+    <title>carrot.connection &mdash; Carrot v0.8.0 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.6.0',
+        VERSION:     '0.8.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.6.0 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.8.0 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.messaging" href="carrot.messaging.html" />
     <link rel="prev" title="API Reference" href="index.html" /> 
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="index.html" title="API Reference"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.8.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -184,18 +184,18 @@ from the Django <tt class="docutils literal"><span class="pre">settings.py</span
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><em>hostname</em> &#8211; The hostname of the AMQP server to connect to,
-if not provided this is taken from <tt class="docutils literal"><span class="pre">settings.AMQP_SERVER</span></tt>.</li>
+if not provided this is taken from <tt class="docutils literal"><span class="pre">settings.BROKER_HOST</span></tt>.</li>
 <li><em>userid</em> &#8211; The username of the user to authenticate to the server
-as. If not provided this is taken from <tt class="docutils literal"><span class="pre">settings.AMQP_USER</span></tt>.</li>
+as. If not provided this is taken from <tt class="docutils literal"><span class="pre">settings.BROKER_USER</span></tt>.</li>
 <li><em>password</em> &#8211; The users password. If not provided this is taken
-from <tt class="docutils literal"><span class="pre">settings.AMQP_PASSWORD</span></tt>.</li>
-<li><em>vhost</em> &#8211; The name of the virtual host to work with.
+from <tt class="docutils literal"><span class="pre">settings.BROKER_PASSWORD</span></tt>.</li>
+<li><em>virtual_host</em> &#8211; The name of the virtual host to work with.
 This virtual host must exist on the server, and the user must
 have access to it. Consult your brokers manual for help with
 creating, and mapping users to virtual hosts. If not provided
-this is taken from <tt class="docutils literal"><span class="pre">settings.AMQP_VHOST</span></tt>.</li>
+this is taken from <tt class="docutils literal"><span class="pre">settings.BROKER_VHOST</span></tt>.</li>
 <li><em>port</em> &#8211; The port the AMQP server is running on. If not provided
-this is taken from <tt class="docutils literal"><span class="pre">settings.AMQP_PORT</span></tt>, or if that is not set,
+this is taken from <tt class="docutils literal"><span class="pre">settings.BROKER_PORT</span></tt>, or if that is not set,
 the default is <tt class="docutils literal"><span class="pre">5672</span></tt> (amqp).</li>
 </ul>
 </td>
@@ -255,7 +255,7 @@ the default is <tt class="docutils literal"><span class="pre">5672</span></tt> (
         <li class="right" >
           <a href="index.html" title="API Reference"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.8.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; Carrot v0.6.0 documentation</title>
+    <title>Index &mdash; Carrot v0.8.0 documentation</title>
     <link rel="stylesheet" href="static/nature.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.6.0',
+        VERSION:     '0.8.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.6.0 documentation" href="index.html" /> 
+    <link rel="top" title="Carrot v0.8.0 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
-        <li><a href="index.html">Carrot v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.8.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -56,6 +56,7 @@
   <dd><dl>
     <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message._amqp_message">(carrot.backends.pyamqplib.Message attribute)</a></dt>
   </dl></dd></dl></td><td width="33%" valign="top"><dl>
+<dt><a href="reference/carrot.backends.pystomp.html#carrot.backends.pystomp.Message._frame">_frame (carrot.backends.pystomp.Message attribute)</a></dt>
 </dl></td></tr></table>
 
 <h2 id="A">A</h2>
@@ -66,6 +67,7 @@
   <dd><dl>
     <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseMessage.ack">(carrot.backends.base.BaseMessage method)</a></dt>
     <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.ack">(carrot.backends.pyamqplib.Backend method)</a></dt>
+    <dt><a href="reference/carrot.backends.pystomp.html#carrot.backends.pystomp.Message.ack">(carrot.backends.pystomp.Message method)</a></dt>
   </dl></dd>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.ConsumerSet.add_consumer">add_consumer() (carrot.messaging.ConsumerSet method)</a></dt>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.ConsumerSet.add_consumer_from_dict">add_consumer_from_dict() (carrot.messaging.ConsumerSet method)</a></dt>
@@ -74,6 +76,7 @@
   <dd><dl>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.ConsumerSet.auto_ack">(carrot.messaging.ConsumerSet attribute)</a></dt>
   </dl></dd>
+<dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.auto_declare">auto_declare (carrot.messaging.Publisher attribute)</a></dt>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.auto_delete">auto_delete (carrot.messaging.Consumer attribute)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.auto_delete">(carrot.messaging.Publisher attribute)</a></dt>
@@ -87,6 +90,7 @@
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.Message.backend">backend (carrot.backends.pyamqplib.Backend.Message attribute)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message.backend">(carrot.backends.pyamqplib.Message attribute)</a></dt>
+    <dt><a href="reference/carrot.backends.pystomp.html#carrot.backends.pystomp.Message.backend">(carrot.backends.pystomp.Message attribute)</a></dt>
   </dl></dd>
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend">Backend (class in carrot.backends.pyamqplib)</a></dt>
   <dd><dl>
@@ -103,6 +107,7 @@
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.Message.body">body (carrot.backends.pyamqplib.Backend.Message attribute)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message.body">(carrot.backends.pyamqplib.Message attribute)</a></dt>
+    <dt><a href="reference/carrot.backends.pystomp.html#carrot.backends.pystomp.Message.body">(carrot.backends.pystomp.Message attribute)</a></dt>
   </dl></dd>
 <dt><a href="reference/carrot.connection.html#carrot.connection.BrokerConnection">BrokerConnection (class in carrot.connection)</a></dt>
 </dl></td></tr></table>
@@ -124,6 +129,7 @@
 <dt><a href="reference/carrot.backends.html#module-carrot.backends">carrot.backends (module)</a></dt>
 <dt><a href="reference/carrot.backends.base.html#module-carrot.backends.base">carrot.backends.base (module)</a></dt>
 <dt><a href="reference/carrot.backends.pyamqplib.html#module-carrot.backends.pyamqplib">carrot.backends.pyamqplib (module)</a></dt>
+<dt><a href="reference/carrot.backends.pystomp.html#module-carrot.backends.pystomp">carrot.backends.pystomp (module)</a></dt>
 <dt><a href="reference/carrot.backends.queue.html#module-carrot.backends.queue">carrot.backends.queue (module)</a></dt>
 <dt><a href="reference/carrot.connection.html#module-carrot.connection">carrot.connection (module)</a></dt>
 <dt><a href="reference/carrot.messaging.html#module-carrot.messaging">carrot.messaging (module)</a></dt>
@@ -167,17 +173,22 @@
 <table width="100%" class="indextable"><tr><td width="33%" valign="top">
 <dl>
 
+<dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.declare">declare() (carrot.messaging.Consumer method)</a></dt>
+  <dd><dl>
+    <dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.declare">(carrot.messaging.Publisher method)</a></dt>
+  </dl></dd>
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.declare_consumer">declare_consumer() (carrot.backends.pyamqplib.Backend method)</a></dt>
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseMessage.decode">decode() (carrot.backends.base.BaseMessage method)</a></dt>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Publisher.delivery_mode">delivery_mode (carrot.messaging.Publisher attribute)</a></dt>
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.Message.delivery_tag">delivery_tag (carrot.backends.pyamqplib.Backend.Message attribute)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message.delivery_tag">(carrot.backends.pyamqplib.Message attribute)</a></dt>
-  </dl></dd>
+    <dt><a href="reference/carrot.backends.pystomp.html#carrot.backends.pystomp.Message.delivery_tag">(carrot.backends.pystomp.Message attribute)</a></dt>
+  </dl></dd></dl></td><td width="33%" valign="top"><dl>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.discard_all">discard_all() (carrot.messaging.Consumer method)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.ConsumerSet.discard_all">(carrot.messaging.ConsumerSet method)</a></dt>
-  </dl></dd></dl></td><td width="33%" valign="top"><dl>
+  </dl></dd>
 <dt><a href="reference/carrot.connection.html#carrot.connection.DjangoAMQPConnection">DjangoAMQPConnection (in module carrot.connection)</a></dt>
 <dt><a href="reference/carrot.connection.html#carrot.connection.DjangoBrokerConnection">DjangoBrokerConnection (class in carrot.connection)</a></dt>
 <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.durable">durable (carrot.messaging.Consumer attribute)</a></dt>
@@ -220,6 +231,7 @@
   </dl></dd>
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseBackend.flow">flow() (carrot.backends.base.BaseBackend method)</a></dt>
   <dd><dl>
+    <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.flow">(carrot.backends.pyamqplib.Backend method)</a></dt>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.flow">(carrot.messaging.Consumer method)</a></dt>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.ConsumerSet.flow">(carrot.messaging.ConsumerSet method)</a></dt>
   </dl></dd></dl></td><td width="33%" valign="top"><dl>
@@ -268,6 +280,7 @@
 
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Message">Message (class in carrot.backends.pyamqplib)</a></dt>
   <dd><dl>
+    <dt><a href="reference/carrot.backends.pystomp.html#carrot.backends.pystomp.Message">(class in carrot.backends.pystomp)</a></dt>
     <dt><a href="reference/carrot.backends.queue.html#carrot.backends.queue.Message">(class in carrot.backends.queue)</a></dt>
   </dl></dd>
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseBackend.message_to_python">message_to_python() (carrot.backends.base.BaseBackend method)</a></dt>
@@ -317,6 +330,7 @@
 
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseBackend.qos">qos() (carrot.backends.base.BaseBackend method)</a></dt>
   <dd><dl>
+    <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.qos">(carrot.backends.pyamqplib.Backend method)</a></dt>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.Consumer.qos">(carrot.messaging.Consumer method)</a></dt>
     <dt><a href="reference/carrot.messaging.html#carrot.messaging.ConsumerSet.qos">(carrot.messaging.ConsumerSet method)</a></dt>
   </dl></dd>
@@ -324,11 +338,11 @@
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseBackend.queue_bind">queue_bind() (carrot.backends.base.BaseBackend method)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.queue_bind">(carrot.backends.pyamqplib.Backend method)</a></dt>
-  </dl></dd>
+  </dl></dd></dl></td><td width="33%" valign="top"><dl>
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseBackend.queue_declare">queue_declare() (carrot.backends.base.BaseBackend method)</a></dt>
   <dd><dl>
     <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.queue_declare">(carrot.backends.pyamqplib.Backend method)</a></dt>
-  </dl></dd></dl></td><td width="33%" valign="top"><dl>
+  </dl></dd>
 <dt><a href="reference/carrot.backends.pyamqplib.html#carrot.backends.pyamqplib.Backend.queue_exists">queue_exists() (carrot.backends.pyamqplib.Backend method)</a></dt>
 <dt><a href="reference/carrot.backends.base.html#carrot.backends.base.BaseBackend.queue_purge">queue_purge() (carrot.backends.base.BaseBackend method)</a></dt>
   <dd><dl>
@@ -439,7 +453,7 @@
         <li class="right" >
           <a href="modindex.html" title="Global Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">Carrot v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.8.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -2,7 +2,7 @@
  carrot - AMQP Messaging Framework for Python
 ##############################################
 
-:Version: 0.6.0
+:Version: 0.8.0
 
 **NOTE** This release contains backward-incompatible changes.
 Please read the `Changelog`_ for more information.
@@ -155,7 +155,7 @@ Creating a connection
     ``carrot.connection.DjangoBrokerConnection`` class instead, which loads
     the connection settings from your ``settings.py``::
 
-       AMQP_SERVER = "localhost"
+       AMQP_HOST = "localhost"
        AMQP_PORT = 5672
        AMQP_USER = "test"
        AMQP_PASSWORD = "secret"

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.6.0 documentation</title>
+    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.8.0 documentation</title>
     <link rel="stylesheet" href="static/nature.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.6.0',
+        VERSION:     '0.8.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.6.0 documentation" href="index.html" />
+    <link rel="top" title="Carrot v0.8.0 documentation" href="index.html" />
     <link rel="next" title="Frequently Asked Questions" href="faq.html" />
     <link rel="prev" title="Carrot Documentation" href="index.html" /> 
   </head>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="index.html" title="Carrot Documentation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Carrot v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.8.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,7 +54,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.6.0</td>
+<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.8.0</td>
 </tr>
 </tbody>
 </table>
@@ -183,7 +183,7 @@ routing keys <tt class="docutils literal"><span class="pre">&quot;usd.stock&quot
 <tt class="docutils literal"><span class="pre">carrot.messaging.BrokerConnection</span></tt>, with the appropriate options for
 your broker:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.connection</span> <span class="kn">import</span> <span class="n">BrokerConnection</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span> <span class="o">=</span> <span class="n">BrokerConnection</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mf">5672</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conn</span> <span class="o">=</span> <span class="n">BrokerConnection</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5672</span><span class="p">,</span>
 <span class="gp">... </span>                          <span class="n">userid</span><span class="o">=</span><span class="s">&quot;test&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s">&quot;test&quot;</span><span class="p">,</span>
 <span class="gp">... </span>                          <span class="n">virtual_host</span><span class="o">=</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
 </pre></div>
@@ -191,8 +191,8 @@ your broker:</p>
 <p>If you&#8217;re using Django you can use the
 <tt class="docutils literal"><span class="pre">carrot.connection.DjangoBrokerConnection</span></tt> class instead, which loads
 the connection settings from your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">AMQP_SERVER</span> <span class="o">=</span> <span class="s">&quot;localhost&quot;</span>
-<span class="n">AMQP_PORT</span> <span class="o">=</span> <span class="mf">5672</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">AMQP_HOST</span> <span class="o">=</span> <span class="s">&quot;localhost&quot;</span>
+<span class="n">AMQP_PORT</span> <span class="o">=</span> <span class="mi">5672</span>
 <span class="n">AMQP_USER</span> <span class="o">=</span> <span class="s">&quot;test&quot;</span>
 <span class="n">AMQP_PASSWORD</span> <span class="o">=</span> <span class="s">&quot;secret&quot;</span>
 <span class="n">AMQP_VHOST</span> <span class="o">=</span> <span class="s">&quot;/test&quot;</span>
@@ -494,7 +494,7 @@ file in the top distribution directory for the full license text.</p>
         <li class="right" >
           <a href="index.html" title="Carrot Documentation"
              >previous</a> |</li>
-        <li><a href="index.html">Carrot v0.6.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.8.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.backends.pyamqplib &mdash; Carrot v0.6.0 documentation</title>
+    <title>carrot.backends.pyamqplib &mdash; Carrot v0.8.0 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.6.0',
+        VERSION:     '0.8.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.6.0 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.8.0 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends.pystomp" href="carrot.backends.pystomp.html" />
     <link rel="prev" title="carrot.backends.base" href="carrot.backends.base.html" /> 
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="carrot.backends.base.html" title="carrot.backends.base"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.8.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -161,6 +161,11 @@ production code.</dd></dl>
 <dd>Declare an named exchange.</dd></dl>
 
 <dl class="method">
+<dt id="carrot.backends.pyamqplib.Backend.flow">
+<tt class="descclassname">Backend.</tt><tt class="descname">flow</tt><big>(</big><em>active</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.flow" title="Permalink to this definition">¶</a></dt>
+<dd>Enable/disable flow from peer.</dd></dl>
+
+<dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.get">
 <tt class="descclassname">Backend.</tt><tt class="descname">get</tt><big>(</big><em>queue</em>, <em>no_ack=False</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Receive a message from a declared queue by name.</p>
@@ -190,6 +195,11 @@ there was no messages waiting on the queue.</td>
 <dt id="carrot.backends.pyamqplib.Backend.publish">
 <tt class="descclassname">Backend.</tt><tt class="descname">publish</tt><big>(</big><em>message</em>, <em>exchange</em>, <em>routing_key</em>, <em>mandatory=None</em>, <em>immediate=None</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.publish" title="Permalink to this definition">¶</a></dt>
 <dd>Publish a message to a named exchange.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.pyamqplib.Backend.qos">
+<tt class="descclassname">Backend.</tt><tt class="descname">qos</tt><big>(</big><em>prefetch_size</em>, <em>prefetch_count</em>, <em>apply_global=False</em><big>)</big><a class="headerlink" href="#carrot.backends.pyamqplib.Backend.qos" title="Permalink to this definition">¶</a></dt>
+<dd>Request specific Quality of Service.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.pyamqplib.Backend.queue_bind">
@@ -334,7 +344,7 @@ rename the queue or restart the broker.</dd></dl>
         <li class="right" >
           <a href="carrot.backends.base.html" title="carrot.backends.base"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.8.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>

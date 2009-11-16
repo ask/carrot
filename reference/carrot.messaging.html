@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.messaging &mdash; Carrot v0.6.0 documentation</title>
+    <title>carrot.messaging &mdash; Carrot v0.8.0 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.6.0',
+        VERSION:     '0.8.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.6.0 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.8.0 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends" href="carrot.backends.html" />
     <link rel="prev" title="carrot.connection" href="carrot.connection.html" /> 
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="carrot.connection.html" title="carrot.connection"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.8.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -74,6 +74,7 @@ to the <a class="reference external" href="http://ask.github.com/carrot/introduc
 <li><em>exchange_type</em> &#8211; see <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">exchange_type</span></tt></a>.</li>
 <li><em>auto_ack</em> &#8211; see <a title="carrot.messaging.Consumer.auto_ack" class="reference internal" href="#carrot.messaging.Consumer.auto_ack"><tt class="xref docutils literal"><span class="pre">auto_ack</span></tt></a>.</li>
 <li><em>no_ack</em> &#8211; see <a title="carrot.messaging.Consumer.no_ack" class="reference internal" href="#carrot.messaging.Consumer.no_ack"><tt class="xref docutils literal"><span class="pre">no_ack</span></tt></a>.</li>
+<li><em>auto_declare</em> &#8211; see <tt class="xref docutils literal"><span class="pre">auto_declare</span></tt>.</li>
 </ul>
 </td>
 </tr>
@@ -265,6 +266,12 @@ connection.</td>
 <dt id="carrot.messaging.Consumer.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.close" title="Permalink to this definition">¶</a></dt>
 <dd>Close the channel to the queue.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.Consumer.declare">
+<tt class="descname">declare</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.declare" title="Permalink to this definition">¶</a></dt>
+<dd>Declares the queue, the exchange and binds the queue to
+the exchange.</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.discard_all">
@@ -690,6 +697,7 @@ See <a title="carrot.messaging.Consumer.register_callback" class="reference inte
 <li><em>durable</em> &#8211; see <a title="carrot.messaging.Consumer.durable" class="reference internal" href="#carrot.messaging.Consumer.durable"><tt class="xref docutils literal"><span class="pre">Consumer.durable</span></tt></a>.</li>
 <li><em>auto_delete</em> &#8211; see <a title="carrot.messaging.Consumer.auto_delete" class="reference internal" href="#carrot.messaging.Consumer.auto_delete"><tt class="xref docutils literal"><span class="pre">Consumer.auto_delete</span></tt></a>.</li>
 <li><em>serializer</em> &#8211; see <a title="carrot.messaging.Publisher.serializer" class="reference internal" href="#carrot.messaging.Publisher.serializer"><tt class="xref docutils literal"><span class="pre">serializer</span></tt></a>.</li>
+<li><em>auto_declare</em> &#8211; See <a title="carrot.messaging.Publisher.auto_declare" class="reference internal" href="#carrot.messaging.Publisher.auto_declare"><tt class="xref docutils literal"><span class="pre">auto_declare</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -756,6 +764,16 @@ preserved if the server dies or restarts.</p>
 <dd>See <a title="carrot.messaging.Consumer.auto_delete" class="reference internal" href="#carrot.messaging.Consumer.auto_delete"><tt class="xref docutils literal"><span class="pre">Consumer.auto_delete</span></tt></a>.</dd></dl>
 
 <dl class="attribute">
+<dt id="carrot.messaging.Publisher.auto_declare">
+<tt class="descname">auto_declare</tt><a class="headerlink" href="#carrot.messaging.Publisher.auto_declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>If this is <tt class="xref docutils literal"><span class="pre">True</span></tt> and the <a title="carrot.messaging.Publisher.exchange" class="reference internal" href="#carrot.messaging.Publisher.exchange"><tt class="xref docutils literal"><span class="pre">exchange</span></tt></a> name is set, the exchange
+will be automatically declared at instantiation.
+You can manually the declare the exchange by using the <a title="carrot.messaging.Publisher.declare" class="reference internal" href="#carrot.messaging.Publisher.declare"><tt class="xref docutils literal"><span class="pre">declare()</span></tt></a>
+method.</p>
+<p>Auto declare is on by default.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="carrot.messaging.Publisher.serializer">
 <tt class="descname">serializer</tt><a class="headerlink" href="#carrot.messaging.Publisher.serializer" title="Permalink to this definition">¶</a></dt>
 <dd>A string identifying the default serialization method to use.
@@ -774,6 +792,13 @@ methods that have been registered with
 <tt class="descname">create_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode=None</em>, <em>priority=None</em>, <em>content_type=None</em>, <em>content_encoding=None</em>, <em>serializer=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.create_message" title="Permalink to this definition">¶</a></dt>
 <dd>With any data, serialize it and encapsulate it in a AMQP
 message with the proper headers set.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.Publisher.declare">
+<tt class="descname">declare</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.declare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare the exchange.</p>
+<p>Creates the exchange on the broker.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Publisher.send">
@@ -870,7 +895,7 @@ properly sets content_encoding.</li>
         <li class="right" >
           <a href="carrot.connection.html" title="carrot.connection"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.8.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>

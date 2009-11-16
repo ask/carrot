@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.backends.pystomp &mdash; Carrot v0.6.0 documentation</title>
+    <title>carrot.backends.pystomp &mdash; Carrot v0.8.0 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.6.0',
+        VERSION:     '0.8.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.6.0 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.8.0 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends.queue" href="carrot.backends.queue.html" />
     <link rel="prev" title="carrot.backends.pyamqplib" href="carrot.backends.pyamqplib.html" /> 
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="carrot.backends.pyamqplib.html" title="carrot.backends.pyamqplib"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.8.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -50,8 +50,67 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="carrot-backends-pystomp">
-<h1>carrot.backends.pystomp<a class="headerlink" href="#carrot-backends-pystomp" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-carrot.backends.pystomp">
+<h1>carrot.backends.pystomp<a class="headerlink" href="#module-carrot.backends.pystomp" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="carrot.backends.pystomp.Message">
+<em class="property">class </em><tt class="descclassname">carrot.backends.pystomp.</tt><tt class="descname">Message</tt><big>(</big><em>backend</em>, <em>frame</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.pystomp.Message" title="Permalink to this definition">¶</a></dt>
+<dd><p>A message received by the STOMP broker.</p>
+<p>Usually you don&#8217;t insantiate message objects yourself, but receive
+them using a <a title="carrot.messaging.Consumer" class="reference external" href="carrot.messaging.html#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">carrot.messaging.Consumer</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>backend</em> &#8211; see <a title="carrot.backends.pystomp.Message.backend" class="reference internal" href="#carrot.backends.pystomp.Message.backend"><tt class="xref docutils literal"><span class="pre">backend</span></tt></a>.</li>
+<li><em>frame</em> &#8211; see <a title="carrot.backends.pystomp.Message._frame" class="reference internal" href="#carrot.backends.pystomp.Message._frame"><tt class="xref docutils literal"><span class="pre">_frame</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="carrot.backends.pystomp.Message.body">
+<tt class="descname">body</tt><a class="headerlink" href="#carrot.backends.pystomp.Message.body" title="Permalink to this definition">¶</a></dt>
+<dd>The message body.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.backends.pystomp.Message.delivery_tag">
+<tt class="descname">delivery_tag</tt><a class="headerlink" href="#carrot.backends.pystomp.Message.delivery_tag" title="Permalink to this definition">¶</a></dt>
+<dd>The message delivery tag, uniquely identifying this message.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.backends.pystomp.Message.backend">
+<tt class="descname">backend</tt><a class="headerlink" href="#carrot.backends.pystomp.Message.backend" title="Permalink to this definition">¶</a></dt>
+<dd>The message backend used.
+A subclass of <a title="carrot.backends.base.BaseBackend" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseBackend"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseBackend</span></tt></a>.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.backends.pystomp.Message._frame">
+<tt class="descname">_frame</tt><a class="headerlink" href="#carrot.backends.pystomp.Message._frame" title="Permalink to this definition">¶</a></dt>
+<dd>The frame received by the STOMP client. This is considered a private
+variable and should never be used in production code.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.backends.pystomp.Message.ack">
+<tt class="descname">ack</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.pystomp.Message.ack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acknowledge this message as being processed.,
+This will remove the message from the queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">Raises MessageStateError:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">If the message has already been
+acknowledged/requeued/rejected.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -103,7 +162,7 @@
         <li class="right" >
           <a href="carrot.backends.pyamqplib.html" title="carrot.backends.pyamqplib"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.8.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
