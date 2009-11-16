@@ -28,7 +28,6 @@ def resolve_backend(backend=None):
 
 def _get_backend_cls(backend=None):
     backend_module_name, backend_cls_name = resolve_backend(backend)
-    print("backend_module_name: %s" % (backend_module_name))
     __import__(backend_module_name)
     backend_module = sys.modules[backend_module_name]
     return getattr(backend_module, backend_cls_name)
