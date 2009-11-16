@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>carrot.connection &mdash; Carrot v0.6.0 documentation</title>
+    <link rel="stylesheet" href="../static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.6.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <link rel="top" title="Carrot v0.6.0 documentation" href="../index.html" />
+    <link rel="up" title="API Reference" href="index.html" />
+    <link rel="next" title="carrot.messaging" href="carrot.messaging.html" />
+    <link rel="prev" title="API Reference" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="carrot.messaging.html" title="carrot.messaging"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="API Reference"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-carrot.connection">
+<h1>carrot.connection<a class="headerlink" href="#module-carrot.connection" title="Permalink to this headline">¶</a></h1>
+<p>Getting a connection to the AMQP server.</p>
+<dl class="attribute">
+<dt id="carrot.connection.AMQPConnection">
+<tt class="descclassname">carrot.connection.</tt><tt class="descname">AMQPConnection</tt><a class="headerlink" href="#carrot.connection.AMQPConnection" title="Permalink to this definition">¶</a></dt>
+<dd>alias of <a title="carrot.connection.BrokerConnection" class="reference internal" href="#carrot.connection.BrokerConnection"><tt class="xref docutils literal"><span class="pre">BrokerConnection</span></tt></a></dd></dl>
+
+<dl class="class">
+<dt id="carrot.connection.BrokerConnection">
+<em class="property">class </em><tt class="descclassname">carrot.connection.</tt><tt class="descname">BrokerConnection</tt><big>(</big><em>hostname=None</em>, <em>userid=None</em>, <em>password=None</em>, <em>virtual_host=None</em>, <em>port=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.connection.BrokerConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>A network/socket connection to an AMQP message broker.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>hostname</em> &#8211; see <a title="carrot.connection.BrokerConnection.hostname" class="reference internal" href="#carrot.connection.BrokerConnection.hostname"><tt class="xref docutils literal"><span class="pre">hostname</span></tt></a>.</li>
+<li><em>userid</em> &#8211; see <a title="carrot.connection.BrokerConnection.userid" class="reference internal" href="#carrot.connection.BrokerConnection.userid"><tt class="xref docutils literal"><span class="pre">userid</span></tt></a>.</li>
+<li><em>password</em> &#8211; see <a title="carrot.connection.BrokerConnection.password" class="reference internal" href="#carrot.connection.BrokerConnection.password"><tt class="xref docutils literal"><span class="pre">password</span></tt></a>.</li>
+<li><em>virtual_host</em> &#8211; see <a title="carrot.connection.BrokerConnection.virtual_host" class="reference internal" href="#carrot.connection.BrokerConnection.virtual_host"><tt class="xref docutils literal"><span class="pre">virtual_host</span></tt></a>.</li>
+<li><em>port</em> &#8211; see <a title="carrot.connection.BrokerConnection.port" class="reference internal" href="#carrot.connection.BrokerConnection.port"><tt class="xref docutils literal"><span class="pre">port</span></tt></a>.</li>
+<li><em>insist</em> &#8211; see <a title="carrot.connection.BrokerConnection.insist" class="reference internal" href="#carrot.connection.BrokerConnection.insist"><tt class="xref docutils literal"><span class="pre">insist</span></tt></a>.</li>
+<li><em>connect_timeout</em> &#8211; see <a title="carrot.connection.BrokerConnection.connect_timeout" class="reference internal" href="#carrot.connection.BrokerConnection.connect_timeout"><tt class="xref docutils literal"><span class="pre">connect_timeout</span></tt></a>.</li>
+<li><em>ssl</em> &#8211; see <a title="carrot.connection.BrokerConnection.ssl" class="reference internal" href="#carrot.connection.BrokerConnection.ssl"><tt class="xref docutils literal"><span class="pre">ssl</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="carrot.connection.BrokerConnection.hostname">
+<tt class="descname">hostname</tt><a class="headerlink" href="#carrot.connection.BrokerConnection.hostname" title="Permalink to this definition">¶</a></dt>
+<dd>The hostname to the AMQP server</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.connection.BrokerConnection.userid">
+<tt class="descname">userid</tt><a class="headerlink" href="#carrot.connection.BrokerConnection.userid" title="Permalink to this definition">¶</a></dt>
+<dd>A valid username used to authenticate to the server.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.connection.BrokerConnection.password">
+<tt class="descname">password</tt><a class="headerlink" href="#carrot.connection.BrokerConnection.password" title="Permalink to this definition">¶</a></dt>
+<dd>The password used to authenticate to the server.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.connection.BrokerConnection.virtual_host">
+<tt class="descname">virtual_host</tt><a class="headerlink" href="#carrot.connection.BrokerConnection.virtual_host" title="Permalink to this definition">¶</a></dt>
+<dd>The name of the virtual host to work with. This virtual host must
+exist on the server, and the user must have access to it. Consult
+your brokers manual for help with creating, and mapping
+users to virtual hosts.
+Default is <tt class="docutils literal"><span class="pre">&quot;/&quot;</span></tt>.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.connection.BrokerConnection.port">
+<tt class="descname">port</tt><a class="headerlink" href="#carrot.connection.BrokerConnection.port" title="Permalink to this definition">¶</a></dt>
+<dd>The port of the AMQP server.  Default is <tt class="docutils literal"><span class="pre">5672</span></tt> (amqp).</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.connection.BrokerConnection.insist">
+<tt class="descname">insist</tt><a class="headerlink" href="#carrot.connection.BrokerConnection.insist" title="Permalink to this definition">¶</a></dt>
+<dd>Insist on connecting to a server. In a configuration with multiple
+load-sharing servers, the insist option tells the server that the
+client is insisting on a connection to the specified server.
+Default is <tt class="xref docutils literal"><span class="pre">False</span></tt>.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.connection.BrokerConnection.connect_timeout">
+<tt class="descname">connect_timeout</tt><a class="headerlink" href="#carrot.connection.BrokerConnection.connect_timeout" title="Permalink to this definition">¶</a></dt>
+<dd>The timeout in seconds before we give up connecting to the server.
+The default is no timeout.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.connection.BrokerConnection.ssl">
+<tt class="descname">ssl</tt><a class="headerlink" href="#carrot.connection.BrokerConnection.ssl" title="Permalink to this definition">¶</a></dt>
+<dd>Use SSL to connect to the server.
+The default is <tt class="xref docutils literal"><span class="pre">False</span></tt>.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.connection.BrokerConnection.backend_cls">
+<tt class="descname">backend_cls</tt><a class="headerlink" href="#carrot.connection.BrokerConnection.backend_cls" title="Permalink to this definition">¶</a></dt>
+<dd>The messaging backend class used. Defaults to the <tt class="docutils literal"><span class="pre">pyamqplib</span></tt>
+backend.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.connection.BrokerConnection.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.connection.BrokerConnection.close" title="Permalink to this definition">¶</a></dt>
+<dd>Close the currently open connection.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.connection.BrokerConnection.connect">
+<tt class="descname">connect</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.connection.BrokerConnection.connect" title="Permalink to this definition">¶</a></dt>
+<dd>Establish a connection to the AMQP server.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.connection.BrokerConnection.create_backend">
+<tt class="descname">create_backend</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.connection.BrokerConnection.create_backend" title="Permalink to this definition">¶</a></dt>
+<dd>Create a new instance of the current backend in
+<a title="carrot.connection.BrokerConnection.backend_cls" class="reference internal" href="#carrot.connection.BrokerConnection.backend_cls"><tt class="xref docutils literal"><span class="pre">backend_cls</span></tt></a>.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.connection.BrokerConnection.get_backend_cls">
+<tt class="descname">get_backend_cls</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.connection.BrokerConnection.get_backend_cls" title="Permalink to this definition">¶</a></dt>
+<dd>Get the currently used backend class.</dd></dl>
+
+<dl class="method">
+<dt id="carrot.connection.BrokerConnection.get_channel">
+<tt class="descname">get_channel</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.connection.BrokerConnection.get_channel" title="Permalink to this definition">¶</a></dt>
+<dd>Request a new AMQP channel.</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.connection.BrokerConnection.host">
+<tt class="descname">host</tt><a class="headerlink" href="#carrot.connection.BrokerConnection.host" title="Permalink to this definition">¶</a></dt>
+<dd>The host as a hostname/port pair separated by colon.</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="carrot.connection.DjangoAMQPConnection">
+<tt class="descclassname">carrot.connection.</tt><tt class="descname">DjangoAMQPConnection</tt><a class="headerlink" href="#carrot.connection.DjangoAMQPConnection" title="Permalink to this definition">¶</a></dt>
+<dd>alias of <a title="carrot.connection.DjangoBrokerConnection" class="reference internal" href="#carrot.connection.DjangoBrokerConnection"><tt class="xref docutils literal"><span class="pre">DjangoBrokerConnection</span></tt></a></dd></dl>
+
+<dl class="class">
+<dt id="carrot.connection.DjangoBrokerConnection">
+<em class="property">class </em><tt class="descclassname">carrot.connection.</tt><tt class="descname">DjangoBrokerConnection</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.connection.DjangoBrokerConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>A version of <a title="carrot.connection.BrokerConnection" class="reference internal" href="#carrot.connection.BrokerConnection"><tt class="xref docutils literal"><span class="pre">BrokerConnection</span></tt></a> that takes configuration
+from the Django <tt class="docutils literal"><span class="pre">settings.py</span></tt> module.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><em>hostname</em> &#8211; The hostname of the AMQP server to connect to,
+if not provided this is taken from <tt class="docutils literal"><span class="pre">settings.AMQP_SERVER</span></tt>.</li>
+<li><em>userid</em> &#8211; The username of the user to authenticate to the server
+as. If not provided this is taken from <tt class="docutils literal"><span class="pre">settings.AMQP_USER</span></tt>.</li>
+<li><em>password</em> &#8211; The users password. If not provided this is taken
+from <tt class="docutils literal"><span class="pre">settings.AMQP_PASSWORD</span></tt>.</li>
+<li><em>vhost</em> &#8211; The name of the virtual host to work with.
+This virtual host must exist on the server, and the user must
+have access to it. Consult your brokers manual for help with
+creating, and mapping users to virtual hosts. If not provided
+this is taken from <tt class="docutils literal"><span class="pre">settings.AMQP_VHOST</span></tt>.</li>
+<li><em>port</em> &#8211; The port the AMQP server is running on. If not provided
+this is taken from <tt class="docutils literal"><span class="pre">settings.AMQP_PORT</span></tt>, or if that is not set,
+the default is <tt class="docutils literal"><span class="pre">5672</span></tt> (amqp).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="index.html"
+                                  title="previous chapter">API Reference</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="carrot.messaging.html"
+                                  title="next chapter">carrot.messaging</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../sources/reference/carrot.connection.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="carrot.messaging.html" title="carrot.messaging"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="API Reference"
+             >previous</a> |</li>
+        <li><a href="../index.html">Carrot v0.6.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >API Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

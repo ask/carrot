@@ -1,0 +1,561 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Change history &mdash; Carrot v0.6.0 documentation</title>
+    <link rel="stylesheet" href="static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.6.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Carrot v0.6.0 documentation" href="index.html" />
+    <link rel="prev" title="carrot.serialization" href="reference/carrot.serialization.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="reference/carrot.serialization.html" title="carrot.serialization"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Carrot v0.6.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="change-history">
+<h1>Change history<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="p-m-cet">
+<h2>0.6.0 [2009-09-17 16:41 P.M CET]<a class="headerlink" href="#p-m-cet" title="Permalink to this headline">¶</a></h2>
+<p><strong>BACKWARD INCOMPATIBLE CHANGES</strong></p>
+<ul>
+<li><dl class="first docutils">
+<dt>AMQPConnection renamed to BrokerConnection with AMQPConnection remaining</dt>
+<dd><p class="first last">an alias for backwards compatability. Similarly DjangoAMQPConnection is
+renamed to DjangoBrokerConnection.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>AMQPConnection renamed to BrokerConnection</dt>
+<dd><p class="first last">DjangoAMQPConnection renamed to DjangoBrokerConnection
+(The previous names are still available but will be deprecated in 1.0)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>The connection is now lazy, requested only when it&#8217;s needed.</dt>
+<dd><p class="first">To explicitly connect you have to evaluate the BrokerConnections
+<tt class="docutils literal"><span class="pre">connection</span></tt> attribute.</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">connection</span> <span class="o">=</span> <span class="n">BrokerConnection</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="c"># Not connected yet.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">connection</span><span class="o">.</span><span class="n">connection</span><span class="p">;</span> <span class="c"># Now it&#39;s connected</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p class="first">A channel is now lazy, requested only when it&#8217;s needed.</p>
+</li>
+<li><p class="first">pyamqplib.Message.amqp_message is now a private attribute</p>
+</li>
+</ul>
+<p><strong>NEW FEATURES</strong></p>
+<ul>
+<li><dl class="first docutils">
+<dt>Basic support for STOMP using the stompy library.</dt>
+<dd><p class="first last">(Available at <a class="reference external" href="http://bitbucket.org/benjaminws/python-stomp/overview/">http://bitbucket.org/benjaminws/python-stomp/overview/</a>)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Implements <tt class="xref docutils literal"><span class="pre">Consumer.qos()</span></tt> and <tt class="xref docutils literal"><span class="pre">Consumer.flow()</span></tt> for setting</dt>
+<dd><p class="first last">quality of service and flow control.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>NEWS</strong></p>
+<ul>
+<li><dl class="first docutils">
+<dt>The current Message class is now available as an attribute on the</dt>
+<dd><p class="first last">Backend.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Default port is now handled by the backend and all AMQP_* settings to the</dt>
+<dd><p class="first last">DjangoBrokerConnection is now optional</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Backend is now initialized in the connection instead of Consumer/Publisher,</dt>
+<dd><p class="first last">so backend_cls now has to be sent to AMQPConnection if you want to
+explicitly set it.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Specifying utf-8 as the content type when forcing unicode into a string.</dt>
+<dd><p class="first last">This removes the reference to the unbound content_type variable.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>0.5.1 [2009-07-19 06:19 P.M CET]<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul class="simple">
+<li>Handle messages without content_encoding attribute set.</li>
+<li>Make delivery_info available on the Message instance.</li>
+<li>Use anyjson to detect best installed JSON module on the system.</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id2">
+<h2>0.5.0 [2009-06-25 08:16 P.M CET]<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p><strong>BACKWARD-INCOMPATIBLE CHANGES</strong></p>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>Custom encoder/decoder support has been moved to a centralized</dt>
+<dd><p class="first last">registry in <tt class="docutils literal"><span class="pre">carrot.serialization</span></tt>. This means the
+<tt class="docutils literal"><span class="pre">encoder</span></tt>/<tt class="docutils literal"><span class="pre">decoder</span></tt> optional arguments to <tt class="docutils literal"><span class="pre">Publisher.send</span></tt>
+<cite>(and the similar attributes of  ``Publisher`</cite> and <tt class="docutils literal"><span class="pre">Consumer</span></tt>
+classes) no longer exist.   See <tt class="docutils literal"><span class="pre">README</span></tt> for details of the new
+system.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Any <tt class="docutils literal"><span class="pre">Consumer</span></tt> and <tt class="docutils literal"><span class="pre">Publisher</span></tt> instances should be</dt>
+<dd><p class="first last">upgraded at the same time since carrot now uses the AMQP
+<tt class="docutils literal"><span class="pre">content-type</span></tt> field to know how to automatically de-serialize
+your data. If you use an old-style <tt class="docutils literal"><span class="pre">Publisher</span></tt> with a new-style
+<tt class="docutils literal"><span class="pre">Consumer</span></tt>, you will get a raw string back as <tt class="docutils literal"><span class="pre">message_data</span></tt>
+instead of your de-serialized data. An old-style <tt class="docutils literal"><span class="pre">Consumer</span></tt>
+will work with a new-style <tt class="docutils literal"><span class="pre">Publisher</span></tt> as long as you&#8217;re using
+the default <tt class="docutils literal"><span class="pre">JSON</span></tt> serialization methods.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Acknowledging/Rejecting/Requeuing a message twice now raises</dt>
+<dd><p class="first last">an exception.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</blockquote>
+<p><em>ENHANCEMENTS</em></p>
+<blockquote>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">ConsumerSet</span></tt>: Receive messages from several consumers.</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id3">
+<h2>0.4.5 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p><strong>BACKWARD-INCOMPATIBLE CHANGES</strong></p>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>the exchange is now also declared in the <tt class="docutils literal"><span class="pre">Publisher</span></tt>. This means</dt>
+<dd><p class="first last">the following attributes (if used) must be set on <em>both</em>
+the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the <tt class="docutils literal"><span class="pre">Consumer</span></tt>:
+<tt class="docutils literal"><span class="pre">exchange_type</span></tt>, <tt class="docutils literal"><span class="pre">durable</span></tt> and <tt class="docutils literal"><span class="pre">auto_delete</span></tt>.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</blockquote>
+<p><strong>IMPORTANT BUGS</strong></p>
+<blockquote>
+<ul class="simple">
+<li>No_ack was always set to <tt class="xref docutils literal"><span class="pre">True</span></tt> when using <tt class="docutils literal"><span class="pre">Consumer.iterconsume</span></tt>.</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id4">
+<h2>0.4.4 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul class="simple">
+<li>__init__.pyc was included in the distribution by error.</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id5">
+<h2>0.4.3 [2009-06-13 09:26 P.M CET]<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul class="simple">
+<li>Fix typo with long_description in <tt class="docutils literal"><span class="pre">setup.py</span></tt>.</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id6">
+<h2>0.4.2 [2009-06-13 08:30 P.M CET]<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>Make sure README exists before reading it for <tt class="docutils literal"><span class="pre">long_description</span></tt>.</dt>
+<dd><p class="first last">Thanks to jcater.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">discard_all</span></tt>: Use <tt class="docutils literal"><span class="pre">AMQP.queue_purge</span></tt> if <tt class="docutils literal"><span class="pre">filterfunc</span></tt> is not</dt>
+<dd><p class="first last">specified</p>
+</dd>
+</dl>
+</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id7">
+<h2>0.4.1 [2009-06-08 04:21 P.M CET]<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>Consumer/Publisher now correctly sets the encoder/decoder if they</dt>
+<dd><p class="first last">have been overriden by setting the class attribute.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h2>0.4.0 [2009-06-06 01:39 P.M CET]<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p><strong>IMPORTANT</strong> Please don&#8217;t use <tt class="docutils literal"><span class="pre">Consumer.wait</span></tt> in production. Use either
+of <tt class="docutils literal"><span class="pre">Consumer.iterconsume</span></tt> or <tt class="docutils literal"><span class="pre">Consumer.iterqueue</span></tt>.</p>
+<p><strong>IMPORTANT</strong> The <tt class="docutils literal"><span class="pre">ack</span></tt> argument to <tt class="docutils literal"><span class="pre">Consumer.process_next</span></tt> has been
+removed, use the instance-wide <tt class="docutils literal"><span class="pre">auto_ack</span></tt> argument/attribute instead.</p>
+<p><strong>IMPORTANT</strong> <tt class="docutils literal"><span class="pre">Consumer.message_to_python</span></tt> has been removed, use
+<tt class="docutils literal"><span class="pre">message.decode()</span></tt> on the returned message object instead.</p>
+<p><strong>IMPORTANT</strong> Consumer/Publisher/Messaging now no longer takes a backend
+instance, but a backend class, so the <tt class="docutils literal"><span class="pre">backend</span></tt> argument is renamed to
+<tt class="docutils literal"><span class="pre">backend_cls</span></tt>.</p>
+<p><em>WARNING</em> <tt class="docutils literal"><span class="pre">Consumer.process_next</span></tt> has been deprecated in favor of
+<tt class="docutils literal"><span class="pre">Consumer.fetch(enable_callbacks=True)</span></tt> and emits a <tt class="docutils literal"><span class="pre">DeprecationWarning</span></tt>
+if used.</p>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">Consumer.iterconsume</span></tt>: New sane way to use basic_consume instead of <tt class="docutils literal"><span class="pre">Consumer.wait</span></tt>:</dt>
+<dd><p class="first last">(Consmer.wait now uses this behind the scenes, just wrapped around
+a highly unsafe infinite loop.)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Consumer: New options: <tt class="docutils literal"><span class="pre">auto_ack</span></tt> and <tt class="docutils literal"><span class="pre">no_ack</span></tt>. Auto ack means the</dt>
+<dd><p class="first last">consumer will automatically acknowledge new messages, and No-Ack
+means it will disable acknowledgement on the server alltogether
+(probably not what you want)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">Consumer.iterqueue</span></tt>: Now supports infinite argument, which means the</dt>
+<dd><p class="first last">iterator doesn&#8217;t raise <tt class="docutils literal"><span class="pre">StopIteration</span></tt> if there&#8217;s no messages,
+but instead yields <tt class="xref docutils literal"><span class="pre">None</span></tt> (thus never ends)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>message argument to consumer callbacks is now a</dt>
+<dd><p class="first last"><tt class="docutils literal"><span class="pre">carrot.backends.pyamqplib.Message</span></tt> instance. See <a class="reference external" href="http://github.com/ask/carrot/issues/closed/#issue/4">[GH #4]</a>.
+Thanks gregoirecachet!</p>
+</dd>
+</dl>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>AMQPConnection, Consumer, Publisher and Messaging now supports</dt>
+<dd><p class="first last">the with statement. They automatically close when the with-statement
+block exists.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Consumer tags are now automatically generated for each class instance,</dt>
+<dd><p class="first last">so you should never get the &#8220;consumer tag already open&#8221; error anymore.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">Loads of new unit tests.</p>
+</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="pre7-2009-06-03-05-08-p-m-cet">
+<h2>0.4.0-pre7 [2009-06-03 05:08 P.M CET]<a class="headerlink" href="#pre7-2009-06-03-05-08-p-m-cet" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul class="simple">
+<li>Conform to pep8.py trying to raise our pypants score.</li>
+<li>Documentation cleanup (thanks Rune Halvorsen)</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="pre6-2009-06-03-04-55-p-m-cet">
+<h2>0.4.0-pre6 [2009-06-03 04:55 P.M CET]<a class="headerlink" href="#pre6-2009-06-03-04-55-p-m-cet" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>exclusive implies auto_delete, not durable. Closes #2.</dt>
+<dd><p class="first last">Thanks gregoirecachet</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Consumer tags are now automatically generated by the class module,</dt>
+<dd><p class="first last">name and a UUID.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>New attribute <tt class="docutils literal"><span class="pre">Consumer.warn_if_exists:</span></tt></dt>
+<dd><p class="first last">If True, emits a warning if the queue has already been declared.
+If a queue already exists, and you try to redeclare the queue
+with new settings, the new settings will be silently ignored,
+so this can be useful if you&#8217;ve recently changed the
+<cite>routing_key</cite> attribute or other settings.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="pre3-2009-05-29-02-27-p-m-cet">
+<h2>0.4.0-pre3 [2009-05-29 02:27 P.M CET]<a class="headerlink" href="#pre3-2009-05-29-02-27-p-m-cet" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>Publisher.send: Now supports message priorities (a number between <tt class="docutils literal"><span class="pre">0</span></tt></dt>
+<dd><p class="first last">and <tt class="docutils literal"><span class="pre">9</span></tt>)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Publihser.send: Added <tt class="docutils literal"><span class="pre">routing_key</span></tt> keyword argument. Can override</dt>
+<dd><p class="first last">the routing key for a single message.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">Publisher.send: Support for the <tt class="docutils literal"><span class="pre">immediate</span></tt> and <tt class="docutils literal"><span class="pre">mandatory</span></tt> flags.</p>
+</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="pre2-2009-05-29-02-27-p-m-cet">
+<h2>0.4.0-pre2 [2009-05-29 02:27 P.M CET]<a class="headerlink" href="#pre2-2009-05-29-02-27-p-m-cet" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>AMQPConnection: Added <tt class="docutils literal"><span class="pre">connect_timeout</span></tt> timeout option, which is</dt>
+<dd><p class="first last">the timeout in seconds before we exhaust trying to establish a
+connection to the AMQP server.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="pre1-2009-05-27-04-27-p-m-cet">
+<h2>0.4.0-pre1 [2009-05-27 04:27 P.M CET]<a class="headerlink" href="#pre1-2009-05-27-04-27-p-m-cet" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>This version introduces backends. The consumers and publishers</dt>
+<dd><p class="first last">all have an associated backend. Currently there are two backends
+available; <tt class="docutils literal"><span class="pre">pyamqlib</span></tt> and <tt class="docutils literal"><span class="pre">pyqueue</span></tt>. The <tt class="docutils literal"><span class="pre">amqplib</span></tt> backend
+is for production use, while the <tt class="docutils literal"><span class="pre">Queue</span></tt> backend is for use while
+unit testing.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">Consumer/Publisher operations no longer re-establishes the connection
+if the connection has been closed.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">Consumer.next</span></tt> has been deprecated for a while, and has now been
+removed.</p>
+</li>
+<li><p class="first">Message objects now have a <tt class="docutils literal"><span class="pre">decode</span></tt> method, to deserialize the
+message body.</p>
+</li>
+<li><p class="first">You can now use the Consumer class standalone, without subclassing,
+by registering callbacks by using <tt class="docutils literal"><span class="pre">Consumer.register_callback</span></tt>.</p>
+</li>
+<li><p class="first">Ability to filter messages in <tt class="docutils literal"><span class="pre">Consumer.discard_all</span></tt>.</p>
+</li>
+<li><dl class="first docutils">
+<dt>carrot now includes a basic unit test suite, which hopefully will</dt>
+<dd><p class="first last">be more complete in later releases.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">carrot now uses the Sphinx documentation system.</p>
+</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id9">
+<h2>0.3.9 [2009-05-18 04:49 P.M CET]<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul class="simple">
+<li>Consumer.wait() now works properly again. Thanks Alexander Solovyov!</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id10">
+<h2>0.3.8 [2009-05-11 02:14 P.M CET]<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>Rearranged json module import order.</dt>
+<dd><p class="first last">New order is cjson &gt; simplejson &gt; json &gt; django.util.somplejson</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>_Backwards incompatible change:</dt>
+<dd><p class="first">Have to instantiate AMQPConnection object before passing
+it to consumers/publishers. e.g before when you did</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">DjangoAMQPConnection</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+<p>you now have to do</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">consumer</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">DjangoAMQPConnection</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>or sometimes you might even want to share the same connection with
+publisher/consumer.</p>
+</blockquote>
+</div>
+<div class="section" id="id11">
+<h2>0.2.1 [2009-03-24 05:48 P.M CET]<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Fix typo &#8220;package&#8221; -&gt; &#8220;packages&#8221; in setup.py</li>
+</ul>
+</div>
+<div class="section" id="p-m">
+<h2>0.2.0 [2009-03-24 05:23 P.M ]`<a class="headerlink" href="#p-m" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>hasty bugfix release, fixed syntax errors.</li>
+</ul>
+</div>
+<div class="section" id="id12">
+<h2>0.1.0 [2009-03-24 05:16 P.M ]`<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<ul class="simple">
+<li>Initial release</li>
+</ul>
+</blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">Change history</a><ul>
+<li><a class="reference external" href="#p-m-cet">0.6.0 [2009-09-17 16:41 P.M CET]</a></li>
+<li><a class="reference external" href="#id1">0.5.1 [2009-07-19 06:19 P.M CET]</a></li>
+<li><a class="reference external" href="#id2">0.5.0 [2009-06-25 08:16 P.M CET]</a></li>
+<li><a class="reference external" href="#id3">0.4.5 [2009-06-15 01:58 P.M CET]</a></li>
+<li><a class="reference external" href="#id4">0.4.4 [2009-06-15 01:58 P.M CET]</a></li>
+<li><a class="reference external" href="#id5">0.4.3 [2009-06-13 09:26 P.M CET]</a></li>
+<li><a class="reference external" href="#id6">0.4.2 [2009-06-13 08:30 P.M CET]</a></li>
+<li><a class="reference external" href="#id7">0.4.1 [2009-06-08 04:21 P.M CET]</a></li>
+<li><a class="reference external" href="#id8">0.4.0 [2009-06-06 01:39 P.M CET]</a></li>
+<li><a class="reference external" href="#pre7-2009-06-03-05-08-p-m-cet">0.4.0-pre7 [2009-06-03 05:08 P.M CET]</a></li>
+<li><a class="reference external" href="#pre6-2009-06-03-04-55-p-m-cet">0.4.0-pre6 [2009-06-03 04:55 P.M CET]</a></li>
+<li><a class="reference external" href="#pre3-2009-05-29-02-27-p-m-cet">0.4.0-pre3 [2009-05-29 02:27 P.M CET]</a></li>
+<li><a class="reference external" href="#pre2-2009-05-29-02-27-p-m-cet">0.4.0-pre2 [2009-05-29 02:27 P.M CET]</a></li>
+<li><a class="reference external" href="#pre1-2009-05-27-04-27-p-m-cet">0.4.0-pre1 [2009-05-27 04:27 P.M CET]</a></li>
+<li><a class="reference external" href="#id9">0.3.9 [2009-05-18 04:49 P.M CET]</a></li>
+<li><a class="reference external" href="#id10">0.3.8 [2009-05-11 02:14 P.M CET]</a></li>
+<li><a class="reference external" href="#id11">0.2.1 [2009-03-24 05:48 P.M CET]</a></li>
+<li><a class="reference external" href="#p-m">0.2.0 [2009-03-24 05:23 P.M ]`</a></li>
+<li><a class="reference external" href="#id12">0.1.0 [2009-03-24 05:16 P.M ]`</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="reference/carrot.serialization.html"
+                                  title="previous chapter">carrot.serialization</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="sources/changelog.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference/carrot.serialization.html" title="carrot.serialization"
+             >previous</a> |</li>
+        <li><a href="index.html">Carrot v0.6.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>
