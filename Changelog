@@ -2,6 +2,40 @@
  Change history
 ================
 
+0.8.0 [2009-11-16 05:11 P.M CEST]
+---------------------------------
+
+**BACKWARD INCOMPATIBLE CHANGES**
+
+* Django: ``AMQP_SERVER`` has been deprecated and renamed to ``BROKER_HOST``.
+  ``AMQP_SERVER`` is still supported but will be removed in version 1.0.
+
+* Django: All ``AMQP_*`` settings has been renamed to ``BROKER_*``,
+  the old settings still work but gives a deprecation warning.
+  ``AMQP_*`` is scheduled for removal in v1.0.
+
+* You now have to include the class name in the
+  CARROT_BACKEND string. E.g. where you before had "my.module.backends", you now
+  need to include the class name: ``"my.module.backends.BackendClass"``.
+  The aliases works like before.
+
+*BUGFIXES*
+
+* Cancel should delete the affected _consumer
+
+* qos()/flow() now working properly.
+
+* Fixed the bug in UUID4 which makes it return the same id over and over.
+
+*OTHER*
+
+* Sphinx docs: Remove django dependency when building docs. Thanks jetfar!
+
+* You can now build the documentatin using ``python setup.py build_sphinx``
+  (thanks jetfar!)
+
+
+
 0.6.1 [2009-09-30 12:29 P.M CET]
 ------------------------------------------------------------------
 
