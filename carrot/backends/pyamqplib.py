@@ -240,6 +240,8 @@ class Backend(BaseBackend):
 
     def qos(self, prefetch_size, prefetch_count, apply_global=False):
         """Request specific Quality of Service."""
+        print("APPLYING QOS: s:%s c:%s g:%s" % (prefetch_size, prefetch_count,
+            apply_global))
         self.channel.basic_qos(prefetch_size, prefetch_count,
                                 apply_global)
 

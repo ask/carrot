@@ -44,13 +44,6 @@ def fullsplit(path, result=None):
 for scheme in INSTALL_SCHEMES.values():
     scheme['data'] = scheme['purelib']
 
-SKIP_EXTENSIONS = [".pyc", ".pyo", ".swp", ".swo"]
-
-
-def is_unwanted_file(filename):
-    return any([filename.endswith(skip_ext) for skip_ext in SKIP_EXTENSIONS])
-
-
 for dirpath, dirnames, filenames in os.walk(src_dir):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):
@@ -59,8 +52,6 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
     for filename in filenames:
         if filename.endswith(".py"):
             packages.append('.'.join(fullsplit(dirpath)))
-        elif is_unwanted_file(filename):
-            pass
         else:
             data_files.append([dirpath, [os.path.join(dirpath, f) for f in
                 filenames]])

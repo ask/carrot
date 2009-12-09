@@ -111,7 +111,7 @@ class Backend(BaseBackend):
 
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
             **kwargs):
-        ack = "auto" if no_ack else "client"
+        ack = no_ack and "auto" or "client"
         self.channel.subscribe(queue, ack=ack)
         self._consumers[consumer_tag] = queue
         self._callbacks[queue] = callback
