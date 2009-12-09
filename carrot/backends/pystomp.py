@@ -154,9 +154,10 @@ class Backend(BaseBackend):
 
     def prepare_message(self, message_data, delivery_mode, priority=0,
             content_type=None, content_encoding=None):
-        persistent = "true" if delivery_mode == 2 else "false"
-        if not priority:
-            priority = 0
+        persistent = "false"
+        if delivery_mode == 2:
+            persistent = "true"
+        priority = priority or 0
         return {"body": message_data,
                 "persistent": persistent,
                 "priority": priority,
