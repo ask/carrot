@@ -7,6 +7,7 @@
 """
 from amqplib import client_0_8 as amqp
 from amqplib.client_0_8.exceptions import AMQPChannelException
+from amqplib.client_0_8.serialization import AMQPReader, AMQPWriter
 from carrot.backends.base import BaseMessage, BaseBackend
 from itertools import count
 import warnings
@@ -248,3 +249,16 @@ class Backend(BaseBackend):
     def flow(self, active):
         """Enable/disable flow from peer."""
         self.channel.flow(active)
+
+    def encode_table(self, pydict):
+        """Convert python dictionary into AMQP table format."""
+        writer = AMQPWriter()
+        writer.write_table(pydict)
+        return writer.getvalue()
+
+    def decode_table(self, table):
+        """Decode an AMQP table into a python dictionary."""
+        if isinstance(table, unicode):
+            table = table.encode("utf-8")
+        return AMQPReader(table).read_table()
+

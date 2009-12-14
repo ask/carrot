@@ -268,14 +268,18 @@ class Consumer(object):
                                           durable=self.durable,
                                           auto_delete=self.auto_delete)
         if self.queue:
+            routing_key = self.routing_key
+            if self.exchange_type == "headers":
+                routing_key = self.backend.encode_table(routing_key)
             self.backend.queue_bind(queue=self.queue, exchange=self.exchange,
-                                    routing_key=self.routing_key)
+                                    routing_key=routing_key)
         self._closed = False
         return self
 
     def _receive_callback(self, raw_message):
         """Internal method used when a message is received in consume mode."""
         message = self.backend.message_to_python(raw_message)
+
         if self.auto_ack and not message.acknowledged:
             message.ack()
         self.receive(message.payload, message)
@@ -725,6 +729,9 @@ class Publisher(object):
         """
         if not routing_key:
             routing_key = self.routing_key
+        if self.exchange_type == "headers":
+            routing_key = self.backend.encode_table(routing_key)
+
         message = self.create_message(message_data, priority=priority,
                                       delivery_mode=delivery_mode,
                                       content_type=content_type,
