@@ -1,13 +1,34 @@
+import asyncore
 import weakref
+import functools
+import itertools
 
 import pika
 
-from carrot.backends import BaseMessage, BaseBackend
+from carrot.backends.base import BaseMessage, BaseBackend
 
 DEFAULT_PORT = 5672
 
 class Message(BaseMessage):
-    pass # FIXME
+
+    def __init__(self, backend, amqp_message, **kwargs):
+        channel, method, header, body = amqp_message
+        self._channel = channel
+        self._method = method
+        self._header = header
+        self.backend = backend
+
+        kwargs.update({"body": body,
+                       "delivery_tag": method.delivery_tag,
+                       "content_type": header.content_type,
+                       "content_encoding": header.content_encoding,
+                       "delivery_info": dict(
+                            consumer_tag=method.consumer_tag,
+                            routing_key=method.routing_key,
+                            delivery_tag=method.delivery_tag,
+                            exchange=method.exchange)})
+
+        super(Message, self).__init__(backend, **kwargs)
 
 
 class Backend(BaseBackend):
@@ -37,11 +58,12 @@ class Backend(BaseBackend):
         if not conninfo.port:
             conninfo.port = self.default_port
         credentials = pika.PlainCredentials(conninfo.userid,
-                                      conninfo.password
-        return pika.AsyncoreConnection(conninfo.hostname,
-                                       port=conninfo.port,
-                                       virtual_host=conninfo.virtual_host,
-                                       credentials=credentials)
+                                            conninfo.password)
+        return pika.AsyncoreConnection(pika.ConnectionParameters(
+                                           conninfo.hostname,
+                                           port=conninfo.port,
+                                           virtual_host=conninfo.virtual_host,
+                                           credentials=credentials))
 
     def close_connection(self, connection):
         """Close the AMQP broker connection."""
@@ -97,31 +119,32 @@ class Backend(BaseBackend):
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
             nowait=False):
         """Declare a consumer."""
-        return # FIXME
-        return self.channel.basic_consume(queue=queue,
-                                          no_ack=no_ack,
-                                          callback=callback,
-                                          consumer_tag=consumer_tag,
-                                          nowait=nowait)
+
+        @functools.wraps(callback)
+        def _callback_decode(channel, method, header, body):
+            return callback((channel, method, header, body))
+
+        return self.channel.basic_consume(_callback_decode,
+                                          queue=queue,
+                                          no_ack=no_ack)
 
     def consume(self, limit=None):
         """Returns an iterator that waits for one message at a time."""
-        return # FIXME
-        for total_message_count in count():
+        for total_message_count in itertools.count():
             if limit and total_message_count >= limit:
                 raise StopIteration
-            self.channel.wait()
+            asyncore.loop(count=1)
             yield True
 
     def cancel(self, consumer_tag):
         """Cancel a channel by consumer tag."""
-        if not self.channel.connection:
+        if not self._channel:
             return
         self.channel.basic_cancel(consumer_tag)
 
     def close(self):
         """Close the channel if open."""
-        if self._channel and self._channel.is_open:
+        if self._channel and not self._channel.handler.channel_close:
             self._channel.close()
         self._channel_ref = None
 
@@ -144,14 +167,15 @@ class Backend(BaseBackend):
                                           content_type=content_type,
                                           content_encoding=content_encoding,
                                           delivery_mode=delivery_mode)
-        return message, properties
+        return message_data, properties
 
     def publish(self, message, exchange, routing_key, mandatory=None,
             immediate=None):
         """Publish a message to a named exchange."""
         body, properties = message
+
         ret = self.channel.basic_publish(body=body,
-                                         properties=properties)
+                                         properties=properties,
                                          exchange=exchange,
                                          routing_key=routing_key,
                                          mandatory=mandatory,
