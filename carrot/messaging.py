@@ -276,6 +276,7 @@ class Consumer(object):
     def _receive_callback(self, raw_message):
         """Internal method used when a message is received in consume mode."""
         message = self.backend.message_to_python(raw_message)
+
         if self.auto_ack and not message.acknowledged:
             message.ack()
         self.receive(message.payload, message)
@@ -725,6 +726,9 @@ class Publisher(object):
         """
         if not routing_key:
             routing_key = self.routing_key
+        if self.exchange_type == "headers":
+            routing_key = self.backend.encode_table(routing_key)
+
         message = self.create_message(message_data, priority=priority,
                                       delivery_mode=delivery_mode,
                                       content_type=content_type,
