@@ -5,6 +5,8 @@ Working with Backends.
 """
 import sys
 
+from carrot.utils import rpartition
+
 DEFAULT_BACKEND = "carrot.backends.pyamqplib.Backend"
 
 BACKEND_ALIASES = {
@@ -22,7 +24,7 @@ _backend_cache = {}
 
 def resolve_backend(backend=None):
     backend = BACKEND_ALIASES.get(backend, backend)
-    backend_module_name, _, backend_cls_name = backend.rpartition(".")
+    backend_module_name, _, backend_cls_name = rpartition(backend, ".")
     return backend_module_name, backend_cls_name
 
 
