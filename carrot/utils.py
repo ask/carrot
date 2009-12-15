@@ -17,3 +17,22 @@ def gen_unique_id():
         _uuid_generate_random(buffer)
         return str(UUID(bytes=buffer.raw))
     return str(uuid4())
+
+
+def _compat_rpartition(str, sep):
+    """``partition(str, sep) -> (head, sep, tail)``
+
+    Search for the separator ``sep`` in ``str``, and return the part before
+    it, the separator itself, and the part after it.  If the separator is not
+    found, return S and two empty strings.
+
+    """
+    items = str.rsplit(sep, 1)
+    if len(items) == 1:
+        return items[0], sep, ''
+    return items[0], sep, items[1]
+
+try:
+    rpartition = str.rpartition
+except AttributeError: # Python <= 2.4
+    rpartition = _compat_rpartition
