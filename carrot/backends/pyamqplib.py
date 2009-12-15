@@ -156,11 +156,12 @@ class Backend(BaseBackend):
                                              durable=durable,
                                              auto_delete=auto_delete)
 
-    def queue_bind(self, queue, exchange, routing_key):
+    def queue_bind(self, queue, exchange, routing_key, arguments=None):
         """Bind queue to an exchange using a routing key."""
         return self.channel.queue_bind(queue=queue,
                                        exchange=exchange,
-                                       routing_key=routing_key)
+                                       routing_key=routing_key,
+                                       arguments=arguments)
 
     def message_to_python(self, raw_message):
         """Convert encoded message body back to a Python value."""
@@ -230,8 +231,12 @@ class Backend(BaseBackend):
         return message
 
     def publish(self, message, exchange, routing_key, mandatory=None,
-            immediate=None):
+            immediate=None, headers=None):
         """Publish a message to a named exchange."""
+
+        if headers:
+            message.properties["headers"] = headers
+
         ret = self.channel.basic_publish(message, exchange=exchange,
                                          routing_key=routing_key,
                                          mandatory=mandatory,
@@ -241,24 +246,9 @@ class Backend(BaseBackend):
 
     def qos(self, prefetch_size, prefetch_count, apply_global=False):
         """Request specific Quality of Service."""
-        print("APPLYING QOS: s:%s c:%s g:%s" % (prefetch_size, prefetch_count,
-            apply_global))
         self.channel.basic_qos(prefetch_size, prefetch_count,
                                 apply_global)
 
     def flow(self, active):
         """Enable/disable flow from peer."""
         self.channel.flow(active)
-
-    def encode_table(self, pydict):
-        """Convert python dictionary into AMQP table format."""
-        writer = AMQPWriter()
-        writer.write_table(pydict)
-        return writer.getvalue()
-
-    def decode_table(self, table):
-        """Decode an AMQP table into a python dictionary."""
-        if isinstance(table, unicode):
-            table = table.encode("utf-8")
-        return AMQPReader(table).read_table()
-
