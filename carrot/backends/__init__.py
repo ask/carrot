@@ -16,6 +16,7 @@ BACKEND_ALIASES = {
     "mem": "carrot.backends.queue.Backend",
     "pika": "carrot.backends.pikachu.Backend",
     "pikachu": "carrot.backends.pikachu.Backend",
+    "asyncpika": "carrot.backends.pikachu.AsyncoreBackend",
 }
 
 _backend_cache = {}
