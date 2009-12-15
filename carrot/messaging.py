@@ -65,7 +65,6 @@ class Consumer(object):
                 routing keys ``"usd.stock"`` and ``"eur.stock.db"`` but not
                 ``"stock.nasdaq"``.
 
-
     .. attribute:: durable
 
         Durable exchanges remain active when a server restarts. Non-durable
@@ -117,8 +116,8 @@ class Consumer(object):
                 ``"all"`` implies an ``AND`` (all pairs must match) and
                 ``"any"`` implies ``OR`` (at least one pair must match).
 
-                *NOTE*: carrot has poor support for header exchanges at
-                    this point.
+                Use the :attr:`routing_key`` is used to specify the arguments,
+                the same when sending messages.
 
             This description of AMQP exchange types was shamelessly stolen
             from the blog post `AMQP in 10 minutes: Part 4`_ by
@@ -257,6 +256,11 @@ class Consumer(object):
     def declare(self):
         """Declares the queue, the exchange and binds the queue to
         the exchange."""
+        arguments = None
+        routing_key = self.routing_key
+        if self.exchange_type == "headers":
+            arguments, routing_key = routing_key, ""
+
         if self.queue:
             self.backend.queue_declare(queue=self.queue, durable=self.durable,
                                        exclusive=self.exclusive,
@@ -268,11 +272,10 @@ class Consumer(object):
                                           durable=self.durable,
                                           auto_delete=self.auto_delete)
         if self.queue:
-            routing_key = self.routing_key
-            if self.exchange_type == "headers":
-                routing_key = self.backend.encode_table(routing_key)
-            self.backend.queue_bind(queue=self.queue, exchange=self.exchange,
-                                    routing_key=routing_key)
+            self.backend.queue_bind(queue=self.queue,
+                                    exchange=self.exchange,
+                                    routing_key=routing_key,
+                                    arguments=arguments)
         self._closed = False
         return self
 
@@ -727,10 +730,12 @@ class Publisher(object):
         :keyword serializer: Override the default :attr:`serializer`.
 
         """
-        if not routing_key:
-            routing_key = self.routing_key
+        headers = None
+        routing_key = routing_key or self.routing_key
+
         if self.exchange_type == "headers":
-            routing_key = self.backend.encode_table(routing_key)
+            headers, routing_key = routing_key, ""
+
 
         message = self.create_message(message_data, priority=priority,
                                       delivery_mode=delivery_mode,
@@ -739,7 +744,8 @@ class Publisher(object):
                                       serializer=serializer)
         self.backend.publish(message,
                              exchange=self.exchange, routing_key=routing_key,
-                             mandatory=mandatory, immediate=immediate)
+                             mandatory=mandatory, immediate=immediate,
+                             headers=headers)
 
     def close(self):
         """Close connection to queue."""
