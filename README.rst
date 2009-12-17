@@ -155,11 +155,11 @@ Creating a connection
     ``carrot.connection.DjangoBrokerConnection`` class instead, which loads
     the connection settings from your ``settings.py``::
 
-       AMQP_HOST = "localhost"
-       AMQP_PORT = 5672
-       AMQP_USER = "test"
-       AMQP_PASSWORD = "secret"
-       AMQP_VHOST = "/test"
+       BROKER_HOST = "localhost"
+       BROKER_PORT = 5672
+       BROKER_USER = "test"
+       BROKER_PASSWORD = "secret"
+       BROKER_VHOST = "/test"
 
     Then create a connection by doing:
 
