@@ -569,12 +569,12 @@ class Publisher(object):
         The default delivery mode used for messages. The value is an integer.
         The following delivery modes are supported by (at least) RabbitMQ:
 
-            * 1
+            * 1 or Publisher.NONE_PERSISTENT_DELIVERY_MODE
 
                 The message is non-persistent. Which means it is stored in
                 memory only, and is lost if the server dies or restarts.
 
-            * 2
+            * 2 or Publisher.PERSISTENT_DELIVERY_MODE
                 The message is persistent. Which means the message is
                 stored both in-memory, and on disk, and therefore
                 preserved if the server dies or restarts.
@@ -612,9 +612,12 @@ class Publisher(object):
 
     """
 
+    NONE_PERSISTENT_DELIVERY_MODE = 1
+    PERSISTENT_DELIVERY_MODE = 2
+
     exchange = ""
     routing_key = ""
-    delivery_mode = 2 # Persistent
+    delivery_mode = Publisher.PERSISTENT_DELIVERY_MODE # Persistent
     _closed = True
     exchange_type = "direct"
     durable = True
