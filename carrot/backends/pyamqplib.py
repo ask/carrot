@@ -18,6 +18,8 @@ DEFAULT_PORT = 5672
 
 class Connection(amqp.Connection):
 
+    def wait_any(self, allowed_methods=None):
+        return self.wait_multi(self.channels.values())
 
     def wait_multi(self, channels, allowed_methods=None):
         """
@@ -51,13 +53,15 @@ class Connection(amqp.Connection):
 
     def _wait_multiple(self, channel_ids, allowed_methods):
         for channel_id in channel_ids:
-            for queued_method in self.channels[channel_id].method_queue:
+            method_queue = self.channels[channel_id].method_queue
+            for queued_method in method_queue:
                 method_sig = queued_method[0]
                 if (allowed_methods is None) \
                 or (method_sig in allowed_methods) \
                 or (method_sig == (20, 40)):
                     method_queue.remove(queued_method)
-                    return queued_method
+                    method_sig, args, content = queued_method
+                    return channel_id, method_sig, args, content
 
         #
         # Nothing queued, need to wait for a method from the peer
