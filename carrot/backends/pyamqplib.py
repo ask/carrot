@@ -18,15 +18,12 @@ DEFAULT_PORT = 5672
 
 class Connection(amqp.Connection):
 
-    def wait_any(self, allowed_methods=None):
+    def drain_events(self, allowed_methods=None):
+        """Wait for an event on any channel."""
         return self.wait_multi(self.channels.values())
 
     def wait_multi(self, channels, allowed_methods=None):
-        """
-        Wait for a method that matches our allowed_methods parameter (the
-        default value of None means match any method), and dispatch to it.
-
-        """
+        """Wait for an event on a channel."""
         chanmap = dict((chan.channel_id, chan) for chan in channels)
         chanid, method_sig, args, content = self._wait_multiple(
                 chanmap.keys(), allowed_methods)
@@ -63,9 +60,7 @@ class Connection(amqp.Connection):
                     method_sig, args, content = queued_method
                     return channel_id, method_sig, args, content
 
-        #
         # Nothing queued, need to wait for a method from the peer
-        #
         while True:
             channel, method_sig, args, content = \
                 self.method_reader.read_method()
@@ -76,10 +71,8 @@ class Connection(amqp.Connection):
                 or (method_sig == (20, 40))):
                 return channel, method_sig, args, content
 
-            #
-            # Not the channel and/or method we were looking for.  Queue
+            # Not the channel and/or method we were looking for. Queue
             # this method for later
-            #
             self.channels[channel].method_queue.append((method_sig,
                                                         args,
                                                         content))
