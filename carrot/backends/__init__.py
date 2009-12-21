@@ -16,6 +16,9 @@ BACKEND_ALIASES = {
     "stompy": "carrot.backends.pystomp.Backend",
     "memory": "carrot.backends.queue.Backend",
     "mem": "carrot.backends.queue.Backend",
+    "pika": "carrot.backends.pikachu.Backend",
+    "pikachu": "carrot.backends.pikachu.Backend",
+    "asyncpika": "carrot.backends.pikachu.AsyncoreBackend",
 }
 
 _backend_cache = {}
