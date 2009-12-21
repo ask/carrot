@@ -16,6 +16,79 @@ import weakref
 DEFAULT_PORT = 5672
 
 
+class Connection(amqp.Connection):
+
+
+    def wait_multi(self, channels, allowed_methods=None):
+        """
+        Wait for a method that matches our allowed_methods parameter (the
+        default value of None means match any method), and dispatch to it.
+
+        """
+        chanmap = dict((chan.channel_id, chan) for chan in channels)
+        chanid, method_sig, args, content = self._wait_multiple(
+                chanmap.keys(), allowed_methods)
+
+        channel = chanmap[chanid]
+
+        if content \
+        and channel.auto_decode \
+        and hasattr(content, 'content_encoding'):
+            try:
+                content.body = content.body.decode(content.content_encoding)
+            except Exception:
+                pass
+
+        amqp_method = channel._METHOD_MAP.get(method_sig, None)
+
+        if amqp_method is None:
+            raise Exception('Unknown AMQP method (%d, %d)' % method_sig)
+
+        if content is None:
+            return amqp_method(channel, args)
+        else:
+            return amqp_method(channel, args, content)
+
+    def _wait_multiple(self, channel_ids, allowed_methods):
+        for channel_id in channel_ids:
+            for queued_method in self.channels[channel_id].method_queue:
+                method_sig = queued_method[0]
+                if (allowed_methods is None) \
+                or (method_sig in allowed_methods) \
+                or (method_sig == (20, 40)):
+                    method_queue.remove(queued_method)
+                    return queued_method
+
+        #
+        # Nothing queued, need to wait for a method from the peer
+        #
+        while True:
+            channel, method_sig, args, content = \
+                self.method_reader.read_method()
+
+            if (channel in channel_ids) \
+            and ((allowed_methods is None) \
+                or (method_sig in allowed_methods) \
+                or (method_sig == (20, 40))):
+                return channel, method_sig, args, content
+
+            #
+            # Not the channel and/or method we were looking for.  Queue
+            # this method for later
+            #
+            self.channels[channel].method_queue.append((method_sig,
+                                                        args,
+                                                        content))
+
+            #
+            # If we just queued up a method for channel 0 (the Connection
+            # itself) it's probably a close method in reaction to some
+            # error, so deal with it right away.
+            #
+            if channel == 0:
+                self.wait()
+
+
 class QueueAlreadyExistsWarning(UserWarning):
     """A queue with that name already exists, so a recently changed
     ``routing_key`` or other settings might be ignored unless you
@@ -104,13 +177,13 @@ class Backend(BaseBackend):
         conninfo = self.connection
         if not conninfo.port:
             conninfo.port = self.default_port
-        return amqp.Connection(host=conninfo.host,
-                               userid=conninfo.userid,
-                               password=conninfo.password,
-                               virtual_host=conninfo.virtual_host,
-                               insist=conninfo.insist,
-                               ssl=conninfo.ssl,
-                               connect_timeout=conninfo.connect_timeout)
+        return Connection(host=conninfo.host,
+                          userid=conninfo.userid,
+                          password=conninfo.password,
+                          virtual_host=conninfo.virtual_host,
+                          insist=conninfo.insist,
+                          ssl=conninfo.ssl,
+                          connect_timeout=conninfo.connect_timeout)
 
     def close_connection(self, connection):
         """Close the AMQP broker connection."""
