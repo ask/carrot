@@ -33,7 +33,7 @@ class Message(BaseMessage):
 
 
 
-class Backend(BaseBackend):
+class SyncBackend(BaseBackend):
     default_port = DEFAULT_PORT
     _connection_cls = pika.BlockingConnection
 
