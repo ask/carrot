@@ -2,7 +2,7 @@
  carrot - AMQP Messaging Framework for Python
 ##############################################
 
-:Version: 0.8.1
+:Version: 0.10.0
 
 **NOTE** This release contains backward-incompatible changes.
 Please read the `Changelog`_ for more information.
@@ -23,8 +23,8 @@ same time it is a goal to re-use what is already available as much as possible.
 
 `carrot` has pluggable messaging back-ends, so it is possible to support
 several messaging systems. Currently, there is support for `AMQP`_
-(`py-amqplib`_) and `STOMP`_ (`python-stomp`_). There is also a in-memory
-backend for testing purposes that uses the `Python queue module`_.
+(`py-amqplib`_, `pika`_), `STOMP`_ (`python-stomp`_). There's also an
+in-memory backend for testing purposes, using the `Python queue module`_.
 
 Several AMQP message broker implementations exists, including `RabbitMQ`_,
 `ZeroMQ`_ and `Apache ActiveMQ`_. You'll need to have one of these installed,
@@ -45,6 +45,7 @@ refer to the `Wikipedia article about AMQP`_.
 .. _`Django`: http://www.djangoproject.com/
 .. _`Rabbits and warrens`: http://blogs.digitar.com/jjww/2009/01/rabbits-and-warrens/
 .. _`py-amqplib`: http://barryp.org/software/py-amqplib/
+.. _`pika`: http://github.com/tonyg/pika
 .. _`Wikipedia article about AMQP`: http://en.wikipedia.org/wiki/AMQP
 
 Documentation
