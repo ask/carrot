@@ -104,6 +104,10 @@ class BaseBackend(object):
         """Declare a queue by name."""
         pass
 
+    def queue_delete(self, *args, **kwargs):
+        """Delete a queue by name."""
+        pass
+
     def exchange_declare(self, *args, **kwargs):
         """Declare an exchange by name."""
         pass
