@@ -6,6 +6,7 @@ carrot.serialization mod reference/carrot.serialization.html
 carrot.backends.queue mod reference/carrot.backends.queue.html
 carrot.backends.pyamqplib mod reference/carrot.backends.pyamqplib.html
 carrot.messaging mod reference/carrot.messaging.html
+carrot.utils mod reference/carrot.utils.html
 carrot.backends.base mod reference/carrot.backends.base.html
 carrot.backends mod reference/carrot.backends.html
 carrot.backends.base.BaseBackend.close method reference/carrot.backends.base.html
@@ -29,6 +30,7 @@ carrot.serialization.registry data reference/carrot.serialization.html
 carrot.backends.pyamqplib.Backend.connection attribute reference/carrot.backends.pyamqplib.html
 carrot.messaging.Publisher.exchange attribute reference/carrot.messaging.html
 carrot.backends.get_backend_cls function reference/carrot.backends.html
+carrot.utils.partition attribute reference/carrot.utils.html
 carrot.backends.pyamqplib.Backend.cancel method reference/carrot.backends.pyamqplib.html
 carrot.messaging.Messaging.send method reference/carrot.messaging.html
 carrot.backends.queue.Backend.publish method reference/carrot.backends.queue.html
@@ -61,12 +63,14 @@ carrot.messaging.ConsumerSet.discard_all method reference/carrot.messaging.html
 carrot.connection.BrokerConnection class reference/carrot.connection.html
 carrot.connection.BrokerConnection.get_backend_cls method reference/carrot.connection.html
 carrot.messaging.Publisher.routing_key attribute reference/carrot.messaging.html
+carrot.utils.gen_unique_id function reference/carrot.utils.html
 carrot.connection.BrokerConnection.insist attribute reference/carrot.connection.html
 carrot.backends.base.BaseBackend.queue_declare method reference/carrot.backends.base.html
 carrot.serialization.SerializerNotInstalled exception reference/carrot.serialization.html
 carrot.messaging.Messaging.register_callback method reference/carrot.messaging.html
 carrot.backends.base.BaseBackend.prepare_message method reference/carrot.backends.base.html
 carrot.messaging.Consumer.auto_ack attribute reference/carrot.messaging.html
+carrot.utils.rpartition attribute reference/carrot.utils.html
 carrot.backends.queue.Backend.purge method reference/carrot.backends.queue.html
 carrot.connection.BrokerConnection.create_backend method reference/carrot.connection.html
 carrot.backends.pyamqplib.Backend.queue_declare method reference/carrot.backends.pyamqplib.html
