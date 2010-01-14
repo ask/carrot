@@ -32,7 +32,6 @@ class Message(BaseMessage):
         super(Message, self).__init__(backend, **kwargs)
 
 
-
 class SyncBackend(BaseBackend):
     default_port = DEFAULT_PORT
     _connection_cls = pika.BlockingConnection

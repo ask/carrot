@@ -24,7 +24,6 @@ BACKEND_ALIASES = {
 _backend_cache = {}
 
 
-
 def resolve_backend(backend=None):
     backend = BACKEND_ALIASES.get(backend, backend)
     backend_module_name, _, backend_cls_name = rpartition(backend, ".")
