@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.8.0 documentation</title>
+    <title>carrot - AMQP Messaging Framework for Python &mdash; Carrot v0.10.0 documentation</title>
     <link rel="stylesheet" href="static/nature.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '0.8.0',
+        URL_ROOT:    '#',
+        VERSION:     '0.10.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.8.0 documentation" href="index.html" />
+    <link rel="top" title="Carrot v0.10.0 documentation" href="index.html" />
     <link rel="next" title="Frequently Asked Questions" href="faq.html" />
     <link rel="prev" title="Carrot Documentation" href="index.html" /> 
   </head>
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="index.html" title="Carrot Documentation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Carrot v0.8.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.10.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,7 +54,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.8.0</td>
+<tr class="field"><th class="field-name">Version:</th><td class="field-body">0.10.0</td>
 </tr>
 </tbody>
 </table>
@@ -70,8 +70,8 @@ providing a high-level interface for producing and consuming messages. At the
 same time it is a goal to re-use what is already available as much as possible.</p>
 <p><cite>carrot</cite> has pluggable messaging back-ends, so it is possible to support
 several messaging systems. Currently, there is support for <a class="reference external" href="http://amqp.org">AMQP</a>
-(<a class="reference external" href="http://barryp.org/software/py-amqplib/">py-amqplib</a>) and <a class="reference external" href="http://stomp.codehaus.org">STOMP</a> (<a class="reference external" href="http://bitbucket.org/asksol/python-stomp">python-stomp</a>). There is also a in-memory
-backend for testing purposes that uses the <a class="reference external" href="http://docs.python.org/library/queue.html">Python queue module</a>.</p>
+(<a class="reference external" href="http://barryp.org/software/py-amqplib/">py-amqplib</a>, <a class="reference external" href="http://github.com/tonyg/pika">pika</a>), <a class="reference external" href="http://stomp.codehaus.org">STOMP</a> (<a class="reference external" href="http://bitbucket.org/asksol/python-stomp">python-stomp</a>). There&#8217;s also an
+in-memory backend for testing purposes, using the <a class="reference external" href="http://docs.python.org/library/queue.html">Python queue module</a>.</p>
 <p>Several AMQP message broker implementations exists, including <a class="reference external" href="http://www.rabbitmq.com/">RabbitMQ</a>,
 <a class="reference external" href="http://www.zeromq.org/">ZeroMQ</a> and <a class="reference external" href="http://activemq.apache.org/">Apache ActiveMQ</a>. You&#8217;ll need to have one of these installed,
 personally we&#8217;ve been using <a class="reference external" href="http://www.rabbitmq.com/">RabbitMQ</a>.</p>
@@ -191,11 +191,11 @@ your broker:</p>
 <p>If you&#8217;re using Django you can use the
 <tt class="docutils literal"><span class="pre">carrot.connection.DjangoBrokerConnection</span></tt> class instead, which loads
 the connection settings from your <tt class="docutils literal"><span class="pre">settings.py</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">AMQP_HOST</span> <span class="o">=</span> <span class="s">&quot;localhost&quot;</span>
-<span class="n">AMQP_PORT</span> <span class="o">=</span> <span class="mi">5672</span>
-<span class="n">AMQP_USER</span> <span class="o">=</span> <span class="s">&quot;test&quot;</span>
-<span class="n">AMQP_PASSWORD</span> <span class="o">=</span> <span class="s">&quot;secret&quot;</span>
-<span class="n">AMQP_VHOST</span> <span class="o">=</span> <span class="s">&quot;/test&quot;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">BROKER_HOST</span> <span class="o">=</span> <span class="s">&quot;localhost&quot;</span>
+<span class="n">BROKER_PORT</span> <span class="o">=</span> <span class="mi">5672</span>
+<span class="n">BROKER_USER</span> <span class="o">=</span> <span class="s">&quot;test&quot;</span>
+<span class="n">BROKER_PASSWORD</span> <span class="o">=</span> <span class="s">&quot;secret&quot;</span>
+<span class="n">BROKER_VHOST</span> <span class="o">=</span> <span class="s">&quot;/test&quot;</span>
 </pre></div>
 </div>
 <p>Then create a connection by doing:</p>
@@ -423,7 +423,7 @@ file in the top distribution directory for the full license text.</p>
         <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference external" href="">carrot - AMQP Messaging Framework for Python</a><ul>
+<li><a class="reference external" href="#">carrot - AMQP Messaging Framework for Python</a><ul>
 <li><a class="reference external" href="#introduction">Introduction</a></li>
 <li><a class="reference external" href="#documentation">Documentation</a><ul>
 <li><a class="reference external" href="#installation">Installation</a></li>
@@ -494,12 +494,12 @@ file in the top distribution directory for the full license text.</p>
         <li class="right" >
           <a href="index.html" title="Carrot Documentation"
              >previous</a> |</li>
-        <li><a href="index.html">Carrot v0.8.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.10.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
       &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
     </div>
   </body>
 </html>

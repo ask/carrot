@@ -2,6 +2,41 @@
  Change history
 ================
 
+0.10.0 [2009-12-21 02:17 P.M CEST]
+----------------------------------
+
+* Added experimental Pika backend for async support. See
+  http://github.com/tonyg/pika
+
+* Python 2.4 compatibility.
+
+* Added intent revealing names for use with the delivery_mode attribute
+
+* The amqplib internal connection now supports waiting for events on any
+  channel, so as to not block the event loop on a single channel. Example:
+
+		>>> from carrot.connection import BrokerConnection
+		>>> from carrot.messaging import Consumer, Publisher
+		>>> from functools import partial
+		>>> connection = BrokerConnection(...)
+		>>> consumer1 = Consumer(queue="foo", exchange="foo")
+		>>> consumer2 = Consumer(queue="bar", exchange="bar")
+		>>> def callback(channel, message_data, message):
+		...     print(%s: %s" % (channel, message_data))
+		>>> consumer1.register_callback(partial(callback, "channel1"))
+		>>> consumer2.register_callback(partial(callback, "channel2"))
+
+		>>> pub1 = Publisher(exchange="foo")
+		>>> pub2 = Publisher(exchange="bar")
+		>>> [(i % 2 and pub1 or pub2).send({"hello": "world"})
+		...		for i in range(100)]
+
+		>>> while True:
+		... 	connection.connection.drain_events()
+
+	But please be sure to note that this is an internal feature only,
+	hopefully we will have a public interface for this for v1.0.
+
 0.8.0 [2009-11-16 05:11 P.M CEST]
 ---------------------------------
 

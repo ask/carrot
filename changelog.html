@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Change history &mdash; Carrot v0.8.0 documentation</title>
+    <title>Change history &mdash; Carrot v0.10.0 documentation</title>
     <link rel="stylesheet" href="static/nature.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '0.8.0',
+        URL_ROOT:    '#',
+        VERSION:     '0.10.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.8.0 documentation" href="index.html" />
+    <link rel="top" title="Carrot v0.10.0 documentation" href="index.html" />
     <link rel="prev" title="carrot.serialization" href="reference/carrot.serialization.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="reference/carrot.serialization.html" title="carrot.serialization"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Carrot v0.8.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.10.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -47,7 +47,50 @@
   <div class="section" id="change-history">
 <h1>Change history<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="p-m-cest">
-<h2>0.8.0 [2009-11-16 05:11 P.M CEST]<a class="headerlink" href="#p-m-cest" title="Permalink to this headline">¶</a></h2>
+<h2>0.10.0 [2009-12-21 02:17 P.M CEST]<a class="headerlink" href="#p-m-cest" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Added experimental Pika backend for async support. See
+<a class="reference external" href="http://github.com/tonyg/pika">http://github.com/tonyg/pika</a></p>
+</li>
+<li><p class="first">Python 2.4 compatibility.</p>
+</li>
+<li><p class="first">Added intent revealing names for use with the delivery_mode attribute</p>
+</li>
+<li><p class="first">The amqplib internal connection now supports waiting for events on any
+channel, so as to not block the event loop on a single channel. Example:</p>
+<blockquote>
+<blockquote>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.connection</span> <span class="kn">import</span> <span class="n">BrokerConnection</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">carrot.messaging</span> <span class="kn">import</span> <span class="n">Consumer</span><span class="p">,</span> <span class="n">Publisher</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">connection</span> <span class="o">=</span> <span class="n">BrokerConnection</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer1</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer2</span> <span class="o">=</span> <span class="n">Consumer</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="s">&quot;bar&quot;</span><span class="p">,</span> <span class="n">exchange</span><span class="o">=</span><span class="s">&quot;bar&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">message_data</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="o">%</span><span class="n">s</span><span class="p">:</span> <span class="o">%</span><span class="n">s</span><span class="s">&quot; % (channel, message_data))</span><span class="gp">&gt;&gt;&gt; </span>
+<span class="n">consumer1</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="s">&quot;channel1&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">consumer2</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="s">&quot;channel2&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pub1</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s">&quot;foo&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pub2</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">exchange</span><span class="o">=</span><span class="s">&quot;bar&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">pub1</span> <span class="ow">or</span> <span class="n">pub2</span><span class="p">)</span><span class="o">.</span><span class="n">send</span><span class="p">({</span><span class="s">&quot;hello&quot;</span><span class="p">:</span> <span class="s">&quot;world&quot;</span><span class="p">})</span>
+<span class="gp">... </span>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">connection</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">drain_events</span><span class="p">()</span>
+</pre></div>
+</div>
+</blockquote>
+<p>But please be sure to note that this is an internal feature only,
+hopefully we will have a public interface for this for v1.0.</p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>0.8.0 [2009-11-16 05:11 P.M CEST]<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p><strong>BACKWARD INCOMPATIBLE CHANGES</strong></p>
 <ul class="simple">
 <li>Django: <tt class="docutils literal"><span class="pre">AMQP_SERVER</span></tt> has been deprecated and renamed to <tt class="docutils literal"><span class="pre">BROKER_HOST</span></tt>.
@@ -105,8 +148,8 @@ behaviour of automatically declaring the queue, exchange and queue binding.</p>
 </li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h2>0.6.0 [2009-09-17 16:41 P.M CET]<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>0.6.0 [2009-09-17 16:41 P.M CET]<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <p><strong>BACKWARD INCOMPATIBLE CHANGES</strong></p>
 <ul>
 <li><dl class="first docutils">
@@ -183,8 +226,8 @@ explicitly set it.</p>
 </li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h2>0.5.1 [2009-07-19 06:19 P.M CET]<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h2>0.5.1 [2009-07-19 06:19 P.M CET]<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>Handle messages without content_encoding attribute set.</li>
@@ -193,8 +236,8 @@ explicitly set it.</p>
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id6">
-<h2>0.5.0 [2009-06-25 08:16 P.M CET]<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h2>0.5.0 [2009-06-25 08:16 P.M CET]<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p><strong>BACKWARD-INCOMPATIBLE CHANGES</strong></p>
 <blockquote>
 <ul>
@@ -235,8 +278,8 @@ the default <tt class="docutils literal"><span class="pre">JSON</span></tt> seri
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id7">
-<h2>0.4.5 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id8">
+<h2>0.4.5 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
 <p><strong>BACKWARD-INCOMPATIBLE CHANGES</strong></p>
 <blockquote>
 <ul>
@@ -257,24 +300,24 @@ the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id8">
-<h2>0.4.4 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h2>0.4.4 [2009-06-15 01:58 P.M CET]<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>__init__.pyc was included in the distribution by error.</li>
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id9">
-<h2>0.4.3 [2009-06-13 09:26 P.M CET]<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id10">
+<h2>0.4.3 [2009-06-13 09:26 P.M CET]<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>Fix typo with long_description in <tt class="docutils literal"><span class="pre">setup.py</span></tt>.</li>
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id10">
-<h2>0.4.2 [2009-06-13 08:30 P.M CET]<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id11">
+<h2>0.4.2 [2009-06-13 08:30 P.M CET]<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul>
 <li><dl class="first docutils">
@@ -292,8 +335,8 @@ the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id11">
-<h2>0.4.1 [2009-06-08 04:21 P.M CET]<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id12">
+<h2>0.4.1 [2009-06-08 04:21 P.M CET]<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><dl class="first docutils">
 <dt>Consumer/Publisher now correctly sets the encoder/decoder if they</dt>
@@ -303,8 +346,8 @@ the <tt class="docutils literal"><span class="pre">Publisher</span></tt> and the
 </li>
 </ul>
 </div>
-<div class="section" id="id12">
-<h2>0.4.0 [2009-06-06 01:39 P.M CET]<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h2>0.4.0 [2009-06-06 01:39 P.M CET]<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
 <p><strong>IMPORTANT</strong> Please don&#8217;t use <tt class="docutils literal"><span class="pre">Consumer.wait</span></tt> in production. Use either
 of <tt class="docutils literal"><span class="pre">Consumer.iterconsume</span></tt> or <tt class="docutils literal"><span class="pre">Consumer.iterqueue</span></tt>.</p>
 <p><strong>IMPORTANT</strong> The <tt class="docutils literal"><span class="pre">ack</span></tt> argument to <tt class="docutils literal"><span class="pre">Consumer.process_next</span></tt> has been
@@ -481,16 +524,16 @@ by registering callbacks by using <tt class="docutils literal"><span class="pre"
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id13">
-<h2>0.3.9 [2009-05-18 04:49 P.M CET]<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id14">
+<h2>0.3.9 [2009-05-18 04:49 P.M CET]<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>Consumer.wait() now works properly again. Thanks Alexander Solovyov!</li>
 </ul>
 </blockquote>
 </div>
-<div class="section" id="id14">
-<h2>0.3.8 [2009-05-11 02:14 P.M CET]<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id15">
+<h2>0.3.8 [2009-05-11 02:14 P.M CET]<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul>
 <li><dl class="first docutils">
@@ -518,8 +561,8 @@ it to consumers/publishers. e.g before when you did</p>
 publisher/consumer.</p>
 </blockquote>
 </div>
-<div class="section" id="id15">
-<h2>0.2.1 [2009-03-24 05:48 P.M CET]<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id16">
+<h2>0.2.1 [2009-03-24 05:48 P.M CET]<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>Fix typo &#8220;package&#8221; -&gt; &#8220;packages&#8221; in setup.py</li>
 </ul>
@@ -530,8 +573,8 @@ publisher/consumer.</p>
 <li>hasty bugfix release, fixed syntax errors.</li>
 </ul>
 </div>
-<div class="section" id="id16">
-<h2>0.1.0 [2009-03-24 05:16 P.M ]`<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id17">
+<h2>0.1.0 [2009-03-24 05:16 P.M ]`<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <ul class="simple">
 <li>Initial release</li>
@@ -548,28 +591,29 @@ publisher/consumer.</p>
         <div class="sphinxsidebarwrapper">
             <h3><a href="index.html">Table Of Contents</a></h3>
             <ul>
-<li><a class="reference external" href="">Change history</a><ul>
-<li><a class="reference external" href="#p-m-cest">0.8.0 [2009-11-16 05:11 P.M CEST]</a></li>
+<li><a class="reference external" href="#">Change history</a><ul>
+<li><a class="reference external" href="#p-m-cest">0.10.0 [2009-12-21 02:17 P.M CEST]</a></li>
+<li><a class="reference external" href="#id1">0.8.0 [2009-11-16 05:11 P.M CEST]</a></li>
 <li><a class="reference external" href="#p-m-cet">0.6.1 [2009-09-30 12:29 P.M CET]</a></li>
-<li><a class="reference external" href="#id4">0.6.0 [2009-09-17 16:41 P.M CET]</a></li>
-<li><a class="reference external" href="#id5">0.5.1 [2009-07-19 06:19 P.M CET]</a></li>
-<li><a class="reference external" href="#id6">0.5.0 [2009-06-25 08:16 P.M CET]</a></li>
-<li><a class="reference external" href="#id7">0.4.5 [2009-06-15 01:58 P.M CET]</a></li>
-<li><a class="reference external" href="#id8">0.4.4 [2009-06-15 01:58 P.M CET]</a></li>
-<li><a class="reference external" href="#id9">0.4.3 [2009-06-13 09:26 P.M CET]</a></li>
-<li><a class="reference external" href="#id10">0.4.2 [2009-06-13 08:30 P.M CET]</a></li>
-<li><a class="reference external" href="#id11">0.4.1 [2009-06-08 04:21 P.M CET]</a></li>
-<li><a class="reference external" href="#id12">0.4.0 [2009-06-06 01:39 P.M CET]</a></li>
+<li><a class="reference external" href="#id5">0.6.0 [2009-09-17 16:41 P.M CET]</a></li>
+<li><a class="reference external" href="#id6">0.5.1 [2009-07-19 06:19 P.M CET]</a></li>
+<li><a class="reference external" href="#id7">0.5.0 [2009-06-25 08:16 P.M CET]</a></li>
+<li><a class="reference external" href="#id8">0.4.5 [2009-06-15 01:58 P.M CET]</a></li>
+<li><a class="reference external" href="#id9">0.4.4 [2009-06-15 01:58 P.M CET]</a></li>
+<li><a class="reference external" href="#id10">0.4.3 [2009-06-13 09:26 P.M CET]</a></li>
+<li><a class="reference external" href="#id11">0.4.2 [2009-06-13 08:30 P.M CET]</a></li>
+<li><a class="reference external" href="#id12">0.4.1 [2009-06-08 04:21 P.M CET]</a></li>
+<li><a class="reference external" href="#id13">0.4.0 [2009-06-06 01:39 P.M CET]</a></li>
 <li><a class="reference external" href="#pre7-2009-06-03-05-08-p-m-cet">0.4.0-pre7 [2009-06-03 05:08 P.M CET]</a></li>
 <li><a class="reference external" href="#pre6-2009-06-03-04-55-p-m-cet">0.4.0-pre6 [2009-06-03 04:55 P.M CET]</a></li>
 <li><a class="reference external" href="#pre3-2009-05-29-02-27-p-m-cet">0.4.0-pre3 [2009-05-29 02:27 P.M CET]</a></li>
 <li><a class="reference external" href="#pre2-2009-05-29-02-27-p-m-cet">0.4.0-pre2 [2009-05-29 02:27 P.M CET]</a></li>
 <li><a class="reference external" href="#pre1-2009-05-27-04-27-p-m-cet">0.4.0-pre1 [2009-05-27 04:27 P.M CET]</a></li>
-<li><a class="reference external" href="#id13">0.3.9 [2009-05-18 04:49 P.M CET]</a></li>
-<li><a class="reference external" href="#id14">0.3.8 [2009-05-11 02:14 P.M CET]</a></li>
-<li><a class="reference external" href="#id15">0.2.1 [2009-03-24 05:48 P.M CET]</a></li>
+<li><a class="reference external" href="#id14">0.3.9 [2009-05-18 04:49 P.M CET]</a></li>
+<li><a class="reference external" href="#id15">0.3.8 [2009-05-11 02:14 P.M CET]</a></li>
+<li><a class="reference external" href="#id16">0.2.1 [2009-03-24 05:48 P.M CET]</a></li>
 <li><a class="reference external" href="#p-m">0.2.0 [2009-03-24 05:23 P.M ]`</a></li>
-<li><a class="reference external" href="#id16">0.1.0 [2009-03-24 05:16 P.M ]`</a></li>
+<li><a class="reference external" href="#id17">0.1.0 [2009-03-24 05:16 P.M ]`</a></li>
 </ul>
 </li>
 </ul>
@@ -611,12 +655,12 @@ publisher/consumer.</p>
         <li class="right" >
           <a href="reference/carrot.serialization.html" title="carrot.serialization"
              >previous</a> |</li>
-        <li><a href="index.html">Carrot v0.8.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Carrot v0.10.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
       &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
     </div>
   </body>
 </html>

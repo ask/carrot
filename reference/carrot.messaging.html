@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.messaging &mdash; Carrot v0.8.0 documentation</title>
+    <title>carrot.messaging &mdash; Carrot v0.10.0 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.0',
+        VERSION:     '0.10.0',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -19,7 +19,7 @@
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.8.0 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.10.0 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends" href="carrot.backends.html" />
     <link rel="prev" title="carrot.connection" href="carrot.connection.html" /> 
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="carrot.connection.html" title="carrot.connection"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.8.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.10.0 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -188,11 +188,8 @@ containing headers and values (optional). A special argument
 named &#8220;x-match&#8221; determines the matching algorithm, where
 <tt class="docutils literal"><span class="pre">&quot;all&quot;</span></tt> implies an <tt class="docutils literal"><span class="pre">AND</span></tt> (all pairs must match) and
 <tt class="docutils literal"><span class="pre">&quot;any&quot;</span></tt> implies <tt class="docutils literal"><span class="pre">OR</span></tt> (at least one pair must match).</p>
-<dl class="docutils">
-<dt><em>NOTE</em>: carrot has poor support for header exchanges at</dt>
-<dd><p class="first last">this point.</p>
-</dd>
-</dl>
+<p>Use the <tt class="xref docutils literal"><span class="pre">routing_key`</span></tt> is used to specify the arguments,
+the same when sending messages.</p>
 </blockquote>
 </li>
 </ul>
@@ -729,14 +726,14 @@ You can override the routing key by passing an explicit
 The following delivery modes are supported by (at least) RabbitMQ:</p>
 <blockquote>
 <ul>
-<li><p class="first">1</p>
+<li><p class="first">1 or &#8220;non-persistent&#8221;</p>
 <blockquote>
 <p>The message is non-persistent. Which means it is stored in
 memory only, and is lost if the server dies or restarts.</p>
 </blockquote>
 </li>
 <li><dl class="first docutils">
-<dt>2</dt>
+<dt>2 or &#8220;persistent&#8221;</dt>
 <dd><p class="first last">The message is persistent. Which means the message is
 stored both in-memory, and on disk, and therefore
 preserved if the server dies or restarts.</p>
@@ -895,13 +892,13 @@ properly sets content_encoding.</li>
         <li class="right" >
           <a href="carrot.connection.html" title="carrot.connection"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.8.0 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.10.0 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
       &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
     </div>
   </body>
 </html>
