@@ -2,7 +2,7 @@
  carrot - AMQP Messaging Framework for Python
 ##############################################
 
-:Version: 0.10.0
+:Version: 0.10.1
 
 **NOTE** This release contains backward-incompatible changes.
 Please read the `Changelog`_ for more information.
@@ -257,7 +257,7 @@ Each option has its advantages and disadvantages.
     than the libraries for JSON. 
     
     If you need a more expressive set of data types and need to maintain
-    cross-language compatability, then ``YAML`` may be a better fit
+    cross-language compatibility, then ``YAML`` may be a better fit
     than the above. 
 
 To instruct carrot to use an alternate serialization method, 
@@ -328,7 +328,7 @@ re-queue the message.
 Sub-classing the messaging classes
 ----------------------------------
 
-The ``Consumer``, and ``Publisher`` classes can also be subclassed. Thus you
+The ``Consumer``, and ``Publisher`` classes can also be sub classed. Thus you
 can define the above publisher and consumer like so:
 
     >>> from carrot.messaging import Publisher, Consumer
@@ -389,5 +389,5 @@ like Github (for some reason) you're welcome to send regular patches.
 License
 =======
 
-This software is licensed under the ``New BSD License``. See the ``LICENCE``
+This software is licensed under the ``New BSD License``. See the ``LICENSE``
 file in the top distribution directory for the full license text.

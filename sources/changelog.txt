@@ -2,7 +2,12 @@
  Change history
 ================
 
-0.10.0 [2009-12-21 02:17 P.M CEST]
+0.10.1 [2010-01-16 10:17 P.M CEST]
+----------------------------------
+
+* Fixed syntax error typo in the Pika backend.
+
+0.10.0 [2010-01-15 12:08 A.M CEST]
 ----------------------------------
 
 * Added experimental Pika backend for async support. See
