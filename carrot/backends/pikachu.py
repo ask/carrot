@@ -205,5 +205,5 @@ class SyncBackend(BaseBackend):
         self.channel.flow(active)
 
 
-class AsyncoreBackend(BaseBackend):
+class AsyncoreBackend(SyncBackend):
     _connection_cls = pika.AsyncoreConnection
