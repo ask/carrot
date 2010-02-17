@@ -168,20 +168,21 @@ class BrokerConnection(object):
 AMQPConnection = BrokerConnection
 
 
-def get_django_conninfo():
+def get_django_conninfo(settings=None):
     # FIXME can't wait to remove this mess in 1.0 [askh]
     ci = {}
-    from django.conf import settings as django_settings
+    if settings is None:
+        from django.conf import settings
 
-    ci["backend_cls"] = getattr(django_settings, "CARROT_BACKEND", None)
+    ci["backend_cls"] = getattr(settings, "CARROT_BACKEND", None)
 
     for arg_name, setting_name in ARG_TO_DJANGO_SETTING.items():
         setting = "%s_%s" % (SETTING_PREFIX, setting_name)
         compat_setting = "%s_%s" % (COMPAT_SETTING_PREFIX, setting_name)
-        if hasattr(django_settings, setting):
-            ci[arg_name] = getattr(django_settings, setting, None)
-        elif hasattr(django_settings, compat_setting):
-            ci[arg_name] = getattr(django_settings, compat_setting, None)
+        if hasattr(settings, setting):
+            ci[arg_name] = getattr(settings, setting, None)
+        elif hasattr(settings, compat_setting):
+            ci[arg_name] = getattr(settings, compat_setting, None)
             warnings.warn(DeprecationWarning(SETTING_DEPRECATED_FMT % (
                 compat_setting, setting)))
 
@@ -222,7 +223,8 @@ class DjangoBrokerConnection(BrokerConnection):
 
 
     def __init__(self, *args, **kwargs):
-        kwargs = dict(get_django_conninfo(), **kwargs)
+        settings = kwargs.pop("settings", None)
+        kwargs = dict(get_django_conninfo(settings), **kwargs)
         super(DjangoBrokerConnection, self).__init__(*args, **kwargs)
 
 # For backwards compatability.
