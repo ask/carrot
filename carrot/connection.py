@@ -187,8 +187,8 @@ def get_django_conninfo(settings=None):
                 compat_setting, setting)))
 
     if "hostname" not in ci:
-        if hasattr(django_settings, "AMQP_SERVER"):
-            ci["hostname"] = django_settings.AMQP_SERVER
+        if hasattr(settings, "AMQP_SERVER"):
+            ci["hostname"] = settings.AMQP_SERVER
             warnings.warn(DeprecationWarning(
                 "AMQP_SERVER has been renamed to BROKER_HOST and is"
                 "scheduled for removal in version 1.0."))
