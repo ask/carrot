@@ -8,7 +8,7 @@ sys.path.append(os.getcwd())
 from carrot.backends.queue import Message as PyQueueMessage
 from carrot.backends.queue import Backend as PyQueueBackend
 from carrot.connection import BrokerConnection
-from carrot.messaging import Messaging
+from carrot.messaging import Messaging, Consumer, Publisher
 
 
 def create_backend():
@@ -54,6 +54,24 @@ class TestPyQueueBackend(unittest.TestCase):
         m_in_q = b.get()
         self.assertTrue(isinstance(m_in_q, PyQueueMessage))
         self.assertEquals(m_in_q.body, message_body)
+    
+    def test_consumer_interface(self):
+        to_send = ['No', 'soup', 'for', 'you!']
+        messages = []
+        def cb(message_data, message):
+            messages.append(message_data)
+        conn = BrokerConnection(backend_cls='memory')
+        consumer = Consumer(connection=conn, queue="test",
+                            exchange="test", routing_key="test")
+        consumer.register_callback(cb)
+        publisher = Publisher(connection=conn, exchange="test",
+                              routing_key="test")
+        for i in to_send:
+            publisher.send(i)
+        it = consumer.iterconsume()
+        for i in range(len(to_send)):
+            it.next()
+        self.assertEqual(messages, to_send)
 
 
 class TMessaging(Messaging):
