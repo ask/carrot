@@ -2,7 +2,30 @@
  Change history
 ================
 
-0.10.1 [2010-02-03 11:43 A.M CEST]
+0.10.3 [2010-03-08 05:01 P.M CEST]
+----------------------------------
+
+* Consumer/Publisher: A kwarg option set to ``None`` should always
+  mean "use the class default value". This was not always the case,
+  but has been fixed in this release.
+
+* DjangoBrokerConnection: Now accepts a custom ``settings`` object. E.g.:
+
+		>>> conn = DjangoBrokerConnection(settings=mysettings)
+
+* Consumer.iterconsume: Now raises :exc:`StopIteration` if the channel is
+  closed. (http://github.com/ask/carrot/issues/issue/24)
+
+* Fixed syntax error in the DjangoBrokerConnection which could be triggered
+  if some conditions were met.
+
+* setup.cfg: Disable --enable-coverage from nosetests section
+
+* Consumer.iterconsume now works properly when using the Python Queue
+  module based backend (http://github.com/ask/carrot/issues/issue/23).
+
+
+0.10.2 [2010-02-03 11:43 A.M CEST]
 ----------------------------------
 * Resolved a typo in the experimental Pika backend.
 
