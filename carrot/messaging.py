@@ -196,6 +196,9 @@ class Consumer(object):
     auto_ack = False
     no_ack = False
     _closed = True
+    _init_opts = ("durable", "exclusive", "auto_delete",
+                  "exchange_type", "warn_if_exists",
+                  "auto_ack", "auto_declare")
 
     def __init__(self, connection, queue=None, exchange=None,
             routing_key=None, **kwargs):
@@ -212,14 +215,10 @@ class Consumer(object):
         self.callbacks = []
 
         # Options
-        self.durable = kwargs.get("durable", self.durable)
-        self.exclusive = kwargs.get("exclusive", self.exclusive)
-        self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
-        self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
-        self.warn_if_exists = kwargs.get("warn_if_exists",
-                                         self.warn_if_exists)
-        self.auto_ack = kwargs.get("auto_ack", self.auto_ack)
-        self.auto_declare = kwargs.get("auto_declare", self.auto_declare)
+        for opt_name in self._init_opts:
+            opt_value = kwargs.get(opt_name)
+            if opt_value is not None:
+                setattr(self, opt_name, opt_value)
 
         # exclusive implies auto-delete.
         if self.exclusive:
@@ -628,20 +627,20 @@ class Publisher(object):
     auto_delete = False
     auto_declare = True
     serializer = None
+    _init_opts = ("exchange_type", "durable", "auto_delete",
+                  "serializer", "delivery_mode", "auto_declare")
 
     def __init__(self, connection, exchange=None, routing_key=None, **kwargs):
         self.connection = connection
         self.backend = self.connection.create_backend()
         self.exchange = exchange or self.exchange
         self.routing_key = routing_key or self.routing_key
-        self.delivery_mode = kwargs.get("delivery_mode", self.delivery_mode)
+        for opt_name in self._init_opts:
+            opt_value = kwargs.get(opt_name)
+            if opt_value is not None:
+                setattr(self, opt_name, opt_value)
         self.delivery_mode = self.DELIVERY_MODES.get(self.delivery_mode,
                                                      self.delivery_mode)
-        self.exchange_type = kwargs.get("exchange_type", self.exchange_type)
-        self.durable = kwargs.get("durable", self.durable)
-        self.auto_delete = kwargs.get("auto_delete", self.auto_delete)
-        self.serializer = kwargs.get("serializer", self.serializer)
-        self.auto_declare = kwargs.get("auto_declare", self.auto_declare)
         self._closed = False
 
         if self.auto_declare and self.exchange:
