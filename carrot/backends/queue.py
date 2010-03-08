@@ -43,7 +43,7 @@ class Backend(BaseBackend):
         return self.Message(backend=self, body=message_data,
                        content_type=content_type,
                        content_encoding=content_encoding)
-    
+
     def consume(self, limit=None):
         """Go into consume mode."""
         for total_message_count in itertools.count():

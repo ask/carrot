@@ -220,8 +220,6 @@ class DjangoBrokerConnection(BrokerConnection):
         the default is ``5672`` (amqp).
 
     """
-
-
     def __init__(self, *args, **kwargs):
         settings = kwargs.pop("settings", None)
         kwargs = dict(get_django_conninfo(settings), **kwargs)
