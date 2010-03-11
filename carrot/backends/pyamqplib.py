@@ -172,6 +172,8 @@ class Backend(BaseBackend):
     def establish_connection(self):
         """Establish connection to the AMQP broker."""
         conninfo = self.connection
+        if not conninfo.hostname:
+            raise KeyError("Missing hostname for AMQP connection.")
         if not conninfo.port:
             conninfo.port = self.default_port
         return Connection(host=conninfo.host,
