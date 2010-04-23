@@ -872,13 +872,16 @@ class ConsumerSet(object):
         self.connection = connection
         self.options = options
         self.from_dict = from_dict or {}
-        self.consumers = consumers or []
+        self.consumers = []
         self.callbacks = callbacks or []
         self._open_consumers = []
 
         self.backend = self.connection.create_backend()
 
         self.auto_ack = options.get("auto_ack", self.auto_ack)
+
+        [self.add_consumer(consumer)
+                for consumer in consumers]
 
         [self.add_consumer_from_dict(queue_name, **queue_options)
                 for queue_name, queue_options in self.from_dict.items()]
