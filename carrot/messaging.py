@@ -880,8 +880,8 @@ class ConsumerSet(object):
 
         self.auto_ack = options.get("auto_ack", self.auto_ack)
 
-        [self.add_consumer(consumer)
-                for consumer in consumers]
+        if consumers:
+            [self.add_consumer(consumer) for consumer in consumers]
 
         [self.add_consumer_from_dict(queue_name, **queue_options)
                 for queue_name, queue_options in self.from_dict.items()]
