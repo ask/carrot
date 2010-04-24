@@ -21,8 +21,8 @@ def gen_unique_id():
 
 def _compat_rl_partition(S, sep, direction=None):
     if direction is None:
-        diretction = S.split
-    items = direction(S, sep, 1)
+        direction = S.split
+    items = direction(sep, 1)
     if len(items) == 1:
         return items[0], sep, ''
     return items[0], sep, items[1]
