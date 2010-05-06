@@ -1,2 +1,2 @@
 anyjson
-amqplib
+amqplib>=0.6

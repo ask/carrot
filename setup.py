@@ -75,7 +75,7 @@ setup(
     test_suite="nose.collector",
     install_requires=[
         'anyjson',
-        'amqplib',
+        'amqplib>=0.6',
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
