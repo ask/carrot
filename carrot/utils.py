@@ -19,7 +19,9 @@ def gen_unique_id():
     return str(uuid4())
 
 
-def _compat_rl_partition(S, sep, direction=str.split):
+def _compat_rl_partition(S, sep, direction=None):
+    if direction is None:
+        diretction = S.split
     items = direction(S, sep, 1)
     if len(items) == 1:
         return items[0], sep, ''
@@ -34,7 +36,7 @@ def _compat_partition(S, sep):
     found, return ``S`` and two empty strings.
 
     """
-    return _compat_rl_partition(S, sep, direction=str.split)
+    return _compat_rl_partition(S, sep, direction=S.split)
 
 
 def _compat_rpartition(S, sep):
@@ -46,11 +48,19 @@ def _compat_rpartition(S, sep):
     strings and ``S``.
 
     """
-    return _compat_rl_partition(S, sep, direction=str.rsplit)
+    return _compat_rl_partition(S, sep, direction=S.rsplit)
 
-try:
-    partition = str.partition
-    rpartition = str.rpartition
-except AttributeError: # Python <= 2.4
-    partition = _compat_partition
-    rpartition = _compat_rpartition
+
+
+def partition(S, sep):
+    if hasattr(S, 'partition'):
+        return S.partition(sep)
+    else:  # Python <= 2.4:
+        return _compat_partition(S, sep)
+
+
+def rpartition(S, sep):
+    if hasattr(S, 'rpartition'):
+        return S.rpartition(sep)
+    else:  # Python <= 2.4:
+        return _compat_rpartition(S, sep)
