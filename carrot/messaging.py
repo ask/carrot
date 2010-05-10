@@ -414,13 +414,17 @@ class Consumer(object):
             reached.
 
         """
+        self.consume(no_ack=no_ack)
+        return self.backend.consume(limit=limit)
+
+    def consume(self, no_ack=None):
+        """Declare consumer."""
         no_ack = no_ack or self.no_ack
         self.backend.declare_consumer(queue=self.queue, no_ack=no_ack,
                                       callback=self._receive_callback,
                                       consumer_tag=self.consumer_tag,
                                       nowait=True)
         self.channel_open = True
-        return self.backend.consume(limit=limit)
 
     def wait(self, limit=None):
         """Go into consume mode.
@@ -928,17 +932,20 @@ class ConsumerSet(object):
                                       consumer_tag=consumer.consumer_tag)
         self._open_consumers.append(consumer.consumer_tag)
 
-    def iterconsume(self, limit=None):
-        """Cycle between all consumers in consume mode.
-
-        See :meth:`Consumer.iterconsume`.
-        """
+    def consume(self):
+        """Declare consumers."""
         head = self.consumers[:-1]
         tail = self.consumers[-1]
         [self._declare_consumer(consumer, nowait=True)
                 for consumer in head]
         self._declare_consumer(tail, nowait=False)
 
+    def iterconsume(self, limit=None):
+        """Cycle between all consumers in consume mode.
+
+        See :meth:`Consumer.iterconsume`.
+        """
+        self.consume()
         return self.backend.consume(limit=limit)
 
     def discard_all(self):
