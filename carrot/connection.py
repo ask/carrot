@@ -154,6 +154,9 @@ class BrokerConnection(object):
         self._closed = False
         return self.connection
 
+    def drain_events(self):
+        return self.connection.drain_events()
+
     def close(self):
         """Close the currently open connection."""
         try:
