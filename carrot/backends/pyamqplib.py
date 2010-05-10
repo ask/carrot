@@ -18,15 +18,15 @@ DEFAULT_PORT = 5672
 
 class Connection(amqp.Connection):
 
-    def drain_events(self, allowed_methods=None):
+    def drain_events(self, allowed_methods=None, timeout=None):
         """Wait for an event on any channel."""
-        return self.wait_multi(self.channels.values())
+        return self.wait_multi(self.channels.values(), timeout=timeout)
 
-    def wait_multi(self, channels, allowed_methods=None):
+    def wait_multi(self, channels, allowed_methods=None, timeout=None):
         """Wait for an event on a channel."""
         chanmap = dict((chan.channel_id, chan) for chan in channels)
         chanid, method_sig, args, content = self._wait_multiple(
-                chanmap.keys(), allowed_methods)
+                chanmap.keys(), allowed_methods, timeout=timeout)
 
         channel = chanmap[chanid]
 
@@ -48,7 +48,18 @@ class Connection(amqp.Connection):
         else:
             return amqp_method(channel, args, content)
 
-    def _wait_multiple(self, channel_ids, allowed_methods):
+    def read_timeout(self, timeout=None):
+        if timeout is None:
+            return self.method_reader.read_method()
+        sock = self.transport.sock
+        prev = sock.gettimeout()
+        sock.settimeout(timeout)
+        try:
+            return self.method_reader.read_method()
+        finally:
+            sock.settimeout(prev)
+
+    def _wait_multiple(self, channel_ids, allowed_methods, timeout=None):
         for channel_id in channel_ids:
             method_queue = self.channels[channel_id].method_queue
             for queued_method in method_queue:
@@ -62,8 +73,7 @@ class Connection(amqp.Connection):
 
         # Nothing queued, need to wait for a method from the peer
         while True:
-            channel, method_sig, args, content = \
-                self.method_reader.read_method()
+            channel, method_sig, args, content = self.read_timeout(timeout)
 
             if (channel in channel_ids) \
             and ((allowed_methods is None) \
