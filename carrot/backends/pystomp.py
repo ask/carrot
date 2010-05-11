@@ -130,8 +130,7 @@ class Backend(BaseBackend):
                 raise socket.timeout("the operation timed out.")
         queue = frame.headers.get("destination")
         if not queue or queue not in self._callbacks:
-            continue
-
+            return
         self._callbacks[queue](frame)
 
     def consume(self, limit=None):
