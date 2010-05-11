@@ -1,8 +1,11 @@
+import time
+import socket
+from itertools import count
+
 from stompy import Client
 from stompy import Empty as QueueEmpty
+
 from carrot.backends.base import BaseMessage, BaseBackend
-from itertools import count
-import socket
 
 DEFAULT_PORT = 61613
 
@@ -89,6 +92,7 @@ class Backend(BaseBackend):
             conninfo.port = self.default_port
         stomp = self.Stomp(conninfo.hostname, conninfo.port)
         stomp.connect()
+        stomp.drain_events = self.drain_events
         return stomp
 
     def close_connection(self, connection):
@@ -116,22 +120,26 @@ class Backend(BaseBackend):
         self._consumers[consumer_tag] = queue
         self._callbacks[queue] = callback
 
+    def drain_events(self, timeout=None):
+        start_time = time.time()
+        while True:
+            frame = self.channel.get()
+            if frame:
+                break
+            if time.time() - time_start > timeout:
+                raise socket.timeout("the operation timed out.")
+        queue = frame.headers.get("destination")
+        if not queue or queue not in self._callbacks:
+            continue
+
+        self._callbacks[queue](frame)
+
     def consume(self, limit=None):
         """Returns an iterator that waits for one message at a time."""
         for total_message_count in count():
             if limit and total_message_count >= limit:
                 raise StopIteration
-            while True:
-                frame = self.channel.get()
-                if frame:
-                    break
-            queue = frame.headers.get("destination")
-
-            if not queue or queue not in self._callbacks:
-                continue
-
-            self._callbacks[queue](frame)
-
+            self.drain_events()
             yield True
 
     def queue_declare(self, queue, *args, **kwargs):
