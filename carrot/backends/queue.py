@@ -44,17 +44,24 @@ class Backend(BaseBackend):
                        content_type=content_type,
                        content_encoding=content_encoding)
 
+    def establish_connection(self):
+        # for drain_events
+        return self
+
+    def drain_events(self, timeout=None):
+        message = self.get()
+        if message:
+            self.callback(message)
+        else:
+            time.sleep(0.1)
+
     def consume(self, limit=None):
         """Go into consume mode."""
         for total_message_count in itertools.count():
             if limit and total_message_count >= limit:
                 raise StopIteration
-            message = self.get()
-            if message:
-                self.callback(message)
-                yield True
-            else:
-                time.sleep(0.1)
+            self.drain_events()
+            yield True
 
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
                          nowait=False):
