@@ -2,7 +2,7 @@
  Change history
 ================
 
-0.10.4 [2010-05-xx xx:xx x.x CEST]
+0.10.4 [2010-05-14 10:26 A.M CEST]
 ----------------------------------
 
 * Added ``BrokerConnection.drain_events()`` (only works for amqplib/pika)
