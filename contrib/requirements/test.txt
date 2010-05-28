@@ -3,5 +3,5 @@ nose-cover3
 coverage>=3.0
 simplejson
 PyYAML
-msgpack
+msgpack-python
 
