@@ -6,6 +6,7 @@ import sys
 import os
 import unittest
 import uuid
+import msgpack
 sys.path.insert(0, os.pardir)
 sys.path.append(os.getcwd())
 
@@ -44,6 +45,16 @@ yaml_data = ('float: 3.1415926500000002\nint: 10\n'
              'unicode: "Th\\xE9 quick brown fox '
              'jumps over th\\xE9 lazy dog"\n')
 
+
+msgpack_py_data = dict(py_data)
+# msgpack only supports tuples
+msgpack_py_data["list"] = tuple(msgpack_py_data["list"])
+# Unicode chars are lost in transmit :(
+msgpack_py_data["unicode"] = 'Th quick brown fox jumps over th lazy dog'
+msgpack_data = ('\x85\xa3int\n\xa5float\xcb@\t!\xfbS\xc8\xd4\xf1\xa4list'
+                '\x94\xa6george\xa5jerry\xa6elaine\xa5cosmo\xa6string\xda'
+                '\x00+The quick brown fox jumps over the lazy dog\xa7unicode'
+                '\xda\x00)Th quick brown fox jumps over th lazy dog')
 
 class TestSerialization(unittest.TestCase):
 
@@ -107,6 +118,24 @@ class TestSerialization(unittest.TestCase):
                               json_data,
                               content_type='application/json',
                               content_encoding='utf-8'))
+
+    def test_msgpack_decode(self):
+        self.assertEquals(msgpack_py_data,
+                          registry.decode(
+                              msgpack_data,
+                              content_type='application/x-msgpack',
+                              content_encoding='binary'))
+
+    def test_msgpack_encode(self):
+        self.assertEquals(registry.decode(
+                registry.encode(msgpack_py_data, serializer="msgpack")[-1],
+                content_type='application/x-msgpack',
+                content_encoding='binary'),
+                registry.decode(
+                    msgpack_data,
+                    content_type='application/x-msgpack',
+                    content_encoding='binary'))
+
 
     def test_yaml_decode(self):
         self.assertEquals(py_data,

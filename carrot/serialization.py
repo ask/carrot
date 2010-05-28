@@ -2,13 +2,20 @@
 Centralized support for encoding/decoding of data structures.
 Requires a json library (`cjson`_, `simplejson`_, or `Python 2.6+`_).
 
-Optionally installs support for ``YAML`` if the necessary
-PyYAML is installed.
+Pickle support is built-in.
+
+Optionally installs support for ``YAML`` if the `PyYAML`_ package
+is installed.
+
+Optionally installs support for `msgpack`_ if the `msgpack-python`_
+package is installed.
 
 .. _`cjson`: http://pypi.python.org/pypi/python-cjson/
 .. _`simplejson`: http://code.google.com/p/simplejson/
 .. _`Python 2.6+`: http://docs.python.org/library/json.html
 .. _`PyYAML`: http://pyyaml.org/
+.. _`msgpack`: http://msgpack.sourceforge.net/
+.. _`msgpack-python`: http://pypi.python.org/pypi/msgpack-python/
 
 """
 
@@ -243,10 +250,29 @@ def register_pickle():
                       content_encoding='binary')
 
 
+def register_msgpack():
+    """See http://msgpack.sourceforge.net/"""
+    try:
+        import msgpack
+        registry.register('msgpack', msgpack.packs, msgpack.unpacks,
+                content_type='application/x-msgpack',
+                content_encoding='utf-8')
+    except ImportError:
+
+        def not_available(*args, **kwargs):
+            """In case a client receives a msgpack message, but yaml
+            isn't installed."""
+            raise SerializerNotInstalled(
+                    "No decoder installed for msgpack. "
+                    "Install the msgpack library")
+        registry.register('msgpack', None, not_available,
+                          'application/x-msgpack')
+
 # Register the base serialization methods.
 register_json()
 register_pickle()
 register_yaml()
+register_msgpack()
 
 # JSON is assumed to always be available, so is the default.
 # (this matches the historical use of carrot.)

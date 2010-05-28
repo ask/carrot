@@ -217,12 +217,13 @@ Serialization of Data
 
 By default every message is encoded using `JSON`_, so sending
 Python data structures like dictionaries and lists works.
-`YAML`_ and Python's built-in ``pickle`` module is also supported,
+`YAML`_, `msgpack`_ and Python's built-in ``pickle`` module is also supported,
 and if needed you can register any custom serialization scheme you
 want to use.
 
 .. _`JSON`: http://www.json.org/
 .. _`YAML`: http://yaml.org/
+.. _`msgpack`: http://msgpack.sourceforge.net/
 
 Each option has its advantages and disadvantages.
 
