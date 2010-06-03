@@ -2,6 +2,23 @@
  Change history
 ================
 
+0.10.5 [2010-06-03 09:02 A.M CEST]
+----------------------------------
+
+* In-memory backend: discard_all() now works correctly.
+
+* Added msgpack serialization support
+
+    See http://msgpack.sourceforge.net for more information.
+
+    To enable set::
+
+        serializer="msgpack"
+
+* Added dependency specification for building RPMs.
+
+    $ python setup.py bdist_rpm
+
 0.10.4 [2010-05-14 10:26 A.M CEST]
 ----------------------------------
 
