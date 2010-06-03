@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,21 +6,22 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.backends.queue &mdash; Carrot v0.10.1 documentation</title>
+    <title>carrot.backends.queue &mdash; Carrot v0.10.5 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.10.1',
-        COLLAPSE_MODINDEX: false,
+        VERSION:     '0.10.5',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.10.1 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.10.5 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.serialization" href="carrot.serialization.html" />
     <link rel="prev" title="carrot.backends.pystomp" href="carrot.backends.pystomp.html" /> 
@@ -32,15 +34,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="carrot.serialization.html" title="carrot.serialization"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="carrot.backends.pystomp.html" title="carrot.backends.pystomp"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.10.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.10.5 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -51,12 +53,12 @@
           <div class="body">
             
   <div class="section" id="module-carrot.backends.queue">
-<h1>carrot.backends.queue<a class="headerlink" href="#module-carrot.backends.queue" title="Permalink to this headline">¶</a></h1>
-<p>Backend for unit-tests, using the Python <tt class="xref docutils literal"><span class="pre">Queue</span></tt> module.</p>
+<span id="carrot-backends-queue"></span><h1>carrot.backends.queue<a class="headerlink" href="#module-carrot.backends.queue" title="Permalink to this headline">¶</a></h1>
+<p>Backend for unit-tests, using the Python <tt class="xref py py-mod docutils literal"><span class="pre">Queue</span></tt> module.</p>
 <dl class="class">
 <dt id="carrot.backends.queue.Backend">
 <em class="property">class </em><tt class="descclassname">carrot.backends.queue.</tt><tt class="descname">Backend</tt><big>(</big><em>connection</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.queue.Backend" title="Permalink to this definition">¶</a></dt>
-<dd><p>Backend using the Python <tt class="xref docutils literal"><span class="pre">Queue</span></tt> library. Usually only
+<dd><p>Backend using the Python <tt class="xref py py-mod docutils literal"><span class="pre">Queue</span></tt> library. Usually only
 used while executing unit tests.</p>
 <p>Please not that this backend does not support queues, exchanges
 or routing keys, so <em>all messages will be sent to all consumers</em>.</p>
@@ -64,13 +66,14 @@ or routing keys, so <em>all messages will be sent to all consumers</em>.</p>
 <dt id="carrot.backends.queue.Backend.Message">
 <em class="property">class </em><tt class="descname">Message</tt><big>(</big><em>backend</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.queue.Backend.Message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Message received from the backend.</p>
-<p>See <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a>.</p>
+<p>See <a class="reference internal" href="carrot.backends.base.html#carrot.backends.base.BaseMessage" title="carrot.backends.base.BaseMessage"><tt class="xref py py-class docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.queue.Backend.consume">
-<tt class="descclassname">Backend.</tt><tt class="descname">consume</tt><big>(</big><em>queue</em>, <em>no_ack</em>, <em>callback</em>, <em>consumer_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.queue.Backend.consume" title="Permalink to this definition">¶</a></dt>
-<dd>Go into consume mode.</dd></dl>
+<tt class="descclassname">Backend.</tt><tt class="descname">consume</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.backends.queue.Backend.consume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Go into consume mode.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.queue.Backend.get">
@@ -80,7 +83,7 @@ or routing keys, so <em>all messages will be sent to all consumers</em>.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A <a title="carrot.backends.queue.Message" class="reference internal" href="#carrot.backends.queue.Message"><tt class="xref docutils literal"><span class="pre">Message</span></tt></a> instance, or <tt class="xref docutils literal"><span class="pre">None</span></tt> if there is
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="#carrot.backends.queue.Message" title="carrot.backends.queue.Message"><tt class="xref py py-class docutils literal"><span class="pre">Message</span></tt></a> instance, or <tt class="xref docutils literal"><span class="pre">None</span></tt> if there is
 no messages waiting.</td>
 </tr>
 </tbody>
@@ -90,17 +93,20 @@ no messages waiting.</td>
 <dl class="method">
 <dt id="carrot.backends.queue.Backend.prepare_message">
 <tt class="descclassname">Backend.</tt><tt class="descname">prepare_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode</em>, <em>content_type</em>, <em>content_encoding</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.queue.Backend.prepare_message" title="Permalink to this definition">¶</a></dt>
-<dd>Prepare message for sending.</dd></dl>
+<dd><p>Prepare message for sending.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.queue.Backend.publish">
 <tt class="descclassname">Backend.</tt><tt class="descname">publish</tt><big>(</big><em>message</em>, <em>exchange</em>, <em>routing_key</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.queue.Backend.publish" title="Permalink to this definition">¶</a></dt>
-<dd>Publish a message to the queue.</dd></dl>
+<dd><p>Publish a message to the queue.</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="carrot.backends.queue.Backend.purge">
-<tt class="descclassname">Backend.</tt><tt class="descname">purge</tt><big>(</big><em>queue</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.queue.Backend.purge" title="Permalink to this definition">¶</a></dt>
-<dd>Discard all messages in the queue.</dd></dl>
+<dt id="carrot.backends.queue.Backend.queue_purge">
+<tt class="descclassname">Backend.</tt><tt class="descname">queue_purge</tt><big>(</big><em>queue</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.queue.Backend.queue_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Discard all messages in the queue.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -108,7 +114,7 @@ no messages waiting.</td>
 <dt id="carrot.backends.queue.Message">
 <em class="property">class </em><tt class="descclassname">carrot.backends.queue.</tt><tt class="descname">Message</tt><big>(</big><em>backend</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.queue.Message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Message received from the backend.</p>
-<p>See <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a>.</p>
+<p>See <a class="reference internal" href="carrot.backends.base.html#carrot.backends.base.BaseMessage" title="carrot.backends.base.BaseMessage"><tt class="xref py py-class docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a>.</p>
 </dd></dl>
 
 </div>
@@ -119,30 +125,30 @@ no messages waiting.</td>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="carrot.backends.pystomp.html"
-                                  title="previous chapter">carrot.backends.pystomp</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="carrot.serialization.html"
-                                  title="next chapter">carrot.serialization</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../sources/reference/carrot.backends.queue.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="carrot.backends.pystomp.html"
+                        title="previous chapter">carrot.backends.pystomp</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="carrot.serialization.html"
+                        title="next chapter">carrot.serialization</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../sources/reference/carrot.backends.queue.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -154,7 +160,7 @@ no messages waiting.</td>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
+          <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="carrot.serialization.html" title="carrot.serialization"
@@ -162,13 +168,13 @@ no messages waiting.</td>
         <li class="right" >
           <a href="carrot.backends.pystomp.html" title="carrot.backends.pystomp"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.10.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.10.5 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+        &copy; Copyright 2009, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
     </div>
   </body>
 </html>

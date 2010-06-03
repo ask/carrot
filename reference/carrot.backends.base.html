@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,21 +6,22 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.backends.base &mdash; Carrot v0.10.1 documentation</title>
+    <title>carrot.backends.base &mdash; Carrot v0.10.5 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.10.1',
-        COLLAPSE_MODINDEX: false,
+        VERSION:     '0.10.5',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.10.1 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.10.5 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends.pyamqplib" href="carrot.backends.pyamqplib.html" />
     <link rel="prev" title="carrot.backends" href="carrot.backends.html" /> 
@@ -32,15 +34,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="carrot.backends.pyamqplib.html" title="carrot.backends.pyamqplib"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="carrot.backends.html" title="carrot.backends"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.10.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.10.5 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -51,7 +53,7 @@
           <div class="body">
             
   <div class="section" id="module-carrot.backends.base">
-<h1>carrot.backends.base<a class="headerlink" href="#module-carrot.backends.base" title="Permalink to this headline">¶</a></h1>
+<span id="carrot-backends-base"></span><h1>carrot.backends.base<a class="headerlink" href="#module-carrot.backends.base" title="Permalink to this headline">¶</a></h1>
 <p>Backend base classes.</p>
 <dl class="class">
 <dt id="carrot.backends.base.BaseBackend">
@@ -60,103 +62,123 @@
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.ack">
 <tt class="descname">ack</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.ack" title="Permalink to this definition">¶</a></dt>
-<dd>Acknowledge the message.</dd></dl>
+<dd><p>Acknowledge the message.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.cancel">
 <tt class="descname">cancel</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.cancel" title="Permalink to this definition">¶</a></dt>
-<dd>Cancel the consumer.</dd></dl>
+<dd><p>Cancel the consumer.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.close" title="Permalink to this definition">¶</a></dt>
-<dd>Close the backend.</dd></dl>
+<dd><p>Close the backend.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.close_connection">
 <tt class="descname">close_connection</tt><big>(</big><em>connection</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.close_connection" title="Permalink to this definition">¶</a></dt>
-<dd>Close the connection.</dd></dl>
+<dd><p>Close the connection.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.consume">
 <tt class="descname">consume</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.consume" title="Permalink to this definition">¶</a></dt>
-<dd>Iterate over the declared consumers.</dd></dl>
+<dd><p>Iterate over the declared consumers.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.establish_connection">
 <tt class="descname">establish_connection</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.establish_connection" title="Permalink to this definition">¶</a></dt>
-<dd>Establish a connection to the backend.</dd></dl>
+<dd><p>Establish a connection to the backend.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.exchange_declare">
 <tt class="descname">exchange_declare</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.exchange_declare" title="Permalink to this definition">¶</a></dt>
-<dd>Declare an exchange by name.</dd></dl>
+<dd><p>Declare an exchange by name.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.flow">
 <tt class="descname">flow</tt><big>(</big><em>active</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.flow" title="Permalink to this definition">¶</a></dt>
-<dd>Enable/disable flow from peer.</dd></dl>
+<dd><p>Enable/disable flow from peer.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.get">
 <tt class="descname">get</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.get" title="Permalink to this definition">¶</a></dt>
-<dd>Pop a message off the queue.</dd></dl>
+<dd><p>Pop a message off the queue.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.message_to_python">
 <tt class="descname">message_to_python</tt><big>(</big><em>raw_message</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.message_to_python" title="Permalink to this definition">¶</a></dt>
-<dd>Convert received message body to a python datastructure.</dd></dl>
+<dd><p>Convert received message body to a python datastructure.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.prepare_message">
 <tt class="descname">prepare_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.prepare_message" title="Permalink to this definition">¶</a></dt>
-<dd>Prepare message for sending.</dd></dl>
+<dd><p>Prepare message for sending.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.publish">
 <tt class="descname">publish</tt><big>(</big><em>message</em>, <em>exchange</em>, <em>routing_key</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.publish" title="Permalink to this definition">¶</a></dt>
-<dd>Publish a message.</dd></dl>
+<dd><p>Publish a message.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.purge">
 <tt class="descname">purge</tt><big>(</big><em>queue</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.purge" title="Permalink to this definition">¶</a></dt>
-<dd>Discard all messages in the queue.</dd></dl>
+<dd><p>Discard all messages in the queue.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.qos">
 <tt class="descname">qos</tt><big>(</big><em>prefetch_size</em>, <em>prefetch_count</em>, <em>apply_global=False</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.qos" title="Permalink to this definition">¶</a></dt>
-<dd>Request specific Quality of Service.</dd></dl>
+<dd><p>Request specific Quality of Service.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.queue_bind">
 <tt class="descname">queue_bind</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.queue_bind" title="Permalink to this definition">¶</a></dt>
-<dd>Bind a queue to an exchange.</dd></dl>
+<dd><p>Bind a queue to an exchange.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.queue_declare">
 <tt class="descname">queue_declare</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.queue_declare" title="Permalink to this definition">¶</a></dt>
-<dd>Declare a queue by name.</dd></dl>
+<dd><p>Declare a queue by name.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.queue_delete">
 <tt class="descname">queue_delete</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.queue_delete" title="Permalink to this definition">¶</a></dt>
-<dd>Delete a queue by name.</dd></dl>
+<dd><p>Delete a queue by name.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.queue_purge">
 <tt class="descname">queue_purge</tt><big>(</big><em>queue</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.queue_purge" title="Permalink to this definition">¶</a></dt>
-<dd>Discard all messages in the queue. This will delete the messages
-and results in an empty queue.</dd></dl>
+<dd><p>Discard all messages in the queue. This will delete the messages
+and results in an empty queue.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.reject">
 <tt class="descname">reject</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.reject" title="Permalink to this definition">¶</a></dt>
-<dd>Reject the message.</dd></dl>
+<dd><p>Reject the message.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseBackend.requeue">
 <tt class="descname">requeue</tt><big>(</big><em>delivery_tag</em><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseBackend.requeue" title="Permalink to this definition">¶</a></dt>
-<dd>Requeue the message.</dd></dl>
+<dd><p>Requeue the message.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -167,7 +189,8 @@ and results in an empty queue.</dd></dl>
 <dl class="exception">
 <dt id="carrot.backends.base.BaseMessage.MessageStateError">
 <em class="property">exception </em><tt class="descname">MessageStateError</tt><a class="headerlink" href="#carrot.backends.base.BaseMessage.MessageStateError" title="Permalink to this definition">¶</a></dt>
-<dd>The message has already been acknowledged.</dd></dl>
+<dd><p>The message has already been acknowledged.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseMessage.ack">
@@ -178,7 +201,7 @@ This will remove the message from the queue.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name" colspan="2">Raises <a title="carrot.backends.base.MessageStateError" class="reference internal" href="#carrot.backends.base.MessageStateError">MessageStateError</a>:</th></tr>
+<tr class="field"><th class="field-name" colspan="2">Raises MessageStateError:</th></tr>
 <tr><td>&nbsp;</td><td class="field-body">If the message has already been
 acknowledged/requeued/rejected.</td>
 </tr>
@@ -189,13 +212,15 @@ acknowledged/requeued/rejected.</td>
 <dl class="method">
 <dt id="carrot.backends.base.BaseMessage.decode">
 <tt class="descclassname">BaseMessage.</tt><tt class="descname">decode</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.backends.base.BaseMessage.decode" title="Permalink to this definition">¶</a></dt>
-<dd>Deserialize the message body, returning the original
-python structure sent by the publisher.</dd></dl>
+<dd><p>Deserialize the message body, returning the original
+python structure sent by the publisher.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.backends.base.BaseMessage.payload">
 <tt class="descclassname">BaseMessage.</tt><tt class="descname">payload</tt><a class="headerlink" href="#carrot.backends.base.BaseMessage.payload" title="Permalink to this definition">¶</a></dt>
-<dd>The decoded message.</dd></dl>
+<dd><p>The decoded message.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.backends.base.BaseMessage.reject">
@@ -206,7 +231,7 @@ python structure sent by the publisher.</dd></dl>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name" colspan="2">Raises <a title="carrot.backends.base.MessageStateError" class="reference internal" href="#carrot.backends.base.MessageStateError">MessageStateError</a>:</th></tr>
+<tr class="field"><th class="field-name" colspan="2">Raises MessageStateError:</th></tr>
 <tr><td>&nbsp;</td><td class="field-body">If the message has already been
 acknowledged/requeued/rejected.</td>
 </tr>
@@ -224,7 +249,7 @@ to process.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name" colspan="2">Raises <a title="carrot.backends.base.MessageStateError" class="reference internal" href="#carrot.backends.base.MessageStateError">MessageStateError</a>:</th></tr>
+<tr class="field"><th class="field-name" colspan="2">Raises MessageStateError:</th></tr>
 <tr><td>&nbsp;</td><td class="field-body">If the message has already been
 acknowledged/requeued/rejected.</td>
 </tr>
@@ -237,7 +262,8 @@ acknowledged/requeued/rejected.</td>
 <dl class="exception">
 <dt id="carrot.backends.base.MessageStateError">
 <em class="property">exception </em><tt class="descclassname">carrot.backends.base.</tt><tt class="descname">MessageStateError</tt><a class="headerlink" href="#carrot.backends.base.MessageStateError" title="Permalink to this definition">¶</a></dt>
-<dd>The message has already been acknowledged.</dd></dl>
+<dd><p>The message has already been acknowledged.</p>
+</dd></dl>
 
 </div>
 
@@ -247,30 +273,30 @@ acknowledged/requeued/rejected.</td>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="carrot.backends.html"
-                                  title="previous chapter">carrot.backends</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="carrot.backends.pyamqplib.html"
-                                  title="next chapter">carrot.backends.pyamqplib</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../sources/reference/carrot.backends.base.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="carrot.backends.html"
+                        title="previous chapter">carrot.backends</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="carrot.backends.pyamqplib.html"
+                        title="next chapter">carrot.backends.pyamqplib</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../sources/reference/carrot.backends.base.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -282,7 +308,7 @@ acknowledged/requeued/rejected.</td>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
+          <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="carrot.backends.pyamqplib.html" title="carrot.backends.pyamqplib"
@@ -290,13 +316,13 @@ acknowledged/requeued/rejected.</td>
         <li class="right" >
           <a href="carrot.backends.html" title="carrot.backends"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.10.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.10.5 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+        &copy; Copyright 2009, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
     </div>
   </body>
 </html>

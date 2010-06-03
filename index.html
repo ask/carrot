@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,21 +6,22 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Carrot Documentation &mdash; Carrot v0.10.1 documentation</title>
+    <title>Carrot Documentation &mdash; Carrot v0.10.5 documentation</title>
     <link rel="stylesheet" href="static/nature.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
-        VERSION:     '0.10.1',
-        COLLAPSE_MODINDEX: false,
+        URL_ROOT:    '',
+        VERSION:     '0.10.5',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.10.1 documentation" href="#" />
+    <link rel="top" title="Carrot v0.10.5 documentation" href="#" />
     <link rel="next" title="carrot - AMQP Messaging Framework for Python" href="introduction.html" /> 
   </head>
   <body>
@@ -30,12 +32,12 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="introduction.html" title="carrot - AMQP Messaging Framework for Python"
              accesskey="N">next</a> |</li>
-        <li><a href="#">Carrot v0.10.1 documentation</a> &raquo;</li> 
+        <li><a href="#">Carrot v0.10.5 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -47,88 +49,94 @@
   <div class="section" id="carrot-documentation">
 <h1>Carrot Documentation<a class="headerlink" href="#carrot-documentation" title="Permalink to this headline">¶</a></h1>
 <p>Contents:</p>
+<div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference external" href="introduction.html">carrot - AMQP Messaging Framework for Python</a><ul>
-<li class="toctree-l2"><a class="reference external" href="introduction.html#introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference external" href="introduction.html#documentation">Documentation</a><ul>
-<li class="toctree-l3"><a class="reference external" href="introduction.html#installation">Installation</a></li>
-<li class="toctree-l3"><a class="reference external" href="introduction.html#terminology">Terminology</a></li>
-<li class="toctree-l3"><a class="reference external" href="introduction.html#examples">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">carrot - AMQP Messaging Framework for Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#terminology">Terminology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#examples">Examples</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference external" href="introduction.html#creating-a-connection">Creating a connection</a></li>
-<li class="toctree-l2"><a class="reference external" href="introduction.html#receiving-messages-using-a-consumer">Receiving messages using a Consumer</a></li>
-<li class="toctree-l2"><a class="reference external" href="introduction.html#sending-messages-using-a-publisher">Sending messages using a Publisher</a></li>
-<li class="toctree-l2"><a class="reference external" href="introduction.html#serialization-of-data">Serialization of Data</a></li>
-<li class="toctree-l2"><a class="reference external" href="introduction.html#sending-raw-data-without-serialization">Sending raw data without Serialization</a></li>
-<li class="toctree-l2"><a class="reference external" href="introduction.html#receiving-messages-without-a-callback">Receiving messages without a callback</a></li>
-<li class="toctree-l2"><a class="reference external" href="introduction.html#sub-classing-the-messaging-classes">Sub-classing the messaging classes</a><ul>
-<li class="toctree-l3"><a class="reference external" href="introduction.html#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#creating-a-connection">Creating a connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#receiving-messages-using-a-consumer">Receiving messages using a Consumer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#sending-messages-using-a-publisher">Sending messages using a Publisher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#serialization-of-data">Serialization of Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#sending-raw-data-without-serialization">Sending raw data without Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#receiving-messages-without-a-callback">Receiving messages without a callback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#sub-classing-the-messaging-classes">Sub-classing the messaging classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#getting-help">Getting Help</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference external" href="introduction.html#mailing-list">Mailing list</a><ul>
-<li class="toctree-l3"><a class="reference external" href="introduction.html#bug-tracker">Bug tracker</a></li>
-<li class="toctree-l3"><a class="reference external" href="introduction.html#contributing">Contributing</a></li>
-<li class="toctree-l3"><a class="reference external" href="introduction.html#license">License</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference external" href="faq.html">Frequently Asked Questions</a><ul>
-<li class="toctree-l2"><a class="reference external" href="faq.html#questions">Questions</a><ul>
-<li class="toctree-l3"><a class="reference external" href="faq.html#q-message-reject-doesn-t-work">Q: Message.reject doesn&#8217;t work?</a></li>
-<li class="toctree-l3"><a class="reference external" href="faq.html#q-message-requeue-doesn-t-work">Q: Message.requeue doesn&#8217;t work?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#mailing-list">Mailing list</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#bug-tracker">Bug tracker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#contributing">Contributing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#license">License</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference external" href="reference/index.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference external" href="reference/carrot.connection.html">carrot.connection</a></li>
-<li class="toctree-l2"><a class="reference external" href="reference/carrot.messaging.html">carrot.messaging</a></li>
-<li class="toctree-l2"><a class="reference external" href="reference/carrot.backends.html">carrot.backends</a></li>
-<li class="toctree-l2"><a class="reference external" href="reference/carrot.backends.base.html">carrot.backends.base</a></li>
-<li class="toctree-l2"><a class="reference external" href="reference/carrot.backends.pyamqplib.html">carrot.backends.pyamqplib</a></li>
-<li class="toctree-l2"><a class="reference external" href="reference/carrot.backends.pikachu.html">carrot.backends.pikachu</a></li>
-<li class="toctree-l2"><a class="reference external" href="reference/carrot.backends.pystomp.html">carrot.backends.pystomp</a></li>
-<li class="toctree-l2"><a class="reference external" href="reference/carrot.backends.queue.html">carrot.backends.queue</a></li>
-<li class="toctree-l2"><a class="reference external" href="reference/carrot.serialization.html">carrot.serialization</a></li>
-<li class="toctree-l2"><a class="reference external" href="reference/carrot.utils.html">carrot.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#questions">Questions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-message-reject-doesn-t-work">Q: Message.reject doesn&#8217;t work?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="faq.html#q-message-requeue-doesn-t-work">Q: Message.requeue doesn&#8217;t work?</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference external" href="changelog.html">Change history</a><ul>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#p-m-cest">0.10.1 [2010-01-16 10:17 P.M CEST]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#a-m-cest">0.10.0 [2010-01-15 12:08 A.M CEST]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id1">0.8.0 [2009-11-16 05:11 P.M CEST]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#p-m-cet">0.6.1 [2009-09-30 12:29 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id5">0.6.0 [2009-09-17 16:41 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id6">0.5.1 [2009-07-19 06:19 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id7">0.5.0 [2009-06-25 08:16 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id8">0.4.5 [2009-06-15 01:58 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id9">0.4.4 [2009-06-15 01:58 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id10">0.4.3 [2009-06-13 09:26 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id11">0.4.2 [2009-06-13 08:30 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id12">0.4.1 [2009-06-08 04:21 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id13">0.4.0 [2009-06-06 01:39 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#pre7-2009-06-03-05-08-p-m-cet">0.4.0-pre7 [2009-06-03 05:08 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#pre6-2009-06-03-04-55-p-m-cet">0.4.0-pre6 [2009-06-03 04:55 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#pre3-2009-05-29-02-27-p-m-cet">0.4.0-pre3 [2009-05-29 02:27 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#pre2-2009-05-29-02-27-p-m-cet">0.4.0-pre2 [2009-05-29 02:27 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#pre1-2009-05-27-04-27-p-m-cet">0.4.0-pre1 [2009-05-27 04:27 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id14">0.3.9 [2009-05-18 04:49 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id15">0.3.8 [2009-05-11 02:14 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id16">0.2.1 [2009-03-24 05:48 P.M CET]</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#p-m">0.2.0 [2009-03-24 05:23 P.M ]`</a></li>
-<li class="toctree-l2"><a class="reference external" href="changelog.html#id17">0.1.0 [2009-03-24 05:16 P.M ]`</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/carrot.connection.html">carrot.connection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/carrot.messaging.html">carrot.messaging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/carrot.backends.html">carrot.backends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/carrot.backends.base.html">carrot.backends.base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/carrot.backends.pyamqplib.html">carrot.backends.pyamqplib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/carrot.backends.pikachu.html">carrot.backends.pikachu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/carrot.backends.pystomp.html">carrot.backends.pystomp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/carrot.backends.queue.html">carrot.backends.queue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/carrot.serialization.html">carrot.serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/carrot.utils.html">carrot.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change history</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#a-m-cest">0.10.5 [2010-06-03 09:02 A.M CEST]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">0.10.4 [2010-05-14 10:26 A.M CEST]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#p-m-cest">0.10.3 [2010-03-08 05:01 P.M CEST]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">0.10.2 [2010-02-03 11:43 A.M CEST]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id3">0.10.1 [2010-01-16 10:17 P.M CEST]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">0.10.0 [2010-01-15 12:08 A.M CEST]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">0.8.0 [2009-11-16 05:11 P.M CEST]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#p-m-cet">0.6.1 [2009-09-30 12:29 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">0.6.0 [2009-09-17 16:41 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id10">0.5.1 [2009-07-19 06:19 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">0.5.0 [2009-06-25 08:16 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id12">0.4.5 [2009-06-15 01:58 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">0.4.4 [2009-06-15 01:58 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id14">0.4.3 [2009-06-13 09:26 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id15">0.4.2 [2009-06-13 08:30 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">0.4.1 [2009-06-08 04:21 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id17">0.4.0 [2009-06-06 01:39 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#pre7-2009-06-03-05-08-p-m-cet">0.4.0-pre7 [2009-06-03 05:08 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#pre6-2009-06-03-04-55-p-m-cet">0.4.0-pre6 [2009-06-03 04:55 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#pre3-2009-05-29-02-27-p-m-cet">0.4.0-pre3 [2009-05-29 02:27 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#pre2-2009-05-29-02-27-p-m-cet">0.4.0-pre2 [2009-05-29 02:27 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#pre1-2009-05-27-04-27-p-m-cet">0.4.0-pre1 [2009-05-27 04:27 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">0.3.9 [2009-05-18 04:49 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id19">0.3.8 [2009-05-11 02:14 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">0.2.1 [2009-03-24 05:48 P.M CET]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#p-m">0.2.0 [2009-03-24 05:23 P.M ]`</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id21">0.1.0 [2009-03-24 05:16 P.M ]`</a></li>
 </ul>
 </li>
 </ul>
 </div>
+</div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><a class="reference external" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference external" href="modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference external" href="search.html"><em>Search Page</em></a></li>
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
 </ul>
 </div>
 
@@ -138,35 +146,35 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h3><a href="#">Table Of Contents</a></h3>
-            <ul>
-<li><a class="reference external" href="#">Carrot Documentation</a><ul>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Carrot Documentation</a><ul>
 </ul>
 </li>
-<li><a class="reference external" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 
-            <h4>Next topic</h4>
-            <p class="topless"><a href="introduction.html"
-                                  title="next chapter">carrot - AMQP Messaging Framework for Python</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="sources/index.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="next chapter">carrot - AMQP Messaging Framework for Python</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -178,17 +186,17 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="modindex.html" title="Global Module Index"
+          <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="introduction.html" title="carrot - AMQP Messaging Framework for Python"
              >next</a> |</li>
-        <li><a href="#">Carrot v0.10.1 documentation</a> &raquo;</li> 
+        <li><a href="#">Carrot v0.10.5 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+        &copy; Copyright 2009, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
     </div>
   </body>
 </html>

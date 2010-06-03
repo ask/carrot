@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,21 +6,22 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.serialization &mdash; Carrot v0.10.1 documentation</title>
+    <title>carrot.serialization &mdash; Carrot v0.10.5 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.10.1',
-        COLLAPSE_MODINDEX: false,
+        VERSION:     '0.10.5',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.10.1 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.10.5 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.utils" href="carrot.utils.html" />
     <link rel="prev" title="carrot.backends.queue" href="carrot.backends.queue.html" /> 
@@ -32,15 +34,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="carrot.utils.html" title="carrot.utils"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="carrot.backends.queue.html" title="carrot.backends.queue"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.10.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.10.5 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -51,15 +53,19 @@
           <div class="body">
             
   <div class="section" id="module-carrot.serialization">
-<h1>carrot.serialization<a class="headerlink" href="#module-carrot.serialization" title="Permalink to this headline">¶</a></h1>
+<span id="carrot-serialization"></span><h1>carrot.serialization<a class="headerlink" href="#module-carrot.serialization" title="Permalink to this headline">¶</a></h1>
 <p>Centralized support for encoding/decoding of data structures.
 Requires a json library (<a class="reference external" href="http://pypi.python.org/pypi/python-cjson/">cjson</a>, <a class="reference external" href="http://code.google.com/p/simplejson/">simplejson</a>, or <a class="reference external" href="http://docs.python.org/library/json.html">Python 2.6+</a>).</p>
-<p>Optionally installs support for <tt class="docutils literal"><span class="pre">YAML</span></tt> if the necessary
-PyYAML is installed.</p>
+<p>Pickle support is built-in.</p>
+<p>Optionally installs support for <tt class="docutils literal"><span class="pre">YAML</span></tt> if the <a class="reference external" href="http://pyyaml.org/">PyYAML</a> package
+is installed.</p>
+<p>Optionally installs support for <a class="reference external" href="http://msgpack.sourceforge.net/">msgpack</a> if the <a class="reference external" href="http://pypi.python.org/pypi/msgpack-python/">msgpack-python</a>
+package is installed.</p>
 <dl class="exception">
 <dt id="carrot.serialization.SerializerNotInstalled">
 <em class="property">exception </em><tt class="descclassname">carrot.serialization.</tt><tt class="descname">SerializerNotInstalled</tt><a class="headerlink" href="#carrot.serialization.SerializerNotInstalled" title="Permalink to this definition">¶</a></dt>
-<dd>Support for the requested serialization type is not installed</dd></dl>
+<dd><p>Support for the requested serialization type is not installed</p>
+</dd></dl>
 
 <dl class="data">
 <dt id="carrot.serialization.registry">
@@ -80,30 +86,30 @@ PyYAML is installed.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="carrot.backends.queue.html"
-                                  title="previous chapter">carrot.backends.queue</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="carrot.utils.html"
-                                  title="next chapter">carrot.utils</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../sources/reference/carrot.serialization.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="carrot.backends.queue.html"
+                        title="previous chapter">carrot.backends.queue</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="carrot.utils.html"
+                        title="next chapter">carrot.utils</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../sources/reference/carrot.serialization.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -115,7 +121,7 @@ PyYAML is installed.</p>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
+          <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="carrot.utils.html" title="carrot.utils"
@@ -123,13 +129,13 @@ PyYAML is installed.</p>
         <li class="right" >
           <a href="carrot.backends.queue.html" title="carrot.backends.queue"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.10.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.10.5 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+        &copy; Copyright 2009, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
     </div>
   </body>
 </html>

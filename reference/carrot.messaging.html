@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -5,21 +6,22 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>carrot.messaging &mdash; Carrot v0.10.1 documentation</title>
+    <title>carrot.messaging &mdash; Carrot v0.10.5 documentation</title>
     <link rel="stylesheet" href="../static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.10.1',
-        COLLAPSE_MODINDEX: false,
+        VERSION:     '0.10.5',
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
     </script>
     <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
     <script type="text/javascript" src="../static/doctools.js"></script>
-    <link rel="top" title="Carrot v0.10.1 documentation" href="../index.html" />
+    <link rel="top" title="Carrot v0.10.5 documentation" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="carrot.backends" href="carrot.backends.html" />
     <link rel="prev" title="carrot.connection" href="carrot.connection.html" /> 
@@ -32,15 +34,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
-             accesskey="M">modules</a> |</li>
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="right" >
           <a href="carrot.backends.html" title="carrot.backends"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="carrot.connection.html" title="carrot.connection"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.10.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.10.5 documentation</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li> 
       </ul>
     </div>  
@@ -50,11 +52,11 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-carrot.messaging">
-<h1>carrot.messaging<a class="headerlink" href="#module-carrot.messaging" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="carrot-messaging">
+<h1>carrot.messaging<a class="headerlink" href="#carrot-messaging" title="Permalink to this headline">¶</a></h1>
 <p>The introduction to carrot that was here previously has been moved
 to the <a class="reference external" href="http://ask.github.com/carrot/introduction.html#examples">introduction</a> page.</p>
-<p>Sending/Receiving Messages.</p>
+<span class="target" id="module-carrot.messaging"></span><p>Sending/Receiving Messages.</p>
 <dl class="class">
 <dt id="carrot.messaging.Consumer">
 <em class="property">class </em><tt class="descclassname">carrot.messaging.</tt><tt class="descname">Consumer</tt><big>(</big><em>connection</em>, <em>queue=None</em>, <em>exchange=None</em>, <em>routing_key=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer" title="Permalink to this definition">¶</a></dt>
@@ -64,17 +66,17 @@ to the <a class="reference external" href="http://ask.github.com/carrot/introduc
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>connection</em> &#8211; see <a title="carrot.messaging.Consumer.connection" class="reference internal" href="#carrot.messaging.Consumer.connection"><tt class="xref docutils literal"><span class="pre">connection</span></tt></a>.</li>
-<li><em>queue</em> &#8211; see <a title="carrot.messaging.Consumer.queue" class="reference internal" href="#carrot.messaging.Consumer.queue"><tt class="xref docutils literal"><span class="pre">queue</span></tt></a>.</li>
-<li><em>exchange</em> &#8211; see <a title="carrot.messaging.Consumer.exchange" class="reference internal" href="#carrot.messaging.Consumer.exchange"><tt class="xref docutils literal"><span class="pre">exchange</span></tt></a>.</li>
-<li><em>routing_key</em> &#8211; see <a title="carrot.messaging.Consumer.routing_key" class="reference internal" href="#carrot.messaging.Consumer.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a>.</li>
-<li><em>durable</em> &#8211; see <a title="carrot.messaging.Consumer.durable" class="reference internal" href="#carrot.messaging.Consumer.durable"><tt class="xref docutils literal"><span class="pre">durable</span></tt></a>.</li>
-<li><em>auto_delete</em> &#8211; see <a title="carrot.messaging.Consumer.auto_delete" class="reference internal" href="#carrot.messaging.Consumer.auto_delete"><tt class="xref docutils literal"><span class="pre">auto_delete</span></tt></a>.</li>
-<li><em>exclusive</em> &#8211; see <a title="carrot.messaging.Consumer.exclusive" class="reference internal" href="#carrot.messaging.Consumer.exclusive"><tt class="xref docutils literal"><span class="pre">exclusive</span></tt></a>.</li>
-<li><em>exchange_type</em> &#8211; see <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">exchange_type</span></tt></a>.</li>
-<li><em>auto_ack</em> &#8211; see <a title="carrot.messaging.Consumer.auto_ack" class="reference internal" href="#carrot.messaging.Consumer.auto_ack"><tt class="xref docutils literal"><span class="pre">auto_ack</span></tt></a>.</li>
-<li><em>no_ack</em> &#8211; see <a title="carrot.messaging.Consumer.no_ack" class="reference internal" href="#carrot.messaging.Consumer.no_ack"><tt class="xref docutils literal"><span class="pre">no_ack</span></tt></a>.</li>
-<li><em>auto_declare</em> &#8211; see <tt class="xref docutils literal"><span class="pre">auto_declare</span></tt>.</li>
+<li><strong>connection</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.connection" title="carrot.messaging.Consumer.connection"><tt class="xref py py-attr docutils literal"><span class="pre">connection</span></tt></a>.</li>
+<li><strong>queue</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.queue" title="carrot.messaging.Consumer.queue"><tt class="xref py py-attr docutils literal"><span class="pre">queue</span></tt></a>.</li>
+<li><strong>exchange</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.exchange" title="carrot.messaging.Consumer.exchange"><tt class="xref py py-attr docutils literal"><span class="pre">exchange</span></tt></a>.</li>
+<li><strong>routing_key</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.routing_key" title="carrot.messaging.Consumer.routing_key"><tt class="xref py py-attr docutils literal"><span class="pre">routing_key</span></tt></a>.</li>
+<li><strong>durable</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.durable" title="carrot.messaging.Consumer.durable"><tt class="xref py py-attr docutils literal"><span class="pre">durable</span></tt></a>.</li>
+<li><strong>auto_delete</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.auto_delete" title="carrot.messaging.Consumer.auto_delete"><tt class="xref py py-attr docutils literal"><span class="pre">auto_delete</span></tt></a>.</li>
+<li><strong>exclusive</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.exclusive" title="carrot.messaging.Consumer.exclusive"><tt class="xref py py-attr docutils literal"><span class="pre">exclusive</span></tt></a>.</li>
+<li><strong>exchange_type</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.exchange_type" title="carrot.messaging.Consumer.exchange_type"><tt class="xref py py-attr docutils literal"><span class="pre">exchange_type</span></tt></a>.</li>
+<li><strong>auto_ack</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.auto_ack" title="carrot.messaging.Consumer.auto_ack"><tt class="xref py py-attr docutils literal"><span class="pre">auto_ack</span></tt></a>.</li>
+<li><strong>no_ack</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.no_ack" title="carrot.messaging.Consumer.no_ack"><tt class="xref py py-attr docutils literal"><span class="pre">no_ack</span></tt></a>.</li>
+<li><strong>auto_declare</strong> &#8211; see <tt class="xref py py-attr docutils literal"><span class="pre">auto_declare</span></tt>.</li>
 </ul>
 </td>
 </tr>
@@ -83,30 +85,33 @@ to the <a class="reference external" href="http://ask.github.com/carrot/introduc
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.connection">
 <tt class="descname">connection</tt><a class="headerlink" href="#carrot.messaging.Consumer.connection" title="Permalink to this definition">¶</a></dt>
-<dd>The connection to the broker.
-A <a title="carrot.connection.BrokerConnection" class="reference external" href="carrot.connection.html#carrot.connection.BrokerConnection"><tt class="xref docutils literal"><span class="pre">carrot.connection.BrokerConnection</span></tt></a> instance.</dd></dl>
+<dd><p>The connection to the broker.
+A <a class="reference internal" href="carrot.connection.html#carrot.connection.BrokerConnection" title="carrot.connection.BrokerConnection"><tt class="xref py py-class docutils literal"><span class="pre">carrot.connection.BrokerConnection</span></tt></a> instance.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.queue">
 <tt class="descname">queue</tt><a class="headerlink" href="#carrot.messaging.Consumer.queue" title="Permalink to this definition">¶</a></dt>
-<dd>Name of the queue.</dd></dl>
+<dd><p>Name of the queue.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.exchange">
 <tt class="descname">exchange</tt><a class="headerlink" href="#carrot.messaging.Consumer.exchange" title="Permalink to this definition">¶</a></dt>
-<dd>Name of the exchange the queue binds to.</dd></dl>
+<dd><p>Name of the exchange the queue binds to.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.routing_key">
 <tt class="descname">routing_key</tt><a class="headerlink" href="#carrot.messaging.Consumer.routing_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>The routing key (if any). The interpretation of the routing key
-depends on the value of the <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">exchange_type</span></tt></a> attribute:</p>
+depends on the value of the <a class="reference internal" href="#carrot.messaging.Consumer.exchange_type" title="carrot.messaging.Consumer.exchange_type"><tt class="xref py py-attr docutils literal"><span class="pre">exchange_type</span></tt></a> attribute:</p>
 <blockquote>
 <ul>
 <li><p class="first">direct exchange</p>
 <blockquote>
 <p>Matches if the routing key property of the message and
-the <a title="carrot.messaging.Consumer.routing_key" class="reference internal" href="#carrot.messaging.Consumer.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a> attribute are identical.</p>
+the <a class="reference internal" href="#carrot.messaging.Consumer.routing_key" title="carrot.messaging.Consumer.routing_key"><tt class="xref py py-attr docutils literal"><span class="pre">routing_key</span></tt></a> attribute are identical.</p>
 </blockquote>
 </li>
 <li><p class="first">fanout exchange</p>
@@ -133,22 +138,25 @@ routing keys <tt class="docutils literal"><span class="pre">&quot;usd.stock&quot
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.durable">
 <tt class="descname">durable</tt><a class="headerlink" href="#carrot.messaging.Consumer.durable" title="Permalink to this definition">¶</a></dt>
-<dd>Durable exchanges remain active when a server restarts. Non-durable
+<dd><p>Durable exchanges remain active when a server restarts. Non-durable
 exchanges (transient exchanges) are purged when a server restarts.
-Default is <tt class="xref docutils literal"><span class="pre">True</span></tt>.</dd></dl>
+Default is <tt class="xref docutils literal"><span class="pre">True</span></tt>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.auto_delete">
 <tt class="descname">auto_delete</tt><a class="headerlink" href="#carrot.messaging.Consumer.auto_delete" title="Permalink to this definition">¶</a></dt>
-<dd>If set, the exchange is deleted when all queues have finished
-using it. Default is <tt class="xref docutils literal"><span class="pre">False</span></tt>.</dd></dl>
+<dd><p>If set, the exchange is deleted when all queues have finished
+using it. Default is <tt class="xref docutils literal"><span class="pre">False</span></tt>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.exclusive">
 <tt class="descname">exclusive</tt><a class="headerlink" href="#carrot.messaging.Consumer.exclusive" title="Permalink to this definition">¶</a></dt>
-<dd>Exclusive queues may only be consumed from by the current connection.
-When <a title="carrot.messaging.Consumer.exclusive" class="reference internal" href="#carrot.messaging.Consumer.exclusive"><tt class="xref docutils literal"><span class="pre">exclusive</span></tt></a> is on, this also implies <a title="carrot.messaging.Consumer.auto_delete" class="reference internal" href="#carrot.messaging.Consumer.auto_delete"><tt class="xref docutils literal"><span class="pre">auto_delete</span></tt></a>.
-Default is <tt class="xref docutils literal"><span class="pre">False</span></tt>.</dd></dl>
+<dd><p>Exclusive queues may only be consumed from by the current connection.
+When <a class="reference internal" href="#carrot.messaging.Consumer.exclusive" title="carrot.messaging.Consumer.exclusive"><tt class="xref py py-attr docutils literal"><span class="pre">exclusive</span></tt></a> is on, this also implies <a class="reference internal" href="#carrot.messaging.Consumer.auto_delete" title="carrot.messaging.Consumer.auto_delete"><tt class="xref py py-attr docutils literal"><span class="pre">auto_delete</span></tt></a>.
+Default is <tt class="xref docutils literal"><span class="pre">False</span></tt>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.exchange_type">
@@ -188,7 +196,7 @@ containing headers and values (optional). A special argument
 named &#8220;x-match&#8221; determines the matching algorithm, where
 <tt class="docutils literal"><span class="pre">&quot;all&quot;</span></tt> implies an <tt class="docutils literal"><span class="pre">AND</span></tt> (all pairs must match) and
 <tt class="docutils literal"><span class="pre">&quot;any&quot;</span></tt> implies <tt class="docutils literal"><span class="pre">OR</span></tt> (at least one pair must match).</p>
-<p>Use the <tt class="xref docutils literal"><span class="pre">routing_key`</span></tt> is used to specify the arguments,
+<p>Use the <tt class="xref py py-attr docutils literal"><span class="pre">routing_key`</span></tt> is used to specify the arguments,
 the same when sending messages.</p>
 </blockquote>
 </li>
@@ -202,36 +210,40 @@ Rajith Attapattu. Recommended reading.</p>
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.callbacks">
 <tt class="descname">callbacks</tt><a class="headerlink" href="#carrot.messaging.Consumer.callbacks" title="Permalink to this definition">¶</a></dt>
-<dd>List of registered callbacks to trigger when a message is received
-by <a title="carrot.messaging.Consumer.wait" class="reference internal" href="#carrot.messaging.Consumer.wait"><tt class="xref docutils literal"><span class="pre">wait()</span></tt></a>, <a title="carrot.messaging.Consumer.process_next" class="reference internal" href="#carrot.messaging.Consumer.process_next"><tt class="xref docutils literal"><span class="pre">process_next()</span></tt></a> or <a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a>.</dd></dl>
+<dd><p>List of registered callbacks to trigger when a message is received
+by <a class="reference internal" href="#carrot.messaging.Consumer.wait" title="carrot.messaging.Consumer.wait"><tt class="xref py py-meth docutils literal"><span class="pre">wait()</span></tt></a>, <a class="reference internal" href="#carrot.messaging.Consumer.process_next" title="carrot.messaging.Consumer.process_next"><tt class="xref py py-meth docutils literal"><span class="pre">process_next()</span></tt></a> or <a class="reference internal" href="#carrot.messaging.Consumer.iterqueue" title="carrot.messaging.Consumer.iterqueue"><tt class="xref py py-meth docutils literal"><span class="pre">iterqueue()</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.warn_if_exists">
 <tt class="descname">warn_if_exists</tt><a class="headerlink" href="#carrot.messaging.Consumer.warn_if_exists" title="Permalink to this definition">¶</a></dt>
-<dd>Emit a warning if the queue has already been declared. If a queue
+<dd><p>Emit a warning if the queue has already been declared. If a queue
 already exists, and you try to redeclare the queue with new settings,
 the new settings will be silently ignored, so this can be
-useful if you&#8217;ve recently changed the <a title="carrot.messaging.Consumer.routing_key" class="reference internal" href="#carrot.messaging.Consumer.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a> attribute
-or other settings.</dd></dl>
+useful if you&#8217;ve recently changed the <a class="reference internal" href="#carrot.messaging.Consumer.routing_key" title="carrot.messaging.Consumer.routing_key"><tt class="xref py py-attr docutils literal"><span class="pre">routing_key</span></tt></a> attribute
+or other settings.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.auto_ack">
 <tt class="descname">auto_ack</tt><a class="headerlink" href="#carrot.messaging.Consumer.auto_ack" title="Permalink to this definition">¶</a></dt>
-<dd>Acknowledgement is handled automatically once messages are received.
-This means that the <a title="carrot.backends.base.BaseMessage.ack" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage.ack"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage.ack()</span></tt></a> and
-<a title="carrot.backends.base.BaseMessage.reject" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage.reject"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage.reject()</span></tt></a> methods
+<dd><p>Acknowledgement is handled automatically once messages are received.
+This means that the <a class="reference internal" href="carrot.backends.base.html#carrot.backends.base.BaseMessage.ack" title="carrot.backends.base.BaseMessage.ack"><tt class="xref py py-meth docutils literal"><span class="pre">carrot.backends.base.BaseMessage.ack()</span></tt></a> and
+<a class="reference internal" href="carrot.backends.base.html#carrot.backends.base.BaseMessage.reject" title="carrot.backends.base.BaseMessage.reject"><tt class="xref py py-meth docutils literal"><span class="pre">carrot.backends.base.BaseMessage.reject()</span></tt></a> methods
 on the message object are no longer valid.
-By default <a title="carrot.messaging.Consumer.auto_ack" class="reference internal" href="#carrot.messaging.Consumer.auto_ack"><tt class="xref docutils literal"><span class="pre">auto_ack</span></tt></a> is set to <tt class="xref docutils literal"><span class="pre">False</span></tt>, and the receiver is
-required to manually handle acknowledgment.</dd></dl>
+By default <a class="reference internal" href="#carrot.messaging.Consumer.auto_ack" title="carrot.messaging.Consumer.auto_ack"><tt class="xref py py-attr docutils literal"><span class="pre">auto_ack</span></tt></a> is set to <tt class="xref docutils literal"><span class="pre">False</span></tt>, and the receiver is
+required to manually handle acknowledgment.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Consumer.no_ack">
 <tt class="descname">no_ack</tt><a class="headerlink" href="#carrot.messaging.Consumer.no_ack" title="Permalink to this definition">¶</a></dt>
-<dd>Disable acknowledgement on the server-side. This is different from
-<a title="carrot.messaging.Consumer.auto_ack" class="reference internal" href="#carrot.messaging.Consumer.auto_ack"><tt class="xref docutils literal"><span class="pre">auto_ack</span></tt></a> in that acknowledgement is turned off altogether.
+<dd><p>Disable acknowledgement on the server-side. This is different from
+<a class="reference internal" href="#carrot.messaging.Consumer.auto_ack" title="carrot.messaging.Consumer.auto_ack"><tt class="xref py py-attr docutils literal"><span class="pre">auto_ack</span></tt></a> in that acknowledgement is turned off altogether.
 This functionality increases performance but at the cost of
 reliability. Messages can get lost if a client dies before it can
-deliver them to the application.</dd></dl>
+deliver them to the application.</p>
+</dd></dl>
 
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -257,18 +269,27 @@ connection.</td>
 <dl class="method">
 <dt id="carrot.messaging.Consumer.cancel">
 <tt class="descname">cancel</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.cancel" title="Permalink to this definition">¶</a></dt>
-<dd>Cancel a running <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a> session.</dd></dl>
+<dd><p>Cancel a running <a class="reference internal" href="#carrot.messaging.Consumer.iterconsume" title="carrot.messaging.Consumer.iterconsume"><tt class="xref py py-meth docutils literal"><span class="pre">iterconsume()</span></tt></a> session.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.close" title="Permalink to this definition">¶</a></dt>
-<dd>Close the channel to the queue.</dd></dl>
+<dd><p>Close the channel to the queue.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.Consumer.consume">
+<tt class="descname">consume</tt><big>(</big><em>no_ack=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.consume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare consumer.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.declare">
 <tt class="descname">declare</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.declare" title="Permalink to this definition">¶</a></dt>
-<dd>Declares the queue, the exchange and binds the queue to
-the exchange.</dd></dl>
+<dd><p>Declares the queue, the exchange and binds the queue to
+the exchange.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Consumer.discard_all">
@@ -278,10 +299,14 @@ the exchange.</dd></dl>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>filterfunc</em> &#8211; A filter function to only discard the messages this
-filter returns.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filterfunc</strong> &#8211; A filter function to only discard the messages this
+filter returns.</li>
+</ul>
+</td>
 </tr>
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body">the number of messages discarded.</td>
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the number of messages discarded.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -309,15 +334,15 @@ filter returns.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a> instance,
+<tr class="field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A <a class="reference internal" href="carrot.backends.base.html#carrot.backends.base.BaseMessage" title="carrot.backends.base.BaseMessage"><tt class="xref py py-class docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a> instance,
 or <tt class="xref docutils literal"><span class="pre">None</span></tt> if there&#8217;s no messages to be received.</p>
 </td>
 </tr>
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>enable_callbacks</em> &#8211; Enable callbacks. The message will be
+<li><strong>enable_callbacks</strong> &#8211; Enable callbacks. The message will be
 processed with all registered callbacks. Default is disabled.</li>
-<li><em>auto_ack</em> &#8211; Override the default <a title="carrot.messaging.Consumer.auto_ack" class="reference internal" href="#carrot.messaging.Consumer.auto_ack"><tt class="xref docutils literal"><span class="pre">auto_ack</span></tt></a> setting.</li>
-<li><em>no_ack</em> &#8211; Override the default <a title="carrot.messaging.Consumer.no_ack" class="reference internal" href="#carrot.messaging.Consumer.no_ack"><tt class="xref docutils literal"><span class="pre">no_ack</span></tt></a> setting.</li>
+<li><strong>auto_ack</strong> &#8211; Override the default <a class="reference internal" href="#carrot.messaging.Consumer.auto_ack" title="carrot.messaging.Consumer.auto_ack"><tt class="xref py py-attr docutils literal"><span class="pre">auto_ack</span></tt></a> setting.</li>
+<li><strong>no_ack</strong> &#8211; Override the default <a class="reference internal" href="#carrot.messaging.Consumer.no_ack" title="carrot.messaging.Consumer.no_ack"><tt class="xref py py-attr docutils literal"><span class="pre">no_ack</span></tt></a> setting.</li>
 </ul>
 </td>
 </tr>
@@ -346,22 +371,26 @@ until it receives the <tt class="docutils literal"><span class="pre">flow(active
 Every new message will be passed to the callbacks, and the iterator
 returns <tt class="xref docutils literal"><span class="pre">True</span></tt>. The iterator is infinite unless the <tt class="docutils literal"><span class="pre">limit</span></tt>
 argument is specified or someone closes the consumer.</p>
-<p><a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a> uses transient requests for messages on the
-server, while <tt class="xref docutils literal"><span class="pre">iterequeue()</span></tt> uses synchronous access. In most
-cases you want <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a>, but if your environment does not
-support this behaviour you can resort to using <a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a>
+<p><a class="reference internal" href="#carrot.messaging.Consumer.iterconsume" title="carrot.messaging.Consumer.iterconsume"><tt class="xref py py-meth docutils literal"><span class="pre">iterconsume()</span></tt></a> uses transient requests for messages on the
+server, while <tt class="xref py py-meth docutils literal"><span class="pre">iterequeue()</span></tt> uses synchronous access. In most
+cases you want <a class="reference internal" href="#carrot.messaging.Consumer.iterconsume" title="carrot.messaging.Consumer.iterconsume"><tt class="xref py py-meth docutils literal"><span class="pre">iterconsume()</span></tt></a>, but if your environment does not
+support this behaviour you can resort to using <a class="reference internal" href="#carrot.messaging.Consumer.iterqueue" title="carrot.messaging.Consumer.iterqueue"><tt class="xref py py-meth docutils literal"><span class="pre">iterqueue()</span></tt></a>
 instead.</p>
-<p>Also, <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a> does not return the message
-at each step, something which <a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a> does.</p>
+<p>Also, <a class="reference internal" href="#carrot.messaging.Consumer.iterconsume" title="carrot.messaging.Consumer.iterconsume"><tt class="xref py py-meth docutils literal"><span class="pre">iterconsume()</span></tt></a> does not return the message
+at each step, something which <a class="reference internal" href="#carrot.messaging.Consumer.iterqueue" title="carrot.messaging.Consumer.iterqueue"><tt class="xref py py-meth docutils literal"><span class="pre">iterqueue()</span></tt></a> does.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Parameter:</th><td class="field-body"><em>limit</em> &#8211; Maximum number of messages to process.</td>
+<tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>limit</strong> &#8211; Maximum number of messages to process.</li>
+</ul>
+</td>
 </tr>
 <tr class="field"><th class="field-name" colspan="2">Raises StopIteration:</th></tr>
-<tr><td>&nbsp;</td><td class="field-body">if limit is set and the message limit has been
-reached.</td>
+<tr><td>&nbsp;</td><td class="field-body"><p class="first last">if limit is set and the message limit has been
+reached.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -372,17 +401,17 @@ reached.</td>
 <tt class="descname">iterqueue</tt><big>(</big><em>limit=None</em>, <em>infinite=False</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.iterqueue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Infinite iterator yielding pending messages, by using
 synchronous direct access to the queue (<tt class="docutils literal"><span class="pre">basic_get</span></tt>).</p>
-<p><a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a> is used where synchronous functionality is more
-important than performance. If you can, use <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a>
+<p><a class="reference internal" href="#carrot.messaging.Consumer.iterqueue" title="carrot.messaging.Consumer.iterqueue"><tt class="xref py py-meth docutils literal"><span class="pre">iterqueue()</span></tt></a> is used where synchronous functionality is more
+important than performance. If you can, use <a class="reference internal" href="#carrot.messaging.Consumer.iterconsume" title="carrot.messaging.Consumer.iterconsume"><tt class="xref py py-meth docutils literal"><span class="pre">iterconsume()</span></tt></a>
 instead.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><em>limit</em> &#8211; If set, the iterator stops when it has processed
+<li><strong>limit</strong> &#8211; If set, the iterator stops when it has processed
 this number of messages in total.</li>
-<li><em>infinite</em> &#8211; Don&#8217;t raise <tt class="xref docutils literal"><span class="pre">StopIteration</span></tt> if there is no
+<li><strong>infinite</strong> &#8211; Don&#8217;t raise <tt class="xref py py-exc docutils literal"><span class="pre">StopIteration</span></tt> if there is no
 messages waiting, but return <tt class="xref docutils literal"><span class="pre">None</span></tt> instead. If infinite you
 obviously shouldn&#8217;t consume the whole iterator at once without
 using a <tt class="docutils literal"><span class="pre">limit</span></tt>.</li>
@@ -401,7 +430,7 @@ iterator is not infinite.</p>
 <dl class="method">
 <dt id="carrot.messaging.Consumer.process_next">
 <tt class="descname">process_next</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.process_next" title="Permalink to this definition">¶</a></dt>
-<dd><p><strong>DEPRECATED</strong> Use <a title="carrot.messaging.Consumer.fetch" class="reference internal" href="#carrot.messaging.Consumer.fetch"><tt class="xref docutils literal"><span class="pre">fetch()</span></tt></a> like this instead:</p>
+<dd><p><strong>DEPRECATED</strong> Use <a class="reference internal" href="#carrot.messaging.Consumer.fetch" title="carrot.messaging.Consumer.fetch"><tt class="xref py py-meth docutils literal"><span class="pre">fetch()</span></tt></a> like this instead:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">enable_callbacks</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -422,7 +451,7 @@ it is currently meaningful only for the server.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>prefetch_size</em> &#8211; Prefetch window in octets.
+<li><strong>prefetch_size</strong> &#8211; Prefetch window in octets.
 The client can request that messages be sent in
 advance so that when the client finishes processing a
 message, the following message is already held
@@ -435,14 +464,14 @@ prefetch size (and also falls into other prefetch
 limits). May be set to zero, meaning &#8220;no specific
 limit&#8221;, although other prefetch limits may still
 apply. The <tt class="docutils literal"><span class="pre">prefetch_size</span></tt> is ignored if the
-<a title="carrot.messaging.Consumer.no_ack" class="reference internal" href="#carrot.messaging.Consumer.no_ack"><tt class="xref docutils literal"><span class="pre">no_ack</span></tt></a> option is set.</li>
-<li><em>prefetch_count</em> &#8211; Specifies a prefetch window in terms of whole
+<a class="reference internal" href="#carrot.messaging.Consumer.no_ack" title="carrot.messaging.Consumer.no_ack"><tt class="xref py py-attr docutils literal"><span class="pre">no_ack</span></tt></a> option is set.</li>
+<li><strong>prefetch_count</strong> &#8211; Specifies a prefetch window in terms of whole
 messages. This field may be used in combination with
 <tt class="docutils literal"><span class="pre">prefetch_size</span></tt>; A message will only be sent
 in advance if both prefetch windows (and those at the
 channel and connection level) allow it. The prefetch-
-count is ignored if the <a title="carrot.messaging.Consumer.no_ack" class="reference internal" href="#carrot.messaging.Consumer.no_ack"><tt class="xref docutils literal"><span class="pre">no_ack</span></tt></a> option is set.</li>
-<li><em>apply_global</em> &#8211; By default the QoS settings apply to the
+count is ignored if the <a class="reference internal" href="#carrot.messaging.Consumer.no_ack" title="carrot.messaging.Consumer.no_ack"><tt class="xref py py-attr docutils literal"><span class="pre">no_ack</span></tt></a> option is set.</li>
+<li><strong>apply_global</strong> &#8211; By default the QoS settings apply to the
 current channel only. If this is set, they are applied
 to the entire connection.</li>
 </ul>
@@ -456,17 +485,17 @@ to the entire connection.</li>
 <dt id="carrot.messaging.Consumer.receive">
 <tt class="descname">receive</tt><big>(</big><em>message_data</em>, <em>message</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.receive" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method is called when a new message is received by
-running <a title="carrot.messaging.Consumer.wait" class="reference internal" href="#carrot.messaging.Consumer.wait"><tt class="xref docutils literal"><span class="pre">wait()</span></tt></a>, <a title="carrot.messaging.Consumer.process_next" class="reference internal" href="#carrot.messaging.Consumer.process_next"><tt class="xref docutils literal"><span class="pre">process_next()</span></tt></a> or <a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a>.</p>
+running <a class="reference internal" href="#carrot.messaging.Consumer.wait" title="carrot.messaging.Consumer.wait"><tt class="xref py py-meth docutils literal"><span class="pre">wait()</span></tt></a>, <a class="reference internal" href="#carrot.messaging.Consumer.process_next" title="carrot.messaging.Consumer.process_next"><tt class="xref py py-meth docutils literal"><span class="pre">process_next()</span></tt></a> or <a class="reference internal" href="#carrot.messaging.Consumer.iterqueue" title="carrot.messaging.Consumer.iterqueue"><tt class="xref py py-meth docutils literal"><span class="pre">iterqueue()</span></tt></a>.</p>
 <p>When a message is received, it passes the message on to the
-callbacks listed in the <a title="carrot.messaging.Consumer.callbacks" class="reference internal" href="#carrot.messaging.Consumer.callbacks"><tt class="xref docutils literal"><span class="pre">callbacks</span></tt></a> attribute.
-You can register callbacks using <a title="carrot.messaging.Consumer.register_callback" class="reference internal" href="#carrot.messaging.Consumer.register_callback"><tt class="xref docutils literal"><span class="pre">register_callback()</span></tt></a>.</p>
+callbacks listed in the <a class="reference internal" href="#carrot.messaging.Consumer.callbacks" title="carrot.messaging.Consumer.callbacks"><tt class="xref py py-attr docutils literal"><span class="pre">callbacks</span></tt></a> attribute.
+You can register callbacks using <a class="reference internal" href="#carrot.messaging.Consumer.register_callback" title="carrot.messaging.Consumer.register_callback"><tt class="xref py py-meth docutils literal"><span class="pre">register_callback()</span></tt></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><em>message_data</em> &#8211; The deserialized message data.</li>
-<li><em>message</em> &#8211; The <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a> instance.</li>
+<li><strong>message_data</strong> &#8211; The deserialized message data.</li>
+<li><strong>message</strong> &#8211; The <a class="reference internal" href="carrot.backends.base.html#carrot.backends.base.BaseMessage" title="carrot.backends.base.BaseMessage"><tt class="xref py py-class docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a> instance.</li>
 </ul>
 </td>
 </tr>
@@ -481,7 +510,7 @@ You can register callbacks using <a title="carrot.messaging.Consumer.register_ca
 <dl class="method">
 <dt id="carrot.messaging.Consumer.register_callback">
 <tt class="descname">register_callback</tt><big>(</big><em>callback</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.register_callback" title="Permalink to this definition">¶</a></dt>
-<dd><p>Register a callback function to be triggered by <a title="carrot.messaging.Consumer.receive" class="reference internal" href="#carrot.messaging.Consumer.receive"><tt class="xref docutils literal"><span class="pre">receive()</span></tt></a>.</p>
+<dd><p>Register a callback function to be triggered by <a class="reference internal" href="#carrot.messaging.Consumer.receive" title="carrot.messaging.Consumer.receive"><tt class="xref py py-meth docutils literal"><span class="pre">receive()</span></tt></a>.</p>
 <p>The <tt class="docutils literal"><span class="pre">callback</span></tt> function must take two arguments:</p>
 <blockquote>
 <ul>
@@ -492,7 +521,7 @@ You can register callbacks using <a title="carrot.messaging.Consumer.register_ca
 </li>
 <li><p class="first">message</p>
 <blockquote>
-<p>The <a title="carrot.backends.base.BaseMessage" class="reference external" href="carrot.backends.base.html#carrot.backends.base.BaseMessage"><tt class="xref docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a> instance.</p>
+<p>The <a class="reference internal" href="carrot.backends.base.html#carrot.backends.base.BaseMessage" title="carrot.backends.base.BaseMessage"><tt class="xref py py-class docutils literal"><span class="pre">carrot.backends.base.BaseMessage</span></tt></a> instance.</p>
 </blockquote>
 </li>
 </ul>
@@ -504,9 +533,9 @@ You can register callbacks using <a title="carrot.messaging.Consumer.register_ca
 <tt class="descname">wait</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Consumer.wait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Go into consume mode.</p>
 <p>Mostly for testing purposes and simple programs, you probably
-want <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a> or <a title="carrot.messaging.Consumer.iterqueue" class="reference internal" href="#carrot.messaging.Consumer.iterqueue"><tt class="xref docutils literal"><span class="pre">iterqueue()</span></tt></a> instead.</p>
+want <a class="reference internal" href="#carrot.messaging.Consumer.iterconsume" title="carrot.messaging.Consumer.iterconsume"><tt class="xref py py-meth docutils literal"><span class="pre">iterconsume()</span></tt></a> or <a class="reference internal" href="#carrot.messaging.Consumer.iterqueue" title="carrot.messaging.Consumer.iterqueue"><tt class="xref py py-meth docutils literal"><span class="pre">iterqueue()</span></tt></a> instead.</p>
 <p>This runs an infinite loop, processing all incoming messages
-using <a title="carrot.messaging.Consumer.receive" class="reference internal" href="#carrot.messaging.Consumer.receive"><tt class="xref docutils literal"><span class="pre">receive()</span></tt></a> to apply the message to all registered
+using <a class="reference internal" href="#carrot.messaging.Consumer.receive" title="carrot.messaging.Consumer.receive"><tt class="xref py py-meth docutils literal"><span class="pre">receive()</span></tt></a> to apply the message to all registered
 callbacks.</p>
 </dd></dl>
 
@@ -521,10 +550,10 @@ callbacks.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>connection</em> &#8211; see <a title="carrot.messaging.ConsumerSet.connection" class="reference internal" href="#carrot.messaging.ConsumerSet.connection"><tt class="xref docutils literal"><span class="pre">connection</span></tt></a>.</li>
-<li><em>from_dict</em> &#8211; see <a title="carrot.messaging.ConsumerSet.from_dict" class="reference internal" href="#carrot.messaging.ConsumerSet.from_dict"><tt class="xref docutils literal"><span class="pre">from_dict</span></tt></a>.</li>
-<li><em>consumers</em> &#8211; see <a title="carrot.messaging.ConsumerSet.consumers" class="reference internal" href="#carrot.messaging.ConsumerSet.consumers"><tt class="xref docutils literal"><span class="pre">consumers</span></tt></a>.</li>
-<li><em>callbacks</em> &#8211; see <a title="carrot.messaging.ConsumerSet.callbacks" class="reference internal" href="#carrot.messaging.ConsumerSet.callbacks"><tt class="xref docutils literal"><span class="pre">callbacks</span></tt></a>.</li>
+<li><strong>connection</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.ConsumerSet.connection" title="carrot.messaging.ConsumerSet.connection"><tt class="xref py py-attr docutils literal"><span class="pre">connection</span></tt></a>.</li>
+<li><strong>from_dict</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.ConsumerSet.from_dict" title="carrot.messaging.ConsumerSet.from_dict"><tt class="xref py py-attr docutils literal"><span class="pre">from_dict</span></tt></a>.</li>
+<li><strong>consumers</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.ConsumerSet.consumers" title="carrot.messaging.ConsumerSet.consumers"><tt class="xref py py-attr docutils literal"><span class="pre">consumers</span></tt></a>.</li>
+<li><strong>callbacks</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.ConsumerSet.callbacks" title="carrot.messaging.ConsumerSet.callbacks"><tt class="xref py py-attr docutils literal"><span class="pre">callbacks</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -533,14 +562,16 @@ callbacks.</p>
 <dl class="attribute">
 <dt id="carrot.messaging.ConsumerSet.connection">
 <tt class="descname">connection</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.connection" title="Permalink to this definition">¶</a></dt>
-<dd>The connection to the broker.
-A <a title="carrot.connection.BrokerConnection" class="reference external" href="carrot.connection.html#carrot.connection.BrokerConnection"><tt class="xref docutils literal"><span class="pre">carrot.connection.BrokerConnection</span></tt></a> instance.</dd></dl>
+<dd><p>The connection to the broker.
+A <a class="reference internal" href="carrot.connection.html#carrot.connection.BrokerConnection" title="carrot.connection.BrokerConnection"><tt class="xref py py-class docutils literal"><span class="pre">carrot.connection.BrokerConnection</span></tt></a> instance.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.ConsumerSet.callbacks">
 <tt class="descname">callbacks</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.callbacks" title="Permalink to this definition">¶</a></dt>
-<dd>A list of callbacks to be called when a message is received.
-See <a title="carrot.messaging.Consumer.register_callback" class="reference internal" href="#carrot.messaging.Consumer.register_callback"><tt class="xref docutils literal"><span class="pre">Consumer.register_callback</span></tt></a>.</dd></dl>
+<dd><p>A list of callbacks to be called when a message is received.
+See <a class="reference internal" href="#carrot.messaging.Consumer.register_callback" title="carrot.messaging.Consumer.register_callback"><tt class="xref py py-class docutils literal"><span class="pre">Consumer.register_callback</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.ConsumerSet.from_dict">
@@ -568,72 +599,87 @@ See <a title="carrot.messaging.Consumer.register_callback" class="reference inte
 <dl class="attribute">
 <dt id="carrot.messaging.ConsumerSet.consumers">
 <tt class="descname">consumers</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.consumers" title="Permalink to this definition">¶</a></dt>
-<dd>Add consumers from a list of <a title="carrot.messaging.Consumer" class="reference internal" href="#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">Consumer</span></tt></a> instances.</dd></dl>
+<dd><p>Add consumers from a list of <a class="reference internal" href="#carrot.messaging.Consumer" title="carrot.messaging.Consumer"><tt class="xref py py-class docutils literal"><span class="pre">Consumer</span></tt></a> instances.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.ConsumerSet.auto_ack">
 <tt class="descname">auto_ack</tt><a class="headerlink" href="#carrot.messaging.ConsumerSet.auto_ack" title="Permalink to this definition">¶</a></dt>
-<dd>Default value for the <a title="carrot.messaging.Consumer.auto_ack" class="reference internal" href="#carrot.messaging.Consumer.auto_ack"><tt class="xref docutils literal"><span class="pre">Consumer.auto_ack</span></tt></a> attribute.</dd></dl>
+<dd><p>Default value for the <a class="reference internal" href="#carrot.messaging.Consumer.auto_ack" title="carrot.messaging.Consumer.auto_ack"><tt class="xref py py-attr docutils literal"><span class="pre">Consumer.auto_ack</span></tt></a> attribute.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.ConsumerSet.add_consumer">
 <tt class="descname">add_consumer</tt><big>(</big><em>consumer</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.add_consumer" title="Permalink to this definition">¶</a></dt>
-<dd>Add another consumer from a <a title="carrot.messaging.Consumer" class="reference internal" href="#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">Consumer</span></tt></a> instance.</dd></dl>
+<dd><p>Add another consumer from a <a class="reference internal" href="#carrot.messaging.Consumer" title="carrot.messaging.Consumer"><tt class="xref py py-class docutils literal"><span class="pre">Consumer</span></tt></a> instance.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.ConsumerSet.add_consumer_from_dict">
 <tt class="descname">add_consumer_from_dict</tt><big>(</big><em>queue</em>, <em>**options</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.add_consumer_from_dict" title="Permalink to this definition">¶</a></dt>
-<dd>Add another consumer from dictionary configuration.</dd></dl>
+<dd><p>Add another consumer from dictionary configuration.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.ConsumerSet.cancel">
 <tt class="descname">cancel</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.cancel" title="Permalink to this definition">¶</a></dt>
-<dd>Cancel a running <a title="carrot.messaging.ConsumerSet.iterconsume" class="reference internal" href="#carrot.messaging.ConsumerSet.iterconsume"><tt class="xref docutils literal"><span class="pre">iterconsume()</span></tt></a> session.</dd></dl>
+<dd><p>Cancel a running <a class="reference internal" href="#carrot.messaging.ConsumerSet.iterconsume" title="carrot.messaging.ConsumerSet.iterconsume"><tt class="xref py py-meth docutils literal"><span class="pre">iterconsume()</span></tt></a> session.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.ConsumerSet.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.close" title="Permalink to this definition">¶</a></dt>
-<dd>Close all consumers.</dd></dl>
+<dd><p>Close all consumers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="carrot.messaging.ConsumerSet.consume">
+<tt class="descname">consume</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.consume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Declare consumers.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.ConsumerSet.discard_all">
 <tt class="descname">discard_all</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.discard_all" title="Permalink to this definition">¶</a></dt>
-<dd>Discard all messages. Does not support filtering.
-See <a title="carrot.messaging.Consumer.discard_all" class="reference internal" href="#carrot.messaging.Consumer.discard_all"><tt class="xref docutils literal"><span class="pre">Consumer.discard_all()</span></tt></a>.</dd></dl>
+<dd><p>Discard all messages. Does not support filtering.
+See <a class="reference internal" href="#carrot.messaging.Consumer.discard_all" title="carrot.messaging.Consumer.discard_all"><tt class="xref py py-meth docutils literal"><span class="pre">Consumer.discard_all()</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.ConsumerSet.flow">
 <tt class="descname">flow</tt><big>(</big><em>active</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.flow" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method asks the peer to pause or restart the flow of
 content data.</p>
-<p>See <a title="carrot.messaging.Consumer.flow" class="reference internal" href="#carrot.messaging.Consumer.flow"><tt class="xref docutils literal"><span class="pre">Consumer.flow()</span></tt></a>.</p>
+<p>See <a class="reference internal" href="#carrot.messaging.Consumer.flow" title="carrot.messaging.Consumer.flow"><tt class="xref py py-meth docutils literal"><span class="pre">Consumer.flow()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.ConsumerSet.iterconsume">
 <tt class="descname">iterconsume</tt><big>(</big><em>limit=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.iterconsume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cycle between all consumers in consume mode.</p>
-<p>See <a title="carrot.messaging.Consumer.iterconsume" class="reference internal" href="#carrot.messaging.Consumer.iterconsume"><tt class="xref docutils literal"><span class="pre">Consumer.iterconsume()</span></tt></a>.</p>
+<p>See <a class="reference internal" href="#carrot.messaging.Consumer.iterconsume" title="carrot.messaging.Consumer.iterconsume"><tt class="xref py py-meth docutils literal"><span class="pre">Consumer.iterconsume()</span></tt></a>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.ConsumerSet.qos">
 <tt class="descname">qos</tt><big>(</big><em>prefetch_size=0</em>, <em>prefetch_count=0</em>, <em>apply_global=False</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.qos" title="Permalink to this definition">¶</a></dt>
 <dd><p>Request specific Quality of Service.</p>
-<p>See <tt class="xref docutils literal"><span class="pre">Consumer.cos()</span></tt>.</p>
+<p>See <tt class="xref py py-meth docutils literal"><span class="pre">Consumer.cos()</span></tt>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.ConsumerSet.receive">
 <tt class="descname">receive</tt><big>(</big><em>message_data</em>, <em>message</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.receive" title="Permalink to this definition">¶</a></dt>
-<dd>What to do when a message is received.
-See <a title="carrot.messaging.Consumer.receive" class="reference internal" href="#carrot.messaging.Consumer.receive"><tt class="xref docutils literal"><span class="pre">Consumer.receive()</span></tt></a>.</dd></dl>
+<dd><p>What to do when a message is received.
+See <a class="reference internal" href="#carrot.messaging.Consumer.receive" title="carrot.messaging.Consumer.receive"><tt class="xref py py-meth docutils literal"><span class="pre">Consumer.receive()</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.ConsumerSet.register_callback">
 <tt class="descname">register_callback</tt><big>(</big><em>callback</em><big>)</big><a class="headerlink" href="#carrot.messaging.ConsumerSet.register_callback" title="Permalink to this definition">¶</a></dt>
-<dd>Register new callback to be called when a message is received.
-See <a title="carrot.messaging.Consumer.register_callback" class="reference internal" href="#carrot.messaging.Consumer.register_callback"><tt class="xref docutils literal"><span class="pre">Consumer.register_callback()</span></tt></a></dd></dl>
+<dd><p>Register new callback to be called when a message is received.
+See <a class="reference internal" href="#carrot.messaging.Consumer.register_callback" title="carrot.messaging.Consumer.register_callback"><tt class="xref py py-meth docutils literal"><span class="pre">Consumer.register_callback()</span></tt></a></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -644,37 +690,44 @@ See <a title="carrot.messaging.Consumer.register_callback" class="reference inte
 <dl class="method">
 <dt id="carrot.messaging.Messaging.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging.close" title="Permalink to this definition">¶</a></dt>
-<dd>Close any open channels.</dd></dl>
+<dd><p>Close any open channels.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Messaging.consumer_cls">
 <tt class="descname">consumer_cls</tt><a class="headerlink" href="#carrot.messaging.Messaging.consumer_cls" title="Permalink to this definition">¶</a></dt>
-<dd>alias of <a title="carrot.messaging.Consumer" class="reference internal" href="#carrot.messaging.Consumer"><tt class="xref docutils literal"><span class="pre">Consumer</span></tt></a></dd></dl>
+<dd><p>alias of <a class="reference internal" href="#carrot.messaging.Consumer" title="carrot.messaging.Consumer"><tt class="xref py py-class docutils literal"><span class="pre">Consumer</span></tt></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Messaging.fetch">
 <tt class="descname">fetch</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging.fetch" title="Permalink to this definition">¶</a></dt>
-<dd>See <a title="carrot.messaging.Consumer.fetch" class="reference internal" href="#carrot.messaging.Consumer.fetch"><tt class="xref docutils literal"><span class="pre">Consumer.fetch()</span></tt></a></dd></dl>
+<dd><p>See <a class="reference internal" href="#carrot.messaging.Consumer.fetch" title="carrot.messaging.Consumer.fetch"><tt class="xref py py-meth docutils literal"><span class="pre">Consumer.fetch()</span></tt></a></p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Messaging.publisher_cls">
 <tt class="descname">publisher_cls</tt><a class="headerlink" href="#carrot.messaging.Messaging.publisher_cls" title="Permalink to this definition">¶</a></dt>
-<dd>alias of <a title="carrot.messaging.Publisher" class="reference internal" href="#carrot.messaging.Publisher"><tt class="xref docutils literal"><span class="pre">Publisher</span></tt></a></dd></dl>
+<dd><p>alias of <a class="reference internal" href="#carrot.messaging.Publisher" title="carrot.messaging.Publisher"><tt class="xref py py-class docutils literal"><span class="pre">Publisher</span></tt></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Messaging.receive">
 <tt class="descname">receive</tt><big>(</big><em>message_data</em>, <em>message</em><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging.receive" title="Permalink to this definition">¶</a></dt>
-<dd>See <a title="carrot.messaging.Consumer.receive" class="reference internal" href="#carrot.messaging.Consumer.receive"><tt class="xref docutils literal"><span class="pre">Consumer.receive()</span></tt></a></dd></dl>
+<dd><p>See <a class="reference internal" href="#carrot.messaging.Consumer.receive" title="carrot.messaging.Consumer.receive"><tt class="xref py py-meth docutils literal"><span class="pre">Consumer.receive()</span></tt></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Messaging.register_callback">
 <tt class="descname">register_callback</tt><big>(</big><em>callback</em><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging.register_callback" title="Permalink to this definition">¶</a></dt>
-<dd>See <a title="carrot.messaging.Consumer.register_callback" class="reference internal" href="#carrot.messaging.Consumer.register_callback"><tt class="xref docutils literal"><span class="pre">Consumer.register_callback()</span></tt></a></dd></dl>
+<dd><p>See <a class="reference internal" href="#carrot.messaging.Consumer.register_callback" title="carrot.messaging.Consumer.register_callback"><tt class="xref py py-meth docutils literal"><span class="pre">Consumer.register_callback()</span></tt></a></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Messaging.send">
 <tt class="descname">send</tt><big>(</big><em>message_data</em>, <em>delivery_mode=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Messaging.send" title="Permalink to this definition">¶</a></dt>
-<dd>See <a title="carrot.messaging.Publisher.send" class="reference internal" href="#carrot.messaging.Publisher.send"><tt class="xref docutils literal"><span class="pre">Publisher.send()</span></tt></a></dd></dl>
+<dd><p>See <a class="reference internal" href="#carrot.messaging.Publisher.send" title="carrot.messaging.Publisher.send"><tt class="xref py py-meth docutils literal"><span class="pre">Publisher.send()</span></tt></a></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -687,14 +740,14 @@ See <a title="carrot.messaging.Consumer.register_callback" class="reference inte
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>connection</em> &#8211; see <a title="carrot.messaging.Publisher.connection" class="reference internal" href="#carrot.messaging.Publisher.connection"><tt class="xref docutils literal"><span class="pre">connection</span></tt></a>.</li>
-<li><em>exchange</em> &#8211; see <a title="carrot.messaging.Publisher.exchange" class="reference internal" href="#carrot.messaging.Publisher.exchange"><tt class="xref docutils literal"><span class="pre">exchange</span></tt></a>.</li>
-<li><em>routing_key</em> &#8211; see <a title="carrot.messaging.Publisher.routing_key" class="reference internal" href="#carrot.messaging.Publisher.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a>.</li>
-<li><em>exchange_type</em> &#8211; see <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">Consumer.exchange_type</span></tt></a>.</li>
-<li><em>durable</em> &#8211; see <a title="carrot.messaging.Consumer.durable" class="reference internal" href="#carrot.messaging.Consumer.durable"><tt class="xref docutils literal"><span class="pre">Consumer.durable</span></tt></a>.</li>
-<li><em>auto_delete</em> &#8211; see <a title="carrot.messaging.Consumer.auto_delete" class="reference internal" href="#carrot.messaging.Consumer.auto_delete"><tt class="xref docutils literal"><span class="pre">Consumer.auto_delete</span></tt></a>.</li>
-<li><em>serializer</em> &#8211; see <a title="carrot.messaging.Publisher.serializer" class="reference internal" href="#carrot.messaging.Publisher.serializer"><tt class="xref docutils literal"><span class="pre">serializer</span></tt></a>.</li>
-<li><em>auto_declare</em> &#8211; See <a title="carrot.messaging.Publisher.auto_declare" class="reference internal" href="#carrot.messaging.Publisher.auto_declare"><tt class="xref docutils literal"><span class="pre">auto_declare</span></tt></a>.</li>
+<li><strong>connection</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Publisher.connection" title="carrot.messaging.Publisher.connection"><tt class="xref py py-attr docutils literal"><span class="pre">connection</span></tt></a>.</li>
+<li><strong>exchange</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Publisher.exchange" title="carrot.messaging.Publisher.exchange"><tt class="xref py py-attr docutils literal"><span class="pre">exchange</span></tt></a>.</li>
+<li><strong>routing_key</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Publisher.routing_key" title="carrot.messaging.Publisher.routing_key"><tt class="xref py py-attr docutils literal"><span class="pre">routing_key</span></tt></a>.</li>
+<li><strong>exchange_type</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.exchange_type" title="carrot.messaging.Consumer.exchange_type"><tt class="xref py py-attr docutils literal"><span class="pre">Consumer.exchange_type</span></tt></a>.</li>
+<li><strong>durable</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.durable" title="carrot.messaging.Consumer.durable"><tt class="xref py py-attr docutils literal"><span class="pre">Consumer.durable</span></tt></a>.</li>
+<li><strong>auto_delete</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Consumer.auto_delete" title="carrot.messaging.Consumer.auto_delete"><tt class="xref py py-attr docutils literal"><span class="pre">Consumer.auto_delete</span></tt></a>.</li>
+<li><strong>serializer</strong> &#8211; see <a class="reference internal" href="#carrot.messaging.Publisher.serializer" title="carrot.messaging.Publisher.serializer"><tt class="xref py py-attr docutils literal"><span class="pre">serializer</span></tt></a>.</li>
+<li><strong>auto_declare</strong> &#8211; See <a class="reference internal" href="#carrot.messaging.Publisher.auto_declare" title="carrot.messaging.Publisher.auto_declare"><tt class="xref py py-attr docutils literal"><span class="pre">auto_declare</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -703,21 +756,24 @@ See <a title="carrot.messaging.Consumer.register_callback" class="reference inte
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.connection">
 <tt class="descname">connection</tt><a class="headerlink" href="#carrot.messaging.Publisher.connection" title="Permalink to this definition">¶</a></dt>
-<dd>The connection to the broker.
-A <a title="carrot.connection.BrokerConnection" class="reference external" href="carrot.connection.html#carrot.connection.BrokerConnection"><tt class="xref docutils literal"><span class="pre">carrot.connection.BrokerConnection</span></tt></a> instance.</dd></dl>
+<dd><p>The connection to the broker.
+A <a class="reference internal" href="carrot.connection.html#carrot.connection.BrokerConnection" title="carrot.connection.BrokerConnection"><tt class="xref py py-class docutils literal"><span class="pre">carrot.connection.BrokerConnection</span></tt></a> instance.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.exchange">
 <tt class="descname">exchange</tt><a class="headerlink" href="#carrot.messaging.Publisher.exchange" title="Permalink to this definition">¶</a></dt>
-<dd>Name of the exchange we send messages to.</dd></dl>
+<dd><p>Name of the exchange we send messages to.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.routing_key">
 <tt class="descname">routing_key</tt><a class="headerlink" href="#carrot.messaging.Publisher.routing_key" title="Permalink to this definition">¶</a></dt>
-<dd>The default routing key for messages sent using this publisher.
-See <a title="carrot.messaging.Consumer.routing_key" class="reference internal" href="#carrot.messaging.Consumer.routing_key"><tt class="xref docutils literal"><span class="pre">Consumer.routing_key</span></tt></a> for more information.
+<dd><p>The default routing key for messages sent using this publisher.
+See <a class="reference internal" href="#carrot.messaging.Consumer.routing_key" title="carrot.messaging.Consumer.routing_key"><tt class="xref py py-attr docutils literal"><span class="pre">Consumer.routing_key</span></tt></a> for more information.
 You can override the routing key by passing an explicit
-<tt class="docutils literal"><span class="pre">routing_key</span></tt> argument to <a title="carrot.messaging.Publisher.send" class="reference internal" href="#carrot.messaging.Publisher.send"><tt class="xref docutils literal"><span class="pre">send()</span></tt></a>.</dd></dl>
+<tt class="docutils literal"><span class="pre">routing_key</span></tt> argument to <a class="reference internal" href="#carrot.messaging.Publisher.send" title="carrot.messaging.Publisher.send"><tt class="xref py py-meth docutils literal"><span class="pre">send()</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.delivery_mode">
@@ -726,9 +782,9 @@ You can override the routing key by passing an explicit
 The following delivery modes are supported by (at least) RabbitMQ:</p>
 <blockquote>
 <ul>
-<li><p class="first">1 or &#8220;non-persistent&#8221;</p>
+<li><p class="first">1 or &#8220;transient&#8221;</p>
 <blockquote>
-<p>The message is non-persistent. Which means it is stored in
+<p>The message is transient. Which means it is stored in
 memory only, and is lost if the server dies or restarts.</p>
 </blockquote>
 </li>
@@ -748,24 +804,27 @@ preserved if the server dies or restarts.</p>
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.exchange_type">
 <tt class="descname">exchange_type</tt><a class="headerlink" href="#carrot.messaging.Publisher.exchange_type" title="Permalink to this definition">¶</a></dt>
-<dd>See <a title="carrot.messaging.Consumer.exchange_type" class="reference internal" href="#carrot.messaging.Consumer.exchange_type"><tt class="xref docutils literal"><span class="pre">Consumer.exchange_type</span></tt></a>.</dd></dl>
+<dd><p>See <a class="reference internal" href="#carrot.messaging.Consumer.exchange_type" title="carrot.messaging.Consumer.exchange_type"><tt class="xref py py-attr docutils literal"><span class="pre">Consumer.exchange_type</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.durable">
 <tt class="descname">durable</tt><a class="headerlink" href="#carrot.messaging.Publisher.durable" title="Permalink to this definition">¶</a></dt>
-<dd>See <a title="carrot.messaging.Consumer.durable" class="reference internal" href="#carrot.messaging.Consumer.durable"><tt class="xref docutils literal"><span class="pre">Consumer.durable</span></tt></a>.</dd></dl>
+<dd><p>See <a class="reference internal" href="#carrot.messaging.Consumer.durable" title="carrot.messaging.Consumer.durable"><tt class="xref py py-attr docutils literal"><span class="pre">Consumer.durable</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.auto_delete">
 <tt class="descname">auto_delete</tt><a class="headerlink" href="#carrot.messaging.Publisher.auto_delete" title="Permalink to this definition">¶</a></dt>
-<dd>See <a title="carrot.messaging.Consumer.auto_delete" class="reference internal" href="#carrot.messaging.Consumer.auto_delete"><tt class="xref docutils literal"><span class="pre">Consumer.auto_delete</span></tt></a>.</dd></dl>
+<dd><p>See <a class="reference internal" href="#carrot.messaging.Consumer.auto_delete" title="carrot.messaging.Consumer.auto_delete"><tt class="xref py py-attr docutils literal"><span class="pre">Consumer.auto_delete</span></tt></a>.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.auto_declare">
 <tt class="descname">auto_declare</tt><a class="headerlink" href="#carrot.messaging.Publisher.auto_declare" title="Permalink to this definition">¶</a></dt>
-<dd><p>If this is <tt class="xref docutils literal"><span class="pre">True</span></tt> and the <a title="carrot.messaging.Publisher.exchange" class="reference internal" href="#carrot.messaging.Publisher.exchange"><tt class="xref docutils literal"><span class="pre">exchange</span></tt></a> name is set, the exchange
+<dd><p>If this is <tt class="xref docutils literal"><span class="pre">True</span></tt> and the <a class="reference internal" href="#carrot.messaging.Publisher.exchange" title="carrot.messaging.Publisher.exchange"><tt class="xref py py-attr docutils literal"><span class="pre">exchange</span></tt></a> name is set, the exchange
 will be automatically declared at instantiation.
-You can manually the declare the exchange by using the <a title="carrot.messaging.Publisher.declare" class="reference internal" href="#carrot.messaging.Publisher.declare"><tt class="xref docutils literal"><span class="pre">declare()</span></tt></a>
+You can manually the declare the exchange by using the <a class="reference internal" href="#carrot.messaging.Publisher.declare" title="carrot.messaging.Publisher.declare"><tt class="xref py py-meth docutils literal"><span class="pre">declare()</span></tt></a>
 method.</p>
 <p>Auto declare is on by default.</p>
 </dd></dl>
@@ -773,22 +832,25 @@ method.</p>
 <dl class="attribute">
 <dt id="carrot.messaging.Publisher.serializer">
 <tt class="descname">serializer</tt><a class="headerlink" href="#carrot.messaging.Publisher.serializer" title="Permalink to this definition">¶</a></dt>
-<dd>A string identifying the default serialization method to use.
+<dd><p>A string identifying the default serialization method to use.
 Defaults to <tt class="docutils literal"><span class="pre">json</span></tt>. Can be <tt class="docutils literal"><span class="pre">json</span></tt> (default), <tt class="docutils literal"><span class="pre">raw</span></tt>,
 <tt class="docutils literal"><span class="pre">pickle</span></tt>, <tt class="docutils literal"><span class="pre">hessian</span></tt>, <tt class="docutils literal"><span class="pre">yaml</span></tt>, or any custom serialization
 methods that have been registered with
-<tt class="xref docutils literal"><span class="pre">carrot.serialization.registry</span></tt>.</dd></dl>
+<tt class="xref py py-mod docutils literal"><span class="pre">carrot.serialization.registry</span></tt>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Publisher.close">
 <tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.close" title="Permalink to this definition">¶</a></dt>
-<dd>Close connection to queue.</dd></dl>
+<dd><p>Close connection to queue.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Publisher.create_message">
 <tt class="descname">create_message</tt><big>(</big><em>message_data</em>, <em>delivery_mode=None</em>, <em>priority=None</em>, <em>content_type=None</em>, <em>content_encoding=None</em>, <em>serializer=None</em><big>)</big><a class="headerlink" href="#carrot.messaging.Publisher.create_message" title="Permalink to this definition">¶</a></dt>
-<dd>With any data, serialize it and encapsulate it in a AMQP
-message with the proper headers set.</dd></dl>
+<dd><p>With any data, serialize it and encapsulate it in a AMQP
+message with the proper headers set.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="carrot.messaging.Publisher.declare">
@@ -806,32 +868,32 @@ message with the proper headers set.</dd></dl>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><em>message_data</em> &#8211; The message data to send. Can be a list,
+<li><strong>message_data</strong> &#8211; The message data to send. Can be a list,
 dictionary or a string.</li>
-<li><em>routing_key</em> &#8211; A custom routing key for the message.
-If not set, the default routing key set in the <a title="carrot.messaging.Publisher.routing_key" class="reference internal" href="#carrot.messaging.Publisher.routing_key"><tt class="xref docutils literal"><span class="pre">routing_key</span></tt></a>
+<li><strong>routing_key</strong> &#8211; A custom routing key for the message.
+If not set, the default routing key set in the <a class="reference internal" href="#carrot.messaging.Publisher.routing_key" title="carrot.messaging.Publisher.routing_key"><tt class="xref py py-attr docutils literal"><span class="pre">routing_key</span></tt></a>
 attribute is used.</li>
-<li><em>mandatory</em> &#8211; If set, the message has mandatory routing.
+<li><strong>mandatory</strong> &#8211; If set, the message has mandatory routing.
 By default the message is silently dropped by the server if it
 can&#8217;t be routed to a queue. However - If the message is mandatory,
 an exception will be raised instead.</li>
-<li><em>immediate</em> &#8211; Request immediate delivery.
+<li><strong>immediate</strong> &#8211; Request immediate delivery.
 If the message cannot be routed to a queue consumer immediately,
 an exception will be raised. This is instead of the default
 behaviour, where the server will accept and queue the message,
 but with no guarantee that the message will ever be consumed.</li>
-<li><em>delivery_mode</em> &#8211; Override the default <a title="carrot.messaging.Publisher.delivery_mode" class="reference internal" href="#carrot.messaging.Publisher.delivery_mode"><tt class="xref docutils literal"><span class="pre">delivery_mode</span></tt></a>.</li>
-<li><em>priority</em> &#8211; The message priority, <tt class="docutils literal"><span class="pre">0</span></tt> to <tt class="docutils literal"><span class="pre">9</span></tt>.</li>
-<li><em>content_type</em> &#8211; The messages content_type. If content_type
+<li><strong>delivery_mode</strong> &#8211; Override the default <a class="reference internal" href="#carrot.messaging.Publisher.delivery_mode" title="carrot.messaging.Publisher.delivery_mode"><tt class="xref py py-attr docutils literal"><span class="pre">delivery_mode</span></tt></a>.</li>
+<li><strong>priority</strong> &#8211; The message priority, <tt class="docutils literal"><span class="pre">0</span></tt> to <tt class="docutils literal"><span class="pre">9</span></tt>.</li>
+<li><strong>content_type</strong> &#8211; The messages content_type. If content_type
 is set, no serialization occurs as it is assumed this is either
 a binary object, or you&#8217;ve done your own serialization.
 Leave blank if using built-in serialization as our library
 properly sets content_type.</li>
-<li><em>content_encoding</em> &#8211; The character set in which this object
+<li><strong>content_encoding</strong> &#8211; The character set in which this object
 is encoded. Use &#8220;binary&#8221; if sending in raw binary objects.
 Leave blank if using built-in serialization as our library
 properly sets content_encoding.</li>
-<li><em>serializer</em> &#8211; Override the default <a title="carrot.messaging.Publisher.serializer" class="reference internal" href="#carrot.messaging.Publisher.serializer"><tt class="xref docutils literal"><span class="pre">serializer</span></tt></a>.</li>
+<li><strong>serializer</strong> &#8211; Override the default <a class="reference internal" href="#carrot.messaging.Publisher.serializer" title="carrot.messaging.Publisher.serializer"><tt class="xref py py-attr docutils literal"><span class="pre">serializer</span></tt></a>.</li>
 </ul>
 </td>
 </tr>
@@ -849,30 +911,30 @@ properly sets content_encoding.</li>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-            <h4>Previous topic</h4>
-            <p class="topless"><a href="carrot.connection.html"
-                                  title="previous chapter">carrot.connection</a></p>
-            <h4>Next topic</h4>
-            <p class="topless"><a href="carrot.backends.html"
-                                  title="next chapter">carrot.backends</a></p>
-            <h3>This Page</h3>
-            <ul class="this-page-menu">
-              <li><a href="../sources/reference/carrot.messaging.txt"
-                     rel="nofollow">Show Source</a></li>
-            </ul>
-          <div id="searchbox" style="display: none">
-            <h3>Quick search</h3>
-              <form class="search" action="../search.html" method="get">
-                <input type="text" name="q" size="18" />
-                <input type="submit" value="Go" />
-                <input type="hidden" name="check_keywords" value="yes" />
-                <input type="hidden" name="area" value="default" />
-              </form>
-              <p class="searchtip" style="font-size: 90%">
-              Enter search terms or a module, class or function name.
-              </p>
-          </div>
-          <script type="text/javascript">$('#searchbox').show(0);</script>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="carrot.connection.html"
+                        title="previous chapter">carrot.connection</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="carrot.backends.html"
+                        title="next chapter">carrot.backends</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../sources/reference/carrot.messaging.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -884,7 +946,7 @@ properly sets content_encoding.</li>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../modindex.html" title="Global Module Index"
+          <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="carrot.backends.html" title="carrot.backends"
@@ -892,13 +954,13 @@ properly sets content_encoding.</li>
         <li class="right" >
           <a href="carrot.connection.html" title="carrot.connection"
              >previous</a> |</li>
-        <li><a href="../index.html">Carrot v0.10.1 documentation</a> &raquo;</li>
+        <li><a href="../index.html">Carrot v0.10.5 documentation</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-      &copy; Copyright 2009, Ask Solem.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+        &copy; Copyright 2009, Ask Solem.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0b2.
     </div>
   </body>
 </html>

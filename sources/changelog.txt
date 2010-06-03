@@ -2,6 +2,121 @@
  Change history
 ================
 
+0.10.5 [2010-06-03 09:02 A.M CEST]
+----------------------------------
+
+* In-memory backend: discard_all() now works correctly.
+
+* Added msgpack serialization support
+
+    See http://msgpack.sourceforge.net for more information.
+
+    To enable set::
+
+        serializer="msgpack"
+
+* Added dependency specification for building RPMs.
+
+    $ python setup.py bdist_rpm
+
+0.10.4 [2010-05-14 10:26 A.M CEST]
+----------------------------------
+
+* Added ``BrokerConnection.drain_events()`` (only works for amqplib/pika)
+
+  `drain_events` waits for events on all active channels.
+
+* amqplib: Added timeout support to ``drain_events``.
+
+	Example usage:
+
+		>>> c = Consumer()
+		>>> it = c.iterconsume()
+		>>> # wait for event on any channel
+		>>> try:
+		...    connection.drain_events(timeout=1)
+		...	except socket.timeout:
+				pass
+
+* Added Consumer.consume / ConsumerSet.consume
+
+  We're slowly moving away from ``iterconsume`` as this flow doesn't
+  make sense. You often want to consume from several channels at once,
+  so ``iterconsume`` will probably be deprecated at some point.
+
+  "new-style" consume example::
+
+    >>> connection = BrokerConnection(..)
+    >>> consumer = Consumer(connection, ...)
+    >>> consumer.register_callback(handle_message)
+    >>> consumer.consume() # declares consumers
+    >>> while True:
+    ...     connection.drain_events()
+    >>> consumer.cancel() # Cancel consumer.
+
+  More elaborate example consuming from two channels,
+  where the first channel consumes from multiple queues::
+
+    >>> connection = BrokerConnection(..)
+
+    # The first channel receives jobs from several
+    # queues.
+    >>> queues = {"video": {"exchange": "jobs",
+    ...                     "queue": "video",
+    ...                     "routing_key": "video"},
+    ...           "image": {"exchange": "jobs",
+    ...                     "queue": "image",
+    ...                     "routing_key": "image"}}
+    >>> job_consumer = ConsumerSet(connection, from_dict=queues)
+    >>> job_consumer.register_callback(handle_job)
+    >>> job_consumer.consume()
+
+    # The second channel receives remote control commands.
+    >>> remote_consumer = Consumer(connection, queue="control",
+    ...                            exchange="control")
+    >>> remote_consumer.register_callback(handle_remote_command)
+    >>> remote_consumer.consume()
+
+    # The eventloop.
+    # Receives a single message a pass and calls the appropriate
+    # callback.
+    >>> try:
+    ...     while True:
+    ...         connection.drain_events()
+    ... finally:
+    ...     job_consumer.close()
+    ...     remote_consumer.close()
+    ...     connection.close()
+
+* amqplib: now raises ``KeyError`` if hostname isn't set.
+
+0.10.3 [2010-03-08 05:01 P.M CEST]
+----------------------------------
+
+* Consumer/Publisher: A kwarg option set to ``None`` should always
+  mean "use the class default value". This was not always the case,
+  but has been fixed in this release.
+
+* DjangoBrokerConnection: Now accepts a custom ``settings`` object. E.g.:
+
+		>>> conn = DjangoBrokerConnection(settings=mysettings)
+
+* Consumer.iterconsume: Now raises :exc:`StopIteration` if the channel is
+  closed. (http://github.com/ask/carrot/issues/issue/24)
+
+* Fixed syntax error in the DjangoBrokerConnection which could be triggered
+  if some conditions were met.
+
+* setup.cfg: Disable --enable-coverage from nosetests section
+
+* Consumer.iterconsume now works properly when using the Python Queue
+  module based backend (http://github.com/ask/carrot/issues/issue/23).
+
+
+0.10.2 [2010-02-03 11:43 A.M CEST]
+----------------------------------
+* Resolved a typo in the experimental Pika backend.
+
 0.10.1 [2010-01-16 10:17 P.M CEST]
 ----------------------------------
 
