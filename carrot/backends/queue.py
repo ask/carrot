@@ -71,9 +71,11 @@ class Backend(BaseBackend):
         self.consumer_tag = consumer_tag
         self.nowait = nowait
 
-    def purge(self, queue, **kwargs):
+    def queue_purge(self, queue, **kwargs):
         """Discard all messages in the queue."""
-        mqueue = Queue()
+        qsize = mqueue.qsize()
+        mqueue.queue.clear()
+        return qsize
 
     def prepare_message(self, message_data, delivery_mode,
                         content_type, content_encoding, **kwargs):
