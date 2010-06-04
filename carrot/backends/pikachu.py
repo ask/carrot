@@ -82,7 +82,7 @@ class SyncBackend(BaseBackend):
     def queue_purge(self, queue, **kwargs):
         """Discard all messages in the queue. This will delete the messages
         and results in an empty queue."""
-        return self.channel.queue_purge(queue=queue)
+        return self.channel.queue_purge(queue=queue).message_count
 
     def queue_declare(self, queue, durable, exclusive, auto_delete,
             warn_if_exists=False):
@@ -100,8 +100,10 @@ class SyncBackend(BaseBackend):
                                              durable=durable,
                                              auto_delete=auto_delete)
 
-    def queue_bind(self, queue, exchange, routing_key, arguments=None):
+    def queue_bind(self, queue, exchange, routing_key, arguments={}):
         """Bind queue to an exchange using a routing key."""
+        if not arguments:
+            arguments = {}
         return self.channel.queue_bind(queue=queue,
                                        exchange=exchange,
                                        routing_key=routing_key,
