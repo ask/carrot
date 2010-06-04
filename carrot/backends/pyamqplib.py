@@ -184,6 +184,10 @@ class Backend(BaseBackend):
         conninfo = self.connection
         if not conninfo.hostname:
             raise KeyError("Missing hostname for AMQP connection.")
+        if conninfo.userid is None:
+            raise KeyError("Missing user id for AMQP connection.")
+        if conninfo.password is None:
+            raise KeyError("Missing password for AMQP connection.")
         if not conninfo.port:
             conninfo.port = self.default_port
         return Connection(host=conninfo.host,
