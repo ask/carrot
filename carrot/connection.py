@@ -3,10 +3,15 @@
 Getting a connection to the AMQP server.
 
 """
+import socket
+import warnings
+
+from collections import deque
+from copy import copy
+from Queue import Queue, Empty as QueueEmpty
+
 from amqplib.client_0_8.connection import AMQPConnectionException
 from carrot.backends import get_backend_cls
-import warnings
-import socket
 
 DEFAULT_CONNECT_TIMEOUT = 5 # seconds
 SETTING_PREFIX = "BROKER"
@@ -98,19 +103,29 @@ class BrokerConnection(object):
         return ":".join([self.hostname, str(self.port)])
 
     def __init__(self, hostname=None, userid=None, password=None,
-            virtual_host=None, port=None, **kwargs):
+            virtual_host=None, port=None, pool=None, **kwargs):
         self.hostname = hostname
         self.userid = userid
         self.password = password
         self.virtual_host = virtual_host or self.virtual_host
         self.port = port or self.port
         self.insist = kwargs.get("insist", self.insist)
+        self.pool = pool
         self.connect_timeout = kwargs.get("connect_timeout",
                                           self.connect_timeout)
         self.ssl = kwargs.get("ssl", self.ssl)
         self.backend_cls = kwargs.get("backend_cls", None)
         self._closed = None
         self._connection = None
+
+    def __copy__(self):
+        return self.__class__(self.hostname, self.userid, self.password,
+                              self.virtual_host, self.port,
+                              insist=self.insist,
+                              connect_timeout=self.connect_timeout,
+                              ssl=self.ssl,
+                              backend_cls=self.backend_cls,
+                              pool=self.pool)
 
     @property
     def connection(self):
@@ -167,8 +182,57 @@ class BrokerConnection(object):
             pass
         self._closed = True
 
+    def release(self):
+        if not self.pool:
+            raise NotImplementedError(
+                    "Trying to release connection not part of a pool")
+        self.pool.release(self)
+
 # For backwards compatability.
 AMQPConnection = BrokerConnection
+
+
+class ConnectionLimitExceeded(Exception):
+    """The maximum number of pool connections has been exceeded."""
+
+
+class ConnectionPool(object):
+
+    def __init__(self, source_connection, min=2, max=None, preload=True):
+        self.source_connection = source_connection
+        self.min = min
+        self.max = max
+        self.preload = preload
+        self.source_connection.pool = self
+
+        self._connections = Queue()
+        self._dirty = deque()
+
+        self._connections.put(self.source_connection)
+        for i in range(min - 1):
+            self._connections.put_nowait(self._new_connection())
+
+    def acquire(self, block=False, timeout=None, connect_timeout=None):
+        try:
+            conn = self._connections.get(block=block, timeout=timeout)
+        except QueueEmpty:
+            conn = self._new_connection()
+        self._dirty.append(conn)
+        if connect_timeout is not None:
+            conn.connect_timeout = connect_timeout
+        return conn
+
+    def release(self, connection):
+        self._dirty.remove(connection)
+        self._connections.put_nowait(connection)
+
+    def _new_connection(self):
+        if len(self._dirty) >= self.max:
+            raise ConnectionLimitExceeded(self.max)
+        return copy(self.source_connection)
+
+
+
 
 
 def get_django_conninfo(settings=None):

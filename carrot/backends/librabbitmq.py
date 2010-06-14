@@ -102,12 +102,11 @@ class Backend(BaseBackend):
             raise KeyError("Missing password for AMQP connection.")
         if not conninfo.port:
             conninfo.port = self.default_port
-        conn = amqp.Connection(hostname=conninfo.hostname,
+        conn = amqp.Connection(host=conninfo.hostname,
                                port=conninfo.port,
                                userid=conninfo.userid,
                                password=conninfo.password,
-                               vhost=conninfo.virtual_host)
-        conn.connect()
+                               virtual_host=conninfo.virtual_host)
         return conn
 
     def close_connection(self, connection):
