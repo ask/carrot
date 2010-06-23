@@ -85,13 +85,14 @@ class SyncBackend(BaseBackend):
         return self.channel.queue_purge(queue=queue).message_count
 
     def queue_declare(self, queue, durable, exclusive, auto_delete,
-            warn_if_exists=False):
+            warn_if_exists=False, arguments=None):
         """Declare a named queue."""
 
         return self.channel.queue_declare(queue=queue,
                                           durable=durable,
                                           exclusive=exclusive,
-                                          auto_delete=auto_delete)
+                                          auto_delete=auto_delete,
+                                          arguments=arguments)
 
     def exchange_declare(self, exchange, type, durable, auto_delete):
         """Declare an named exchange."""
