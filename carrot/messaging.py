@@ -194,11 +194,13 @@ class Consumer(object):
     warn_if_exists = False
     auto_declare = True
     auto_ack = False
+    queue_arguments = None
     no_ack = False
     _closed = True
     _init_opts = ("durable", "exclusive", "auto_delete",
                   "exchange_type", "warn_if_exists",
-                  "auto_ack", "auto_declare")
+                  "auto_ack", "auto_declare",
+                  "queue_arguments")
 
     def __init__(self, connection, queue=None, exchange=None,
             routing_key=None, **kwargs):
@@ -264,6 +266,7 @@ class Consumer(object):
             self.backend.queue_declare(queue=self.queue, durable=self.durable,
                                        exclusive=self.exclusive,
                                        auto_delete=self.auto_delete,
+                                       arguments=self.queue_arguments,
                                        warn_if_exists=self.warn_if_exists)
         if self.exchange:
             self.backend.exchange_declare(exchange=self.exchange,

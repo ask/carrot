@@ -176,7 +176,8 @@ class Backend(BaseBackend):
     def channel(self):
         """If no channel exists, a new one is requested."""
         if not self._channel:
-            self._channel_ref = weakref.ref(self.connection.get_channel())
+            connection = self.connection.connection
+            self._channel_ref = weakref.ref(connection.channel())
         return self._channel
 
     def establish_connection(self):
@@ -227,7 +228,7 @@ class Backend(BaseBackend):
         return self.channel.queue_purge(queue=queue)
 
     def queue_declare(self, queue, durable, exclusive, auto_delete,
-            warn_if_exists=False):
+            warn_if_exists=False, arguments=None):
         """Declare a named queue."""
 
         if warn_if_exists and self.queue_exists(queue):
@@ -237,7 +238,8 @@ class Backend(BaseBackend):
         return self.channel.queue_declare(queue=queue,
                                           durable=durable,
                                           exclusive=exclusive,
-                                          auto_delete=auto_delete)
+                                          auto_delete=auto_delete,
+                                          arguments=arguments)
 
     def exchange_declare(self, exchange, type, durable, auto_delete):
         """Declare an named exchange."""
