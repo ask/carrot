@@ -201,6 +201,7 @@ class Consumer(object):
                   "exchange_type", "warn_if_exists",
                   "auto_ack", "auto_declare",
                   "queue_arguments")
+    _next_consumer_tag = count(1).next
 
     def __init__(self, connection, queue=None, exchange=None,
             routing_key=None, **kwargs):
@@ -249,10 +250,10 @@ class Consumer(object):
         :rtype string:
 
         """
-        return "%s.%s-%s" % (
+        return "%s.%s%s" % (
                 self.__class__.__module__,
                 self.__class__.__name__,
-                gen_unique_id())
+                self._next_consumer_tag())
 
     def declare(self):
         """Declares the queue, the exchange and binds the queue to
@@ -655,6 +656,7 @@ class Publisher(object):
         if self.auto_declare and self.exchange:
             self.declare()
 
+
     def declare(self):
         """Declare the exchange.
 
@@ -670,8 +672,6 @@ class Publisher(object):
         return self
 
     def __exit__(self, e_type, e_value, e_trace):
-        if e_type:
-            raise e_type(e_value)
         self.close()
 
     def create_message(self, message_data, delivery_mode=None, priority=None,

@@ -5,8 +5,13 @@
 .. _`amqplib`: http://barryp.org/software/py-amqplib/
 
 """
-from amqplib import client_0_8 as amqp
 from amqplib.client_0_8 import transport
+# amqplib's handshake mistakenly identifies as protocol version 1191,
+# this breaks in RabbitMQ tip, which no longer falls back to
+# 0-8 for unknown ids.
+transport.AMQP_PROTOCOL_HEADER = "AMQP\x01\x01\x08\x00"
+
+from amqplib import client_0_8 as amqp
 from amqplib.client_0_8.exceptions import AMQPChannelException
 from amqplib.client_0_8.serialization import AMQPReader, AMQPWriter
 from carrot.backends.base import BaseMessage, BaseBackend
@@ -17,10 +22,6 @@ import weakref
 DEFAULT_PORT = 5672
 
 
-# amqplib's handshake mistakenly identifies as protocol version 1191,
-# this breaks in RabbitMQ tip, which no longer falls back to
-# 0-8 for unknown ids.
-transport.AMQP_PROTOCOL_HEADER = "AMQP\x01\x01\x08\x00"
 
 
 class Connection(amqp.Connection):

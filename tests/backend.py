@@ -39,7 +39,7 @@ class BackendMessagingCase(unittest.TestCase):
     def create_consumer(self, **options):
         queue = "%s%s" % (self.queue, self.nextq())
         return Consumer(connection=self.conn,
-                        queue=queue, exchange=self.exchange,
+                        queue=queue, exchange=self.exchange + str(self.nextq),
                         routing_key=self.routing_key, **options)
 
     def create_consumerset(self, queues={}, consumers=[], **options):
