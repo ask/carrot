@@ -122,7 +122,7 @@ class SyncBackend(BaseBackend):
             there was no messages waiting on the queue.
 
         """
-        raw_message = self.channel.basic_get(queue, no_ack=no_ack)
+        raw_message = self.channel.basic_get(queue=queue, no_ack=no_ack)
         if not raw_message:
             return None
         return self.message_to_python(raw_message)
