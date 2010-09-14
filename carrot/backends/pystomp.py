@@ -91,7 +91,7 @@ class Backend(BaseBackend):
         if not conninfo.port:
             conninfo.port = self.default_port
         stomp = self.Stomp(conninfo.hostname, conninfo.port)
-        stomp.connect()
+        stomp.connect(username=conninfo.userid, password=conninfo.password)
         stomp.drain_events = self.drain_events
         return stomp
 
