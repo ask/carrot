@@ -708,7 +708,7 @@ class Publisher(object):
 
     def send(self, message_data, routing_key=None, delivery_mode=None,
             mandatory=False, immediate=False, priority=0, content_type=None,
-            content_encoding=None, serializer=None):
+            content_encoding=None, serializer=None, exchange=None):
         """Send a message.
 
         :param message_data: The message data to send. Can be a list,
@@ -746,6 +746,9 @@ class Publisher(object):
 
         :keyword serializer: Override the default :attr:`serializer`.
 
+        :keyword exchange: Override the exchange to publish to.
+            Note that this exchange must have been declared.
+
         """
         headers = None
         routing_key = routing_key or self.routing_key
@@ -753,6 +756,7 @@ class Publisher(object):
         if self.exchange_type == "headers":
             headers, routing_key = routing_key, ""
 
+        exchange = exchange or self.exchange
 
         message = self.create_message(message_data, priority=priority,
                                       delivery_mode=delivery_mode,
@@ -760,7 +764,7 @@ class Publisher(object):
                                       content_encoding=content_encoding,
                                       serializer=serializer)
         self.backend.publish(message,
-                             exchange=self.exchange, routing_key=routing_key,
+                             exchange=exchange, routing_key=routing_key,
                              mandatory=mandatory, immediate=immediate,
                              headers=headers)
 
