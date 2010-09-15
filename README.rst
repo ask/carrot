@@ -184,7 +184,7 @@ message is received it passes the message to all registered callbacks.
     >>> from carrot.messaging import Consumer
     >>> consumer = Consumer(connection=conn, queue="feed",
     ...                     exchange="feed", routing_key="importer")
-    >>> def import_feed_callback(message_data, message)
+    >>> def import_feed_callback(message_data, message):
     ...     feed_url = message_data["import_feed"]
     ...     print("Got feed import message for: %s" % feed_url)
     ...     # something importing this feed url
