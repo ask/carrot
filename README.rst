@@ -2,7 +2,7 @@
  carrot - AMQP Messaging Framework for Python
 ##############################################
 
-:Version: 0.10.5
+:Version: 0.10.6
 
 **NOTE** This release contains backward-incompatible changes.
 Please read the `Changelog`_ for more information.
