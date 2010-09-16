@@ -664,9 +664,9 @@ class Publisher(object):
 
         """
         self.backend.exchange_declare(exchange=self.exchange,
-                                        type=self.exchange_type,
-                                          durable=self.durable,
-                                          auto_delete=self.auto_delete)
+                                      type=self.exchange_type,
+                                      durable=self.durable,
+                                      auto_delete=self.auto_delete)
 
     def __enter__(self):
         return self

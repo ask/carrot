@@ -39,7 +39,7 @@ class BackendMessagingCase(unittest.TestCase):
     def create_consumer(self, **options):
         queue = "%s%s" % (self.queue, self.nextq())
         return Consumer(connection=self.conn,
-                        queue=queue, exchange=self.exchange + str(self.nextq),
+                        queue=queue, exchange=self.exchange,
                         routing_key=self.routing_key, **options)
 
     def create_consumerset(self, queues={}, consumers=[], **options):
@@ -54,11 +54,12 @@ class BackendMessagingCase(unittest.TestCase):
                         **options)
 
     def test_regression_implied_auto_delete(self):
-        consumer = self.create_consumer(exclusive=True)
+        consumer = self.create_consumer(exclusive=True, auto_declare=False)
         self.assertTrue(consumer.auto_delete, "exclusive implies auto_delete")
         consumer.close()
 
-        consumer = self.create_consumer(durable=True, auto_delete=False)
+        consumer = self.create_consumer(durable=True, auto_delete=False,
+                                        auto_declare=False)
         self.assertFalse(consumer.auto_delete,
             """durable does *not* imply auto_delete.
             regression: http://github.com/ask/carrot/issues/closed#issue/2""")
