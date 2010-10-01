@@ -887,7 +887,7 @@ class ConsumerSet(object):
         self.from_dict = from_dict or {}
         self.consumers = []
         self.callbacks = callbacks or []
-        self._open_consumers = []
+        self._open_consumers = {}
 
         self.backend = self.connection.create_backend()
 
@@ -911,6 +911,7 @@ class ConsumerSet(object):
         consumer = Consumer(self.connection, queue=queue,
                 backend=self.backend, **options)
         self.consumers.append(consumer)
+        return consumer
 
     def add_consumer(self, consumer):
         """Add another consumer from a :class:`Consumer` instance."""
@@ -933,16 +934,17 @@ class ConsumerSet(object):
     def _declare_consumer(self, consumer, nowait=False):
         """Declare consumer so messages can be received from it using
         :meth:`iterconsume`."""
-        # Use the ConsumerSet's consumer by default, but if the
-        # child consumer has a callback, honor it.
-        callback = consumer.callbacks and \
+        if consumer.queue not in self._open_consumers:
+            # Use the ConsumerSet's consumer by default, but if the
+            # child consumer has a callback, honor it.
+            callback = consumer.callbacks and \
                 consumer._receive_callback or self._receive_callback
-        self.backend.declare_consumer(queue=consumer.queue,
-                                      no_ack=consumer.no_ack,
-                                      nowait=nowait,
-                                      callback=callback,
-                                      consumer_tag=consumer.consumer_tag)
-        self._open_consumers.append(consumer.consumer_tag)
+            self.backend.declare_consumer(queue=consumer.queue,
+                                          no_ack=consumer.no_ack,
+                                          nowait=nowait,
+                                          callback=callback,
+                                          consumer_tag=consumer.consumer_tag)
+            self._open_consumers[consumer.queue] = consumer.consumer_tag
 
     def consume(self):
         """Declare consumers."""
@@ -985,12 +987,16 @@ class ConsumerSet(object):
 
     def cancel(self):
         """Cancel a running :meth:`iterconsume` session."""
-        for consumer_tag in self._open_consumers:
+        for consumer_tag in self._open_consumers.values():
             try:
                 self.backend.cancel(consumer_tag)
             except KeyError:
                 pass
-        self._open_consumers = []
+        self._open_consumers.clear()
+
+    def cancel_by_queue(self, queue):
+        consumer_tag = self._open_consumers.pop(queue)
+        self.backend.cancel(consumer_tag)
 
     def close(self):
         """Close all consumers."""
