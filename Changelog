@@ -2,6 +2,37 @@
  Change history
 ================
 
+0.10.7 [2010-10-07 03:20 P.M CEST]
+----------------------------------
+
+* ``ConsumerSet``: Now possible to add/cancel consumers at runtime
+
+    * To add another consumer to an active set do::
+
+        >>> cset.add_consumer(C)
+        >>> # or
+        >>> cset.add_consumer_from_dict(**declaration)
+
+        >>> # ...
+        >>> # consume() will declare new consumers
+        >>> cset.consume()
+
+    * To cancel an active consumer by queue name do::
+
+        >>> cset.cancel_by_queue(queue_name)
+
+0.10.6 [2010-09-03 10:16 A.M CEST]
+----------------------------------
+
+* ``Publisher.send``: Now supports an exchange argument used to override the
+  exchange to send the message to (defaults to ``Publisher.exchange``).
+
+    Note that this exchange must have been declared.
+
+* STOMP backend: Now supports username and password authentication.
+
+* pika backend called basic_get with incorrect arguments.
+
 0.10.5 [2010-06-03 09:02 A.M CEST]
 ----------------------------------
 
