@@ -6,5 +6,6 @@ carrot.backends.queue
 
 .. automodule:: carrot.backends.queue
     :members:
+    :undoc-members:
 
 

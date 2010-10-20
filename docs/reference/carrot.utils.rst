@@ -6,5 +6,6 @@ carrot.utils
 
 .. automodule:: carrot.utils
     :members:
+    :undoc-members:
 
 

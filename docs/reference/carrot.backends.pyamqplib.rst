@@ -6,5 +6,6 @@ carrot.backends.pyamqplib
 
 .. automodule:: carrot.backends.pyamqplib
     :members:
+    :undoc-members:
 
 

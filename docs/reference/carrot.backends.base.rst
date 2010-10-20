@@ -6,5 +6,6 @@ carrot.backends.base
 
 .. automodule:: carrot.backends.base
     :members:
+    :undoc-members:
 
 

@@ -7,13 +7,14 @@
 
 .. toctree::
     :maxdepth: 2
-   
-    carrot.connection 
+
+    carrot.connection
     carrot.messaging
     carrot.backends
     carrot.backends.base
     carrot.backends.pyamqplib
     carrot.backends.pikachu
+    carrot.backends.librabbitmq
     carrot.backends.pystomp
     carrot.backends.queue
     carrot.serialization

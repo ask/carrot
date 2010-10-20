@@ -6,5 +6,6 @@ carrot.backends.pystomp
 
 .. automodule:: carrot.backends.pystomp
     :members:
+    :undoc-members:
 
 

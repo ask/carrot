@@ -6,5 +6,6 @@ carrot.backends.pikachu
 
 .. automodule:: carrot.backends.pikachu
     :members:
+    :undoc-members:
 
 
