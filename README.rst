@@ -148,8 +148,8 @@ Creating a connection
 
     >>> from carrot.connection import BrokerConnection
     >>> conn = BrokerConnection(hostname="localhost", port=5672,
-    ...                           userid="test", password="test",
-    ...                           virtual_host="test")
+    ...                           userid="guest", password="guest",
+    ...                           virtual_host="/")
 
 
     If you're using Django you can use the
@@ -158,9 +158,9 @@ Creating a connection
 
        BROKER_HOST = "localhost"
        BROKER_PORT = 5672
-       BROKER_USER = "test"
-       BROKER_PASSWORD = "secret"
-       BROKER_VHOST = "/test"
+       BROKER_USER = "guest"
+       BROKER_PASSWORD = "guest"
+       BROKER_VHOST = "/"
 
     Then create a connection by doing:
 

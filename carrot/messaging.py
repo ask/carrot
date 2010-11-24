@@ -358,6 +358,9 @@ class Consumer(object):
         """
         self.callbacks.append(callback)
 
+    def purge(self):
+        return self.backend.queue_purge(self.queue)
+
     def discard_all(self, filterfunc=None):
         """Discard all waiting messages.
 
@@ -837,6 +840,7 @@ class ConsumerSet(object):
     :param from_dict: see :attr:`from_dict`.
     :param consumers: see :attr:`consumers`.
     :param callbacks: see :attr:`callbacks`.
+    :param on_decode_error: see :attr:`on_decode_error`.
 
     .. attribute:: connection
 
@@ -877,8 +881,16 @@ class ConsumerSet(object):
 
         Default value for the :attr:`Consumer.auto_ack` attribute.
 
+    .. attribute:: on_decode_error
+
+        Callback called if an error occurs while decoding a message.
+        The callback is called with the following signature::
+
+            callback(message, exception)
+
     """
     auto_ack = False
+    on_decode_error = None
 
     def __init__(self, connection, from_dict=None, consumers=None,
             callbacks=None, **options):
@@ -904,12 +916,20 @@ class ConsumerSet(object):
         message = self.backend.message_to_python(raw_message)
         if self.auto_ack and not message.acknowledged:
             message.ack()
-        self.receive(message.decode(), message)
+        try:
+            decoded = message.decode()
+        except Exception, exc:
+            if not self.on_decode_error:
+                raise
+            self.on_decode_error(message, exc)
+        else:
+            self.receive(decoded, message)
 
     def add_consumer_from_dict(self, queue, **options):
         """Add another consumer from dictionary configuration."""
+        options.setdefault("routing_key", options.pop("binding_key", None))
         consumer = Consumer(self.connection, queue=queue,
-                backend=self.backend, **options)
+                            backend=self.backend, **options)
         self.consumers.append(consumer)
         return consumer
 

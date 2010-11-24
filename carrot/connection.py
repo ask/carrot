@@ -12,6 +12,7 @@ from Queue import Queue, Empty as QueueEmpty
 
 from amqplib.client_0_8.connection import AMQPConnectionException
 from carrot.backends import get_backend_cls
+from carrot.utils import retry_over_time
 
 DEFAULT_CONNECT_TIMEOUT = 5 # seconds
 SETTING_PREFIX = "BROKER"
@@ -114,7 +115,8 @@ class BrokerConnection(object):
         self.connect_timeout = kwargs.get("connect_timeout",
                                           self.connect_timeout)
         self.ssl = kwargs.get("ssl", self.ssl)
-        self.backend_cls = kwargs.get("backend_cls", None)
+        self.backend_cls = (kwargs.get("backend_cls") or
+                                kwargs.get("transport"))
         self._closed = None
         self._connection = None
 
@@ -160,6 +162,10 @@ class BrokerConnection(object):
         backend_cls = self.get_backend_cls()
         return backend_cls(connection=self)
 
+    def channel(self):
+        """For Kombu compatibility."""
+        return self.create_backend()
+
     def get_channel(self):
         """Request a new AMQP channel."""
         return self.connection.channel()
@@ -171,6 +177,32 @@ class BrokerConnection(object):
 
     def drain_events(self, **kwargs):
         return self.connection.drain_events(**kwargs)
+
+    def ensure_connection(self, errback=None, max_retries=None,
+            interval_start=2, interval_step=2, interval_max=30):
+        """Ensure we have a connection to the server.
+
+        If not retry establishing the connection with the settings
+        specified.
+
+        :keyword errback: Optional callback called each time the connection
+          can't be established. Arguments provided are the exception
+          raised and the interval that will be slept ``(exc, interval)``.
+
+        :keyword max_retries: Maximum number of times to retry.
+          If this limit is exceeded the connection error will be re-raised.
+
+        :keyword interval_start: The number of seconds we start sleeping for.
+        :keyword interval_step: How many seconds added to the interval
+          for each retry.
+        :keyword interval_max: Maximum number of seconds to sleep between
+          each retry.
+
+        """
+        retry_over_time(self.connect, self.connection_errors, (), {},
+                        errback, max_retries,
+                        interval_start, interval_step, interval_max)
+        return self
 
     def close(self):
         """Close the currently open connection."""
@@ -187,6 +219,31 @@ class BrokerConnection(object):
             raise NotImplementedError(
                     "Trying to release connection not part of a pool")
         self.pool.release(self)
+
+    def info(self):
+        """Get connection info."""
+        backend_cls = self.backend_cls or "amqplib"
+        port = self.port or self.create_backend().default_port
+        return {"hostname": self.hostname,
+                "userid": self.userid,
+                "password": self.password,
+                "virtual_host": self.virtual_host,
+                "port": port,
+                "insist": self.insist,
+                "ssl": self.ssl,
+                "transport_cls": backend_cls,
+                "backend_cls": backend_cls,
+                "connect_timeout": self.connect_timeout}
+
+    @property
+    def connection_errors(self):
+        """List of exceptions that may be raised by the connection."""
+        return self.create_backend().connection_errors
+
+    @property
+    def channel_errors(self):
+        """List of exceptions that may be raised by the channel."""
+        return self.create_backend().channel_errors
 
 # For backwards compatability.
 AMQPConnection = BrokerConnection

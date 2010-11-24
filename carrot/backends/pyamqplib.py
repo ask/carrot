@@ -12,16 +12,17 @@ from amqplib.client_0_8 import transport
 transport.AMQP_PROTOCOL_HEADER = "AMQP\x01\x01\x08\x00"
 
 from amqplib import client_0_8 as amqp
+from amqplib.client_0_8.exceptions import AMQPConnectionException
 from amqplib.client_0_8.exceptions import AMQPChannelException
 from amqplib.client_0_8.serialization import AMQPReader, AMQPWriter
 from carrot.backends.base import BaseMessage, BaseBackend
 from itertools import count
+
+import socket
 import warnings
 import weakref
 
 DEFAULT_PORT = 5672
-
-
 
 
 class Connection(amqp.Connection):
@@ -168,6 +169,12 @@ class Backend(BaseBackend):
 
     """
     default_port = DEFAULT_PORT
+
+    connection_errors = (AMQPConnectionException,
+                         socket.error,
+                         IOError,
+                         OSError)
+    channel_errors = (AMQPChannelException, )
 
     Message = Message
 

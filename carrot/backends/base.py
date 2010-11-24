@@ -96,6 +96,9 @@ class BaseBackend(object):
     default_port = None
     extra_options = None
 
+    connection_errors = ()
+    channel_errors = ()
+
     def __init__(self, connection, **kwargs):
         self.connection = connection
         self.extra_options = kwargs.get("extra_options")
