@@ -4,11 +4,24 @@
 
 :Version: 0.10.7
 
-**NOTE** This release contains backward-incompatible changes.
-Please read the `Changelog`_ for more information.
+Status
+------
 
-.. _`Changelog`: http://ask.github.com/carrot/changelog.html
+Carrot is discontinued in favor of the new `Kombu`_ framework.
 
+* Kombu is ready, start to use it now!
+* Kombu comes with a Carrot compatible API, so it's easy to port your software.
+* Carrot will not be actively maintained, only critical bugs will be fixed.
+
+Kombu links:
+
+    * Download: http://pypi.python.org/pypi/kombu
+    * Documentation: http://packages.python.org/kombu
+    * Development: http://github.com/ask/kombu
+
+.. _`Kombu`: http://pypi.python.org/pypi/kombu
+
+** ORIGINAL CARROT README CONTINUES BELOW **
 
 Introduction
 ------------
