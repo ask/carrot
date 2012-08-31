@@ -1,5 +1,10 @@
 .DS_Store
-*.pyc
+*.py[co]
+*$py.class
+erl_crash.dump
+.ropeproject/
+.project
+.pydevproject
 *~
 *.sqlite
 *.sqlite-journal
