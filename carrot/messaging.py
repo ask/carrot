@@ -282,6 +282,13 @@ class Consumer(object):
         self._closed = False
         return self
 
+    def queue_delete(self, if_unused=False, if_empty=False):
+        """Delete queue."""
+        if self.queue:
+            return self.backend.queue_delete(queue=self.queue,
+                                             if_unused=if_unused,
+                                             if_empty=if_empty)
+
     def _receive_callback(self, raw_message):
         """Internal method used when a message is received in consume mode."""
         message = self.backend.message_to_python(raw_message)
