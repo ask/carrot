@@ -114,7 +114,7 @@ class QueueAlreadyExistsWarning(UserWarning):
 class Message(BaseMessage):
     """A message received by the broker.
 
-    Usually you don't insantiate message objects yourself, but receive
+    Usually you don't instantiate message objects yourself, but receive
     them using a :class:`carrot.messaging.Consumer`.
 
     :param backend: see :attr:`backend`.
