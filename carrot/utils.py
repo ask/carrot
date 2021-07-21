@@ -7,7 +7,7 @@ except ImportError:
 
 def gen_unique_id():
     """Generate a unique id, having - hopefully - a very small chance of
-    collission.
+    collision.
 
     For now this is provided by :func:`uuid.uuid4`.
     """

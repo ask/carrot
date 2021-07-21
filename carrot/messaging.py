@@ -494,7 +494,7 @@ class Consumer(object):
         content data.
 
         This is a simple flow-control mechanism that a
-        peer can use to avoid oveflowing its queues or otherwise
+        peer can use to avoid overflowing its queues or otherwise
         finding itself receiving more messages than it can process.
         Note that this method is not intended for window control.  The
         peer that receives a request to stop sending content should
